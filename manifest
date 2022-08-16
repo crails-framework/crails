@@ -11,3 +11,4 @@ depends: * bpkg >= 0.15.0
 depends: { libboost-beast libboost-program-options libboost-thread libboost-random libboost-filesystem libboost-system } >= 1.74.0
 depends: { libcrails libcrails-templates } ^2.0.0
 depends: ecpp ^1.0.0
+depends: crails-assets ^1.0.0

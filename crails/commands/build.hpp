@@ -9,5 +9,6 @@ public:
 
 private:
   bool prebuild_renderers();
+  bool generate_assets();
   bool build_with_cmake();
 };

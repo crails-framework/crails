@@ -77,6 +77,7 @@ int New::run()
     {
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
+      configuration.asset_roots({"app/assets"});
       vars["project_name"] = project_name;
       vars["configuration_type"] = configuration_type;
       vars["formats"] = &formats;

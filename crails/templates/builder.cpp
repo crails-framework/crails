@@ -74,13 +74,13 @@ void TemplateBuilder::collect_files(boost::filesystem::path directory)
     std::string alias, classname;
     auto match = std::sregex_iterator(filename.begin(), filename.end(), matcher);
 
-    if (match == std::sregex_iterator())
-      continue ;
     if (boost::filesystem::is_directory(entry))
     {
       collect_files(entry.path());
       continue ;
     }
+    if (match == std::sregex_iterator())
+      continue ;
     alias = filepath.substr(root_path_length + 1);
     for (unsigned int i = 0 ; i < alias.length() ; ++i)
     {

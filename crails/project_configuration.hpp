@@ -27,5 +27,8 @@ public:
   void                   add_renderer(const std::string&);
   void                   remove_renderer(const std::string&);
 
+  std::list<std::string> asset_roots() const;
+  void                   asset_roots(const std::list<std::string>&);
+
   std::string crails_bin_path() const;
 };

@@ -2,6 +2,7 @@
 #include <crails/utils/string.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
+#include <crails/utils/string.hpp>
 
 using namespace std;
 
@@ -16,6 +17,23 @@ bool BuildManager::prebuild_renderers()
       << " templates build -r " << renderer << " -i app/views "
       << " -t Crails::" << Crails::uppercase(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp";
+    boost::process::child process(command.str());
+    process.wait();
+    if (process.exit_code() != 0)
+      return false;
+  }
+  return true;
+}
+
+bool BuildManager::generate_assets()
+{
+  if (boost::filesystem::exists(configuration.crails_bin_path() + "crails-assets"))
+  {
+    std::stringstream command;
+
+    command << configuration.crails_bin_path() + "/crails-assets"
+      << "-i " << Crails::join(configuration.asset_roots(), ',')
+      << "-o public";
     boost::process::child process(command.str());
     process.wait();
     if (process.exit_code() != 0)
@@ -43,7 +61,8 @@ bool BuildManager::build_with_cmake()
 int BuildManager::run()
 {
   configuration.initialize();
-  prebuild_renderers();
+  if (!prebuild_renderers()) return false;
+  if (!generate_assets()) return false;
   if (configuration.toolchain() == "cmake")
     return build_with_cmake() ? 0 : -1;
   else

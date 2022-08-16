@@ -100,6 +100,19 @@ void ProjectConfiguration::remove_renderer(const string& value)
   }
 }
 
+list<string> ProjectConfiguration::asset_roots() const
+{
+  auto it = variables.find("asset-roots");
+
+  return it == variables.end() ? list<string>() : Crails::split(it->second, ';');
+}
+
+void ProjectConfiguration::asset_roots(const std::list<std::string>& value)
+{
+  variables["asset-roots"] = Crails::join(value, ';');
+}
+
+
 string ProjectConfiguration::project_directory()
 {
   auto path = boost::filesystem::canonical(boost::filesystem::current_path());
