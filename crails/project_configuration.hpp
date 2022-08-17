@@ -22,6 +22,11 @@ public:
   std::string toolchain() const;
   void        toolchain(const std::string&);
 
+  std::list<std::string> modules() const;
+  void                   modules(const std::list<std::string>&);
+  void                   add_module(const std::string&);
+  void                   remove_module(const std::string&);
+
   std::list<std::string> renderers() const;
   void                   renderers(const std::list<std::string>&);
   void                   add_renderer(const std::string&);

@@ -2,5 +2,5 @@
 
 void Crails::Router::initialize(void)
 {
-  // Append routes here
+  // Append routes here (do not remove this line)
 }

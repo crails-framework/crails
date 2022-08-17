@@ -16,7 +16,7 @@ class New : public Crails::Command
   std::string              project_name;
   std::string              build_system = "cmake";
   std::string              configuration_type = "full";
-  std::list<std::string>   formats;
+  std::list<std::string>   formats, modules;
 public:
   New();
 

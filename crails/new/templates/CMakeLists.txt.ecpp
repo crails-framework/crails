@@ -1,9 +1,11 @@
 #include <algorithm>
 #include <list>
 
+std::string @crails_version;
 std::string @project_name;
 std::string @configuration_type = "full";
 std::list<std::string>& @formats;
+std::list<std::string>& @modules;
 
 // END LINKING
 cmake_minimum_required(VERSION 3.0)
@@ -12,10 +14,14 @@ project(<%= project_name %>)
 
 set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic ")
 
+find_package(PkgConfig)
 find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
+pkg_check_modules(CRAILS REQUIRED<% for (auto module_ : modules) do %> <%= module_ %><=<%= crails_version %><% end %>)
 
-include_directories(include /usr/local/include ${Boost_INCLUDE_DIRS} .)
+include_directories(/usr/local/include ${Boost_INCLUDE_DIRS} ${CRAILS_INCLUDE_DIRS} .)
 
+file(GLOB_RECURSE server_files app/main.cpp)
+file(GLOB_RECURSE tests_files  spec/*.cpp)
 file(GLOB_RECURSE crails_app
   app/controllers/*.cpp
   app/controllers/*.cxx
@@ -30,42 +36,14 @@ file(GLOB_RECURSE crails_app
   modules/*.cpp
   modules/*.cxx)
 
-file(GLOB_RECURSE server_files
-     app/main.cpp)
-
-file(GLOB_RECURSE tests_files
-     spec/*.cpp)
-
-# Add your modules here (do not modify this line)
-<% if (configuration_type == "full" || configuration_type == "webservice") do -%>
-set(dependencies ${dependencies} libcrails-action)
-<% end -%>
-<% if (configuration_type == "full") do -%>
-set(dependencies ${dependencies} \
-  libcrails-controllers libcrails-cookies libcrails-databases \
-  libcrails-url-parser libcrails-form-parser libcrails-multipart-parser)
-<% end -%>
-<% if (std::find(formats.begin(), formats.end(), "json") != formats.end()) do -%>
-set(dependencies ${dependencies} libcrails-json-parser libcrails-json-views)
-<% end -%>
-<% if (std::find(formats.begin(), formats.end(), "xml") != formats.end()) do -%>
-set(dependencies ${dependencies} libcrails-xml-parser)
-<% end -%>
-<% if (std::find(formats.begin(), formats.end(), "html") != formats.end()) do -%>
-set(dependencies ${dependencies} libcrails-html-views)
-<% end -%>
-
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})
 add_executable(tests  ${tests_files})
 
 set(dependencies libcrails
-                 ${dependencies}
+                 ${CRAILS_LINK_LIBRARIES}
                  ${Boost_LIBRARIES}
-                 pthread dl crypto ssl
-                 )
-
-# Custom dependencies (do not modify this line)
+                 pthread dl crypto ssl)
 
 target_link_libraries(server ${dependencies})
 target_link_libraries(tests  libcrails-tests ${dependencies} ${tests_dependencies})

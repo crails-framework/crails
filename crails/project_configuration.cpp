@@ -69,6 +69,36 @@ void ProjectConfiguration::toolchain(const string& value)
   variables["build_system"] = value;
 }
 
+list<string> ProjectConfiguration::modules() const
+{
+  auto it = variables.find("modules");
+
+  return it == variables.end() ? list<string>() : Crails::split(it->second, ',');
+}
+
+void ProjectConfiguration::modules(const list<string>& value)
+{
+  variables["modules"] = Crails::join(value, ',');
+}
+
+void ProjectConfiguration::add_module(const std::string& value)
+{
+  auto list = modules();
+  if (find(list.begin(), list.end(), value) == list.end()) list.push_back(value);
+  modules(list);
+}
+
+void ProjectConfiguration::remove_module(const std::string& value)
+{
+  auto list = modules();
+  auto it = find(list.begin(), list.end(), value);
+  if (it != list.end())
+  {
+    list.erase(it);
+    modules(list);
+  }
+}
+
 list<string> ProjectConfiguration::renderers() const
 {
   auto it = variables.find("renderers");

@@ -78,9 +78,12 @@ int New::run()
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
       configuration.asset_roots({"app/assets"});
+      configuration.add_module("libcrails");
       vars["project_name"] = project_name;
+      vars["crails_version"] = configuration.version();
       vars["configuration_type"] = configuration_type;
       vars["formats"] = &formats;
+      vars["modules"] = &modules;
       use_actions(configuration_type == "full" || configuration_type == "webservice");
       use_cookies(configuration_type == "full");
       prepare_renderers();
@@ -121,11 +124,13 @@ void New::prepare_renderers()
   {
     project_parsers.push_back({"html_renderer", "HtmlRenderer"});
     configuration.add_renderer("html");
+    configuration.add_module("libcrails-html-views");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
     project_parsers.push_back({"json_renderer", "JsonRenderer"});
     configuration.add_renderer("json");
+    configuration.add_module("libcrails-json-views");
   }
 }
 
@@ -133,21 +138,33 @@ void New::prepare_request_pipeline()
 {
   project_handlers.push_back({"file", "FileRequestHandler"});
   if (configuration_type == "full" || configuration_type == "webservice")
+  {
     project_handlers.push_back({"action", "ActionRequestHandler"});
+    configuration.add_module("libcrails-action");
+  }
   if (configuration_type == "full")
   {
     project_parsers.push_back({"form_parser", "RequestFormParser"});
     project_parsers.push_back({"url_parser", "RequestUrlParser"});
     project_parsers.push_back({"multipart_parser", "RequestMultipartParser"});
+    configuration.add_module("libcrails-form-parser");
+    configuration.add_module("libcrails-url-parser");
+    configuration.add_module("libcrails-multipart-parser");
+    configuration.add_module("libcrails-cookies");
+    configuration.add_module("libcrails-databases");
+    configuration.add_module("libcrails-controllers");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
     project_parsers.push_back({"json_parser", "RequestJsonParser"});
+    configuration.add_module("libcrails-json-parser");
   }
   if (find(formats.begin(), formats.end(), "xml") != formats.end())
   {
     project_parsers.push_back({"xml_parser", "RequestXmlParser"});
+    configuration.add_module("libcrails-xml-parser");
   }
+  configuration.add_module("libcrails-tests");
 }
 
 bool New::move_to_project_directory()

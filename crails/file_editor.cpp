@@ -4,27 +4,27 @@
 #include <regex>
 #include <iostream>
 
-CrailsFileEditor::CrailsFileEditor(const std::string& path, const std::string& symbol) : path(path), symbol(symbol)
+CrailsFileEditor::CrailsFileEditor(const std::string& path) : path(path)
 {
 }
 
 bool CrailsFileEditor::load_file()
 {
-  if (Crails::read_file(path, contents))
-  {
-    std::regex pattern("^\\s*//\\s*" + symbol + "\\s*$", std::regex_constants::multiline | std::regex_constants::icase);
-    auto match = std::sregex_iterator(contents.begin(), contents.end(), pattern);
+  return Crails::read_file(path, contents);
+}
 
-    if (match != std::sregex_iterator())
-    {
-      position = match->position() + match->length() + 1;
-      return true;
-    }
-    else
-      std::cout << "[FILE] Cannot find insert pattern `" << symbol << "` in file " << path << std::endl;
+bool CrailsFileEditor::use_symbol(const std::string& symbol)
+{
+  std::regex pattern("^\\s*" + prefix_pattern + "\\s*" + symbol + "\\s*$", std::regex_constants::multiline | std::regex_constants::icase);
+  auto match = std::sregex_iterator(contents.begin(), contents.end(), pattern);
+
+  if (match != std::sregex_iterator())
+  {
+    position = match->position() + match->length() + 1;
+    return true;
   }
   else
-    std::cout << "[FILE] Cannot open file " << path << std::endl;
+    std::cout << "[FILE] Cannot find insert pattern `" << symbol << "` in file " << path << std::endl;
   return false;
 }
 
