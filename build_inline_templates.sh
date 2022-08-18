@@ -60,6 +60,10 @@ $ECPP \
   -i $PROJECT_TPL/config/ssl.cpp.ecpp \
   >  $PROJECT_TPL/build/ssl.cpp
 $ECPP \
+  -n ProjectPublicIndexHtml \
+  -i $PROJECT_TPL/public/index.html.ecpp \
+  >  $PROJECT_TPL/build/index.html.cpp
+$ECPP \
   -n ProjectSpecMainCpp \
   -i $PROJECT_TPL/spec/main.cpp.ecpp \
   >  $PROJECT_TPL/build/spec.cpp

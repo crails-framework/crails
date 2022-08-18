@@ -50,6 +50,7 @@ bool New::generate_project_structure()
   generate_file("config/renderers.cpp");
   generate_file("config/request_pipe.cpp");
   generate_file("config/session_store.cpp");
+  generate_file("public/index.html");
   generate_file("spec/main.cpp");
   if (configuration.has_module("libcrails-action"))
     generate_file("app/routes.cpp");
@@ -132,13 +133,13 @@ void New::prepare_renderers()
 {
   if (find(formats.begin(), formats.end(), "html") != formats.end())
   {
-    project_parsers.push_back({"html_renderer", "HtmlRenderer"});
+    project_renderers.push_back({"html_renderer", "HtmlRenderer"});
     configuration.add_renderer("html");
     configuration.add_module("libcrails-html-views");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
-    project_parsers.push_back({"json_renderer", "JsonRenderer"});
+    project_renderers.push_back({"json_renderer", "JsonRenderer"});
     configuration.add_renderer("json");
     configuration.add_module("libcrails-json-views");
   }
