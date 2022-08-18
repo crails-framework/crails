@@ -5,8 +5,9 @@ bool @with_cookies = false;
 #include <crails/renderer.hpp>
 <% if (with_action) do -%>
 #include <crails/router.hpp>
-<% end %>
-<% if (with_cookies) do -%>
+<% end -%>
+<% if (with_cookies) do %>
+
 #include <crails/cipher.hpp>
 #include <crails/cookie_data.hpp>
 <% end %>

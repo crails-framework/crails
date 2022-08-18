@@ -46,6 +46,13 @@ string ProjectConfiguration::crails_bin_path() const
   return path.parent_path().string();
 }
 
+string ProjectConfiguration::application_build_path() const
+{
+  if (toolchain() == "cmake")
+    return project_directory() + "/build";
+  return project_directory();
+}
+
 string ProjectConfiguration::version() const
 {
   auto it = variables.find("crails-version");

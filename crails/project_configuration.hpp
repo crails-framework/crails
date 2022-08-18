@@ -36,4 +36,5 @@ public:
   void                   asset_roots(const std::list<std::string>&);
 
   std::string crails_bin_path() const;
+  std::string application_build_path() const;
 };

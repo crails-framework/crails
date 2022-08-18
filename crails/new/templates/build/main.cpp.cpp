@@ -19,7 +19,7 @@ ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
  };
   ecpp_stream << "";
  if (with_cookies){
-  ecpp_stream << "#include <crails/cipher.hpp>\n#include <crails/cookie_data.hpp>";
+  ecpp_stream << "\n#include <crails/cipher.hpp>\n#include <crails/cookie_data.hpp>";
  };
   ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{";
  if (with_action){

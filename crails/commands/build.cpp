@@ -6,6 +6,20 @@
 
 using namespace std;
 
+struct WithPath
+{
+  const boost::filesystem::path old_path;
+  WithPath(boost::filesystem::path new_path) : old_path(boost::filesystem::current_path())
+  {
+    boost::filesystem::create_directories(new_path);
+    boost::filesystem::current_path(new_path);
+  }
+  ~WithPath()
+  {
+    boost::filesystem::current_path(old_path);
+  }
+};
+
 bool BuildManager::prebuild_renderers()
 {
   std::cout << "prebuild renderers " << configuration.renderers().size() << std::endl;
@@ -44,7 +58,7 @@ bool BuildManager::generate_assets()
 
 bool BuildManager::build_with_cmake()
 {
-  boost::filesystem::path current_dir(configuration.project_directory() + "/build");
+  WithPath path_lock(configuration.application_build_path());
   boost::process::child cmake("cmake " + configuration.project_directory());
 
   cmake.wait();
