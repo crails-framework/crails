@@ -3,7 +3,7 @@
 
 # include <crails/controller.hpp>
 
-class ApplicatonController : public Crails::Controller
+class ApplicationController : public Crails::Controller
 {
 protected:
   ApplicationController(Crails::Context& context) : Crails::Controller(context)

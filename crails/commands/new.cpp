@@ -78,10 +78,10 @@ int New::run()
       formats = Crails::split(options["formats"].as<string>(), ',');
     if (options.count("force") != 0)
       renderer.should_overwrite = true;
-    if (options.count("session-store") != 0)
+    if (options.count("session-store"))
       vars["session_store"] = options["session-store"].as<string>();
     else if (configuration_type == "full")
-      vars["session_store"] = "CookieStore";
+      vars["session_store"] = string("CookieStore");
     if (validate_options() && move_to_project_directory())
     {
       configuration.version(LIBCRAILS_VERSION_STR);
