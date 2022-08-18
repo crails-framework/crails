@@ -4,17 +4,17 @@ using namespace Crails;
 
 const Databases::Settings Databases::settings = {
   {
-    "production", {
+    Production, {
     }
   },
 
   {
-    "development", {
+    Development, {
     }
   },
 
   {
-    "test", {
+    Test, {
     }
   }
 };

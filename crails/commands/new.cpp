@@ -22,6 +22,7 @@ void New::options_description(boost::program_options::options_description& desc)
     ("target,o",        boost::program_options::value<string>(), "folder in which the project will be generated (equal to `name` by default)")
     ("toolchain,t",     boost::program_options::value<string>(), "options: cmake or build2 (defaults to cmake)")
     ("configuration,c", boost::program_options::value<string>(), "options: full or webservice (defaults to full)")
+    ("session-store",   boost::program_options::value<string>(), "options: NoSessionStore, CookieStore")
     ("formats,p",       boost::program_options::value<string>(), "options: html,json,xml")
     ("force,f", "overwrite existing files without asking");
 }
@@ -50,10 +51,14 @@ bool New::generate_project_structure()
   generate_file("config/request_pipe.cpp");
   generate_file("config/session_store.cpp");
   generate_file("spec/main.cpp");
-  if (Crails::cast(vars, "with_action", false))
+  if (configuration.has_module("libcrails-action"))
     generate_file("app/routes.cpp");
-  if (Crails::cast(vars, "with_cookies", false))
+  if (configuration.has_module("libcrails-controllers"))
+    generate_file("app/controllers/application.hpp");
+  if (configuration.has_module("libcrails-cookies"))
     generate_file("config/salt.cpp");
+  if (configuration.has_module("libcrails-databases"))
+    generate_file("config/databases.cpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
   configuration.save();
@@ -73,6 +78,10 @@ int New::run()
       formats = Crails::split(options["formats"].as<string>(), ',');
     if (options.count("force") != 0)
       renderer.should_overwrite = true;
+    if (options.count("session-store") != 0)
+      vars["session_store"] = options["session-store"].as<string>();
+    else if (configuration_type == "full")
+      vars["session_store"] = "CookieStore";
     if (validate_options() && move_to_project_directory())
     {
       configuration.version(LIBCRAILS_VERSION_STR);
@@ -85,7 +94,7 @@ int New::run()
       vars["formats"] = &formats;
       vars["modules"] = &modules;
       use_actions(configuration_type == "full" || configuration_type == "webservice");
-      use_cookies(configuration_type == "full");
+      use_cookies(Crails::cast<string>(vars, "session_store", "NoCookieStore") != "NoCookieStore");
       prepare_renderers();
       prepare_request_pipeline();
       modules = configuration.modules();

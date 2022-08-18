@@ -26,6 +26,7 @@ public:
   void                   modules(const std::list<std::string>&);
   void                   add_module(const std::string&);
   void                   remove_module(const std::string&);
+  bool                   has_module(const std::string&) const;
 
   std::list<std::string> renderers() const;
   void                   renderers(const std::list<std::string>&);

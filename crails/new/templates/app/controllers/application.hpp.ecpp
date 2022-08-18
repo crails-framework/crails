@@ -1,0 +1,17 @@
+#ifndef  APPLICATION_CONTROLLER_HPP
+# define APPLICATION_CONTROLLER_HPP
+
+# include <crails/controller.hpp>
+
+class ApplicatonController : public Crails::Controller
+{
+protected:
+  ApplicationController(Crails::Context& context) : Crails::Controller(context)
+  {
+  }
+
+  // Uncomment the following line to disable CSRF protection (useful for webservices)
+  //virtual bool must_protect_from_forgery() const override { return false; }
+};
+
+#endif

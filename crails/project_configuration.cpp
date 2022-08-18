@@ -106,6 +106,13 @@ void ProjectConfiguration::remove_module(const std::string& value)
   }
 }
 
+bool ProjectConfiguration::has_module(const std::string& name) const
+{
+  auto list = modules();
+  return find(list.begin(), list.end(), name) != list.end();
+}
+
+
 list<string> ProjectConfiguration::renderers() const
 {
   auto it = variables.find("renderers");

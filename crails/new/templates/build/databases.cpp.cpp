@@ -11,7 +11,7 @@ public:
 
   std::string render()
   {
-ecpp_stream << "#include <crails/databases.hpp>\n\nusing namespace Crails;\n\nconst Databases::Settings Databases::settings = {\n  {\n    \"production\", {\n    }\n  },\n\n  {\n    \"development\", {\n    }\n  },\n\n  {\n    \"test\", {\n    }\n  }\n};\n";
+ecpp_stream << "#include <crails/databases.hpp>\n\nusing namespace Crails;\n\nconst Databases::Settings Databases::settings = {\n  {\n    Production, {\n    }\n  },\n\n  {\n    Development, {\n    }\n  },\n\n  {\n    Test, {\n    }\n  }\n};\n";
     return ecpp_stream.str();
   }
 private:

@@ -24,6 +24,10 @@ $ECPP \
   -i $PROJECT_TPL/app/views/exception.html.ecpp \
   >  $PROJECT_TPL/build/exception.html.cpp
 $ECPP \
+  -n ProjectAppControllersApplicationHpp \
+  -i $PROJECT_TPL/app/controllers/application.hpp.ecpp \
+  >  $PROJECT_TPL/build/application.hpp.cpp
+$ECPP \
   -n ProjectConfigEnvironmentCpp \
   -i $PROJECT_TPL/config/environment.cpp.ecpp \
   >  $PROJECT_TPL/build/environment.cpp.cpp
