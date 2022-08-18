@@ -88,6 +88,7 @@ int New::run()
       use_cookies(configuration_type == "full");
       prepare_renderers();
       prepare_request_pipeline();
+      modules = configuration.modules();
       return generate_project_structure();
     }
   }
@@ -164,7 +165,6 @@ void New::prepare_request_pipeline()
     project_parsers.push_back({"xml_parser", "RequestXmlParser"});
     configuration.add_module("libcrails-xml-parser");
   }
-  configuration.add_module("libcrails-tests");
 }
 
 bool New::move_to_project_directory()

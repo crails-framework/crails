@@ -11,7 +11,7 @@ public:
 
   std::string render()
   {
-ecpp_stream << "#include <crails/router.hpp>\n\nvoid Crails::Router::initialize(void)\n{\n  // Append routes here\n}\n";
+ecpp_stream << "#include <crails/router.hpp>\n\nvoid Crails::Router::initialize(void)\n{\n  // Append routes here (do not remove this line)\n}\n";
     return ecpp_stream.str();
   }
 private:

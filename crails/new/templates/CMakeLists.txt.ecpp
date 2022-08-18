@@ -12,38 +12,37 @@ cmake_minimum_required(VERSION 3.0)
 
 project(<%= project_name %>)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic ")
+set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
 
 find_package(PkgConfig)
 find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
-pkg_check_modules(CRAILS REQUIRED<% for (auto module_ : modules) do %> <%= module_ %><=<%= crails_version %><% end %>)
+pkg_check_modules(CRAILS REQUIRED<% for (auto module_ : modules) do %> <%= module_ %>>=<%= crails_version %><% end %>)
+pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests)
 
 include_directories(/usr/local/include ${Boost_INCLUDE_DIRS} ${CRAILS_INCLUDE_DIRS} .)
 
 file(GLOB_RECURSE server_files app/main.cpp)
-file(GLOB_RECURSE tests_files  spec/*.cpp)
 file(GLOB_RECURSE crails_app
-  app/controllers/*.cpp
-  app/controllers/*.cxx
-  app/models/*.cpp
-  app/models/*.cxx
-  app/views/*.cpp
-  app/views/*.cxx
   app/routes.cpp
-  config/*.cpp
-  lib/*.cpp
-  lib/*.cxx
-  modules/*.cpp
-  modules/*.cxx)
+  app/controllers/*.cpp app/controllers/*.cxx
+  app/models/*.cpp      app/models/*.cxx
+  app/views/*.cpp       app/views/*.cxx
+  modules/*.cpp         modules/*.cxx
+  config/*.cpp          config/*.cxx
+  lib/*.cpp             lib/*.cxx)
 
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})
-add_executable(tests  ${tests_files})
 
-set(dependencies libcrails
+set(dependencies crails-app
                  ${CRAILS_LINK_LIBRARIES}
                  ${Boost_LIBRARIES}
                  pthread dl crypto ssl)
 
 target_link_libraries(server ${dependencies})
-target_link_libraries(tests  libcrails-tests ${dependencies} ${tests_dependencies})
+
+if (CRAILS_TESTS_FOUND)
+  file(GLOB_RECURSE tests_files  spec/*.cpp)
+  add_executable(tests ${tests_files})
+  target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${dependencies} ${tests_dependencies})
+endif()
