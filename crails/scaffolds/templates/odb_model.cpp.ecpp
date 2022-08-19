@@ -1,0 +1,12 @@
+std::string @filename;
+std::string @classname;
+bool        @odb_at_once;
+// END LINKING
+#include "<%= filename %>.hpp"
+<% if (odb_at_once) do %>
+#include "lib/application-odb.hxx"
+<% end else do %>
+#include "<%= filename %>-odb.hxx"
+<% end %>
+
+odb_instantiable_impl(<%= classname %>)

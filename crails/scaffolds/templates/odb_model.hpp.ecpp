@@ -1,0 +1,36 @@
+#include <algorithm>
+std::string @classname;
+std::string @pointer_type = "std::shared_ptr";
+std::map<std::string, std::string>& @properties;
+std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float"};
+// END LINKING
+#pragma once
+#include <crails/odb/model.hpp>
+
+#pragma db object pointer(<%= pointer_type %>)
+class <%= classname %> : public Crails::Odb::Model
+{
+  odb_instantiable()
+public:
+  #pragma db view pointer(<%= pointer_type %>) object(<%= classname %>)
+  struct Count
+  {
+    #pragma db column("count(" + <%= classname %>::id + ")")
+    size_t value;
+  };
+
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (std::find(scalar_types.begin(), scalar_types.end(), it->second) != scalar_types.end()) do %>
+  void set_<%= it->first %>(<%= it->second %> value) { this-><%= it->first %> = value; }
+  <%= it->second %> get_<%= it->first %>() const { return <%= it->first %>; }
+<%   end else do %>
+  void set_<%= it->first %>(const <%= it->second %>& value) { this-><%= it->first %> = value; }
+  const <%= it->second %>& get_<%= it->first %>() const { return <%= it->first %>; }
+<%   end %>
+<% end %>
+
+private:
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+  <%= it->second %> <%= it->first %>;
+<% end %>
+};

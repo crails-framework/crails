@@ -1,16 +1,17 @@
 #pragma once
+#include "scaffold_model.hpp"
 #include "../file_renderer.hpp"
 #include "../file_editor.hpp"
 #include <crails/utils/string.hpp>
 
-class ControllerScaffold
+class ControllerScaffold : public ScaffoldModel
 {
   FileRenderer renderer;
   std::string classname;
   std::string path_name;
   std::string target_folder = "app/controllers";
 public:
-  void options_description(boost::program_options::options_description& desc) const
+  void options_description(boost::program_options::options_description& desc) const override
   {
     desc.add_options()
       ("name,n",   boost::program_options::value<std::string>(), "classname")
@@ -18,7 +19,7 @@ public:
       ("mode,m",   boost::program_options::value<std::string>(), "generates methods and routes `crud` or `resource`");
   }
 
-  int create(boost::program_options::variables_map& options)
+  int create(boost::program_options::variables_map& options) override
   {
     if (!options.count("name"))
     {

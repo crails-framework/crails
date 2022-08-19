@@ -4,7 +4,7 @@
 using namespace std;
 using namespace Crails;
 
-bool CommandIndex::initialize(int argc, char ** argv)
+bool CommandIndex::initialize(int argc, const char ** argv)
 {
   if (argc > 1)
   {
@@ -24,7 +24,7 @@ bool CommandIndex::initialize(int argc, char ** argv)
   return false;
 }
 
-void CommandIndex::list_commands(int argc, char **argv)
+void CommandIndex::list_commands(int argc, const char **argv)
 {
   size_t max_length = 0;
 

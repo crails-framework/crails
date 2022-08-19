@@ -16,6 +16,9 @@ public:
   void initialize();
   void save();
 
+  std::string variable(const std::string& name) const { return variables.find(name) != variables.end() ? variables.at(name) : ""; }
+  void        variable(const std::string& name, const std::string& value) { variables[name] = value; }
+
   std::string version() const;
   void        version(const std::string&);
 

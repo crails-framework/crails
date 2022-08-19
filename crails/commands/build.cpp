@@ -4,6 +4,8 @@
 #include <boost/filesystem.hpp>
 #include <crails/utils/string.hpp>
 
+#include "odb.hpp"
+
 using namespace std;
 
 struct WithPath
@@ -22,15 +24,16 @@ struct WithPath
 
 bool BuildManager::prebuild_renderers()
 {
-  std::cout << "prebuild renderers " << configuration.renderers().size() << std::endl;
   for (const auto& renderer : configuration.renderers())
   {
     stringstream command;
 
+    cout << "[renderers] generate " << renderer << "..." << endl;
     command << configuration.crails_bin_path() + "/crails"
       << " templates build -r " << renderer << " -i app/views "
       << " -t Crails::" << Crails::uppercase(renderer) << "Template"
-      << " -z crails/" << renderer << "_template.hpp";
+      << " -z crails/" << renderer << "_template.hpp"
+      << " -p \\." << renderer << "$";
     boost::process::child process(command.str());
     process.wait();
     if (process.exit_code() != 0)
@@ -45,6 +48,7 @@ bool BuildManager::generate_assets()
   {
     std::stringstream command;
 
+    cout << "[assets] generate assets..." << endl;
     command << configuration.crails_bin_path() + "/crails-assets"
       << "-i " << Crails::join(configuration.asset_roots(), ',')
       << "-o public";
@@ -52,6 +56,24 @@ bool BuildManager::generate_assets()
     process.wait();
     if (process.exit_code() != 0)
       return false;
+  }
+  return true;
+}
+
+bool BuildManager::generate_database()
+{
+  if (configuration.has_module("libcrails-odb"))
+  {
+    BuildOdb odb_builder;
+    std::vector<std::string> argv_array{"--at-once","1","--input-dirs","app/models","--output-dir","lib/odb"};
+    const char* argv[argv_array.size() + 1];
+
+    std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
+    argv[argv_array.size()] = 0;
+    for (int i = 0 ; i < argv_array.size() ; ++i)
+      argv[i] = argv_array[i].c_str();
+    odb_builder.initialize(argv_array.size(), argv);
+    return odb_builder.run() == 0;
   }
   return true;
 }
@@ -77,6 +99,7 @@ int BuildManager::run()
   configuration.initialize();
   if (!prebuild_renderers()) return false;
   if (!generate_assets()) return false;
+  if (!generate_database()) return false;
   if (configuration.toolchain() == "cmake")
     return build_with_cmake() ? 0 : -1;
   else

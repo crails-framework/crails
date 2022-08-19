@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 {
   Index index;
 
-  if (index.initialize(argc, argv))
+  if (index.initialize(argc, const_cast<const char**>(argv)))
     return index.run();
   return -1;
 }

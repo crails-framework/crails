@@ -89,3 +89,11 @@ $ECPP \
   -n ScaffoldsControllerHpp \
   -i $SCAFFOLDS_TPL/controller.hpp.ecpp \
   >  $SCAFFOLDS_TPL/build/controller.hpp.cpp
+$ECPP \
+  -n ScaffoldsOdbModelCpp \
+  -i $SCAFFOLDS_TPL/odb_model.cpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/odb_model.cpp.cpp
+$ECPP \
+  -n ScaffoldsOdbModelHpp \
+  -i $SCAFFOLDS_TPL/odb_model.hpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/odb_model.hpp.cpp

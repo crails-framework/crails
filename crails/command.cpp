@@ -4,7 +4,7 @@
 using namespace std;
 using namespace Crails;
 
-bool Command::initialize(int argc, char** argv)
+bool Command::initialize(int argc, const char** argv)
 {
   boost::program_options::options_description desc("Options");
 

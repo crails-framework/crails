@@ -12,10 +12,10 @@ class CommandIndex : public Crails::Command
   CommandCtors             commands;
   std::shared_ptr<Command> command;
 public:
-  bool                     initialize(int argc, char ** argv) override;
+  bool                     initialize(int argc, const char ** argv) override;
   int                      run() override;
   void                     add_command(std::string_view name, CommandCtor ctor) { commands.emplace(name, ctor); }
 private:
-  void                     list_commands(int argc, char **argv);
+  void                     list_commands(int argc, const char **argv);
   std::shared_ptr<Command> find_command(std::string_view);
 };
