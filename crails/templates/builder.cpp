@@ -5,6 +5,7 @@
 #include <regex>
 #include <crails/render_file.hpp>
 #include "../file_renderer.hpp"
+#include "../file_collector.hpp"
 #include <crails/utils/string.hpp>
 
 using namespace std;
@@ -53,44 +54,23 @@ bool TemplateBuilder::validate_options()
 
 void TemplateBuilder::collect_files()
 {
-  boost::filesystem::path root_path(options["input"].as<string>());
+  FileCollector collector(options["input"].as<string>(), pattern);
 
-  collect_files(boost::filesystem::canonical(root_path));
-}
-
-void TemplateBuilder::collect_files(boost::filesystem::path directory)
-{
-  boost::filesystem::path root_path(options["input"].as<string>());
-  boost::filesystem::recursive_directory_iterator dir(directory);
-  std::regex matcher(pattern);
-  unsigned int root_path_length;
-
-  root_path = boost::filesystem::canonical(root_path);
-  root_path_length = root_path.string().length();
-  for (auto& entry : dir)
+  collector.collect_files([this, collector](const boost::filesystem::path& path)
   {
-    std::string filepath = boost::filesystem::canonical(entry.path()).string();
-    std::string filename = entry.path().filename().string();
-    std::string alias, classname;
-    auto match = std::sregex_iterator(filename.begin(), filename.end(), matcher);
+    string filepath      = boost::filesystem::canonical(path).string();
+    string relative_path = collector.relative_path_for(path);
+    string alias         = collector.name_for(path);
+    string classname;
 
-    if (boost::filesystem::is_directory(entry))
-    {
-      collect_files(entry.path());
-      continue ;
-    }
-    if (match == std::sregex_iterator())
-      continue ;
-    alias = filepath.substr(root_path_length + 1);
     for (unsigned int i = 0 ; i < alias.length() ; ++i)
     {
       if (alias[i] == '/' || alias[i] == '.') classname += '_';
       else classname += alias[i];
     }
-    alias = alias.substr(0, alias.length() - match->length());
     classname = Crails::uppercase(classname);
     targets.emplace(filepath, Target{alias, classname, Crails::underscore(classname)});
-  }
+  });
 }
 
 string TemplateBuilder::command_for_target(const pair<string, Target>& target) const

@@ -14,7 +14,7 @@ public:
 
   std::string render()
   {
-ecpp_stream << "#include <crails/renderer.hpp>";
+ecpp_stream << "#include <crails/renderer.hpp>\n";
  for (auto renderer : renderers){
   ecpp_stream << "" << ( "#include <crails/renderers/" + renderer.first + ".hpp>\n" );
   ecpp_stream << "";

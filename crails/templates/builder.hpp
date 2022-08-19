@@ -21,7 +21,6 @@ public:
   std::string_view description() const override { return "compile templates to C++ for a given renderer"; }
   void             options_description(boost::program_options::options_description& desc) const override;
   void             collect_files();
-  void             collect_files(boost::filesystem::path directory);
   bool             validate_options();
   bool             generate_templates();
   bool             generate_renderer_ctor();
