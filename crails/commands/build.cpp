@@ -65,7 +65,7 @@ bool BuildManager::generate_database()
   if (configuration.has_module("libcrails-odb"))
   {
     BuildOdb odb_builder;
-    std::vector<std::string> argv_array{"--at-once","1","--input-dirs","app/models","--output-dir","lib/odb"};
+    std::vector<std::string> argv_array{"--input-dirs","app/models","--output-dir","lib/odb"};
     const char* argv[argv_array.size() + 1];
 
     std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
@@ -96,7 +96,6 @@ bool BuildManager::build_with_cmake()
 
 int BuildManager::run()
 {
-  configuration.initialize();
   if (!prebuild_renderers()) return false;
   if (!generate_assets()) return false;
   if (!generate_database()) return false;

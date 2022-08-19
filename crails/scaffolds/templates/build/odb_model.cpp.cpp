@@ -17,9 +17,9 @@ public:
 ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << ".hpp\"";
  if (odb_at_once){
-  ecpp_stream << "\n#include \"lib/application-odb.hxx\"";
+  ecpp_stream << "\n#include \"lib/odb/application-odb.hxx\"";
  }else{
-  ecpp_stream << "\n#include \"" << ( filename );
+  ecpp_stream << "\n#include \"lib/odb/" << ( filename );
   ecpp_stream << "-odb.hxx\"";
  };
   ecpp_stream << "\n\nodb_instantiable_impl(" << ( classname );

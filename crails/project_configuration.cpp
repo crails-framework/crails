@@ -23,8 +23,8 @@ void ProjectConfiguration::initialize()
   {
     auto parts = Crails::split(configuration_line, ':');
 
-    if (parts.size() == 2)
-      variables.emplace(*parts.begin(), *parts.rbegin());
+    if (parts.size() >= 2)
+      variables.emplace(*parts.begin(), Crails::join(++parts.begin(), parts.end(), ':'));
   }
 }
 

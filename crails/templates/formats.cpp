@@ -12,7 +12,6 @@ void TemplateFormatsManager::options_description(boost::program_options::options
 
 int TemplateFormatsManager::run()
 {
-  configuration.initialize();
   if (!options.count("add") && !options.count("remove"))
   {
     cout << Crails::join(configuration.renderers(), ',') << endl;

@@ -17,5 +17,7 @@ bool Command::initialize(int argc, const char** argv)
     std::cout << "usage: " << argv[0] << " [options]" << std::endl << desc;
     return false;
   }
+  if (with_configuration)
+    configuration.initialize();
   return true;
 }

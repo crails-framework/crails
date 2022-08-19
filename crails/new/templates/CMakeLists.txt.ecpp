@@ -4,6 +4,7 @@
 std::string @crails_version;
 std::string @project_name;
 std::string @configuration_type = "full";
+std::string @cpp_version = "c++17";
 std::list<std::string>& @formats;
 std::list<std::string>& @modules;
 
@@ -12,7 +13,7 @@ cmake_minimum_required(VERSION 3.0)
 
 project(<%= project_name %>)
 
-set(CMAKE_CXX_FLAGS "-std=c++17 -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
+set(CMAKE_CXX_FLAGS "-std=<%= cpp_version %> -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
 
 find_package(PkgConfig)
 find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
@@ -38,6 +39,7 @@ set(dependencies crails-app
                  ${CRAILS_LINK_LIBRARIES}
                  ${Boost_LIBRARIES}
                  pthread dl crypto ssl)
+# Custom dependencies (do not modify this line)
 
 target_link_libraries(server ${dependencies})
 

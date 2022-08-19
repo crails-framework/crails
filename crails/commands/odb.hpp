@@ -18,11 +18,15 @@ public:
   void             options_description(boost::program_options::options_description&) const override;
 
 private:
+  bool        compile_models_at_once(const FileList& files);
+  bool        compile_models_one_by_one(const FileList& files);
   bool        compile_models(const FileList& files);
   bool        generate_schema(const FileList& files);
   FileList    collect_files();
   std::string odb_command();
   std::string hxx_prologue();
+
+  bool at_once_fix_include_paths(const FileList& files) const;
 
 private:
   std::string              odb_compiler = "odb";
@@ -32,8 +36,8 @@ private:
   std::list<std::string>   backends;
   std::string              hxx_prologue_, cxx_prologue;
   std::string              default_pointer;
-  std::string              input_name;
+  std::string              input_name = "application";
   std::string              table_prefix;
   bool                     use_session = true;
-  bool                     at_once = false;
+  bool                     at_once = true;
 };

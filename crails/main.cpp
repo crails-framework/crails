@@ -8,6 +8,7 @@
 #include "commands/new.hpp"
 #include "commands/scaffold.hpp"
 #include "commands/build.hpp"
+#include "commands/modules.hpp"
 #include "templates/index.hpp"
 #include <crails/_libcrails_placeholder.hpp>
 
@@ -22,6 +23,7 @@ public:
     add_command("templates", []() { return make_shared<TemplatesIndex>(); });
     add_command("build",     []() { return make_shared<BuildManager>(); });
     add_command("scaffold",  []() { return make_shared<Scaffold>(); });
+    add_command("modules",   []() { return make_shared<ModuleManager>(); });
     add_command("new",       []() { return make_shared<New>(); });
   }
 };

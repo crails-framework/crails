@@ -28,7 +28,6 @@ void TemplateBuilder::options_description(boost::program_options::options_descri
 
 int TemplateBuilder::run()
 {
-  configuration.initialize();
   if (validate_options() && generate_templates())
     return generate_renderer_ctor() ? 0 : -1;
   return -1;

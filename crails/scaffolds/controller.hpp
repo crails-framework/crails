@@ -52,7 +52,7 @@ public:
   {
     CppFileEditor router("app/routes.cpp");
 
-    if (router.load_file() && router.use_symbol("Append routes here (do not remove this line)"))
+    if (router.load_file() && router.use_symbol("Append routes here \\(do not remove this line\\)"))
     {
       if (options["mode"].as<std::string>() == "crud")
         router.insert("  crud_actions(" + path_name + ", " + classname + ");\n");

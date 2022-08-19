@@ -20,5 +20,6 @@ namespace Crails
   protected:
     boost::program_options::variables_map options;
     ProjectConfiguration                  configuration;
+    bool with_configuration = true;
   };
 }

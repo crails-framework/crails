@@ -28,3 +28,17 @@ public:
 
   void add_include(const std::string& path) { contents.insert(0, "#include \"" + path + "\"\n"); }
 };
+
+class ProjectConfiguration;
+class CMakeFileEditor : public CrailsFileEditor
+{
+public:
+  CMakeFileEditor(ProjectConfiguration&);
+
+  std::string module_config_line() const;
+  void update_modules();
+  void add_dependency(const std::string& name);
+
+private:
+  ProjectConfiguration& configuration;
+};

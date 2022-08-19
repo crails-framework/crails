@@ -26,6 +26,8 @@ declare_renderer(scaffolds_controller_cpp)
 declare_renderer(scaffolds_controller_hpp)
 declare_renderer(scaffolds_odb_model_cpp)
 declare_renderer(scaffolds_odb_model_hpp)
+declare_renderer(odb_hpp)
+declare_renderer(odb_cpp)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -51,4 +53,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/controller.hpp", scaffolds_controller_hpp);
   add_renderer("scaffolds/odb_model.cpp", scaffolds_odb_model_cpp);
   add_renderer("scaffolds/odb_model.hpp", scaffolds_odb_model_hpp);
+
+  add_renderer("config/odb.hpp", odb_hpp);
+  add_renderer("config/odb.cpp", odb_cpp);
 }

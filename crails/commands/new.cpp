@@ -9,6 +9,7 @@ using namespace std;
 
 New::New() : vars(renderer.vars)
 {
+  with_configuration = false;
   vars["crails_version"] = string(LIBCRAILS_VERSION_STR);
   vars["renderers"] = &project_renderers;
   vars["parsers"]   = &project_parsers;
@@ -89,11 +90,13 @@ int New::run()
       configuration.toolchain(build_system);
       configuration.asset_roots({"app/assets"});
       configuration.add_module("libcrails");
+      configuration.variable("std", "c++17");
       vars["project_name"] = project_name;
       vars["crails_version"] = configuration.version();
       vars["configuration_type"] = configuration_type;
       vars["formats"] = &formats;
       vars["modules"] = &modules;
+      vars["cpp_version"] = configuration.variable("std");
       use_actions(configuration_type == "full" || configuration_type == "webservice");
       use_cookies(Crails::cast<string>(vars, "session_store", "NoCookieStore") != "NoCookieStore");
       prepare_renderers();

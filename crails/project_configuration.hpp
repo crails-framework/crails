@@ -9,7 +9,6 @@ class ProjectConfiguration
 public:
   ProjectConfiguration();
 
-  static void        create();
   static std::string project_directory();
   static void        move_to_project_directory();
 

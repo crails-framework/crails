@@ -1,18 +1,17 @@
 #include <algorithm>
 std::string @classname;
-std::string @pointer_type = "std::shared_ptr";
 std::map<std::string, std::string>& @properties;
 std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float"};
 // END LINKING
 #pragma once
 #include <crails/odb/model.hpp>
 
-#pragma db object pointer(<%= pointer_type %>)
+#pragma db object
 class <%= classname %> : public Crails::Odb::Model
 {
   odb_instantiable()
 public:
-  #pragma db view pointer(<%= pointer_type %>) object(<%= classname %>)
+  #pragma db view object(<%= classname %>)
   struct Count
   {
     #pragma db column("count(" + <%= classname %>::id + ")")
