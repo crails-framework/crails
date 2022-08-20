@@ -39,3 +39,8 @@ void CMakeFileEditor::add_dependency(const std::string& name)
   use_symbol("Custom dependencies \\(do not modify this line\\)");
   insert(stream.str());
 }
+
+void CMakeFileEditor::add_task(const std::string& name)
+{
+  contents += "\nadd_subdirectory(tasks/" + name + ')';
+}

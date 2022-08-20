@@ -15,7 +15,7 @@ class TemplateBuilder : public Crails::Command
   std::string renderer;
   std::string pattern = "\\.ecpp$";
   std::string output_directory = "lib/renderers";
-  Targets     targets;
+  Targets     targets, all_targets;
 public:
   int              run() override;
   std::string_view description() const override { return "compile templates to C++ for a given renderer"; }

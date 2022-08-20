@@ -3,19 +3,27 @@ using namespace std;
 string @classname;
 string @parent_class      = "ApplicationController";
 string @parent_header     = "app/controllers/application.hpp";
+string @model_class       = "";
+string @model_header      = "";
 bool   @resource_scaffold = false;
 bool   @crud_scaffold     = false;
 // END LINKING
 #pragma once
 #include "<%= parent_header %>"
+<% if (model_class.length() > 0) do %>
+#include "<%= model_header %>"
+#include <crails/odb/controller.hpp>
+
+class <%= model_class %>;
+<% end %>
 
 class <%= classname %> : public <%= parent_class %>
 {
 public:
   <%= classname %>(Crails::Context&);
 
-  void initialize();
-  void finalize();
+  void initialize() override;
+  void finalize() override;
 <% if (resource_scaffold || crud_scaffold) do -%>
   void index();
   void show();
@@ -27,4 +35,14 @@ public:
   void edit();
 <% end -%>
 <% end -%>
+
+protected:
+<% if (model_class.length() > 0) do %>
+  std::shared_ptr<<%= model_class %>> find_model(Crails::Odb::id_type id);
+  void require_model(Crails::Odb::id_type id);
+  void find_list();
+
+  std::shared_ptr<<%= model_class %>> model;
+  std::vector<<%= model_class %>> model_list;
+<% end %>
 };

@@ -21,7 +21,7 @@ void ProjectConfiguration::initialize()
   configuration_lines = Crails::split(configuration_contents, '\n');
   for (auto configuration_line : configuration_lines)
   {
-    auto parts = Crails::split(configuration_line, ':');
+    auto parts = Crails::split(configuration_line, ':', true);
 
     if (parts.size() >= 2)
       variables.emplace(*parts.begin(), Crails::join(++parts.begin(), parts.end(), ':'));

@@ -44,14 +44,14 @@ bool BuildManager::prebuild_renderers()
 
 bool BuildManager::generate_assets()
 {
-  if (boost::filesystem::exists(configuration.crails_bin_path() + "crails-assets"))
+  if (boost::filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
   {
     std::stringstream command;
 
     cout << "[assets] generate assets..." << endl;
     command << configuration.crails_bin_path() + "/crails-assets"
-      << "-i " << Crails::join(configuration.asset_roots(), ',')
-      << "-o public";
+      << " -i " << Crails::join(configuration.asset_roots(), ',')
+      << " -o public";
     boost::process::child process(command.str());
     process.wait();
     if (process.exit_code() != 0)

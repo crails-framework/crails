@@ -23,13 +23,15 @@ private:
   bool        compile_models(const FileList& files);
   bool        generate_schema(const FileList& files);
   FileList    collect_files();
-  std::string odb_command();
+  std::string odb_command(const std::string& output_dir = "");
   std::string hxx_prologue();
+  void        apply_new_version();
 
   bool at_once_fix_include_paths(const FileList& files) const;
 
 private:
   std::string              odb_compiler = "odb";
+  std::string              temporary_dir;
   std::string              output_dir;
   std::list<std::string>   input_dirs;
   std::list<std::string>   custom_includes;

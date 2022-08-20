@@ -25,8 +25,11 @@ int OdbModule::OdbInstaller::run()
     backends = Crails::split(options["backends"].as<string>(), ',');
   if (!check_backends_validity(backends))
     return -1;
+  renderer.vars["task_name"] = string("odb_migrate");
   renderer.generate_file("config/odb.hpp");
   renderer.generate_file("config/odb.cpp");
+  renderer.generate_file("tasks/odb_migrate/main.cpp");
+  renderer.generate_file("scaffolds/task/CMakeLists.txt", "tasks/odb_migrate/CMakeLists.txt");
   configuration.remove_module("libcrails-databases"); // must be included after libcrails-odb
   configuration.add_module("libcrails-odb");
   configuration.add_module("libcrails-databases");
@@ -39,6 +42,7 @@ int OdbModule::OdbInstaller::run()
   cmakefile.add_dependency("odb");
   for (const string& backend : backends)
     cmakefile.add_dependency("odb-" + backend);
+  cmakefile.add_task("odb_migrate");
   cmakefile.save_file();
   return 0;
 }

@@ -1,0 +1,47 @@
+#include <crails/utils/string.hpp>
+std::string @classname;
+std::string @resource_name = Crails::underscore(classname);
+std::string @header;
+std::map<std::string, std::string>& @properties;
+std::string @name_property = "name";
+bool has_name = properties.find(name_property) != properties.end();
+// END LINKING
+#include "<%= header %>"
+#include <boost/lexical_cast.hpp>
+
+using namespace std;
+
+vector<<%= classname %>>& @models;
+std::string route = "<%= resource_name %>";
+// END LINKING
+<h1><%= classname %> index</h1>
+
+<%%= tag("a", {{"href", '/' + route + "/new"}}) yields %>
+  New
+<%% yields-end %>
+
+<table class="table">
+  <thead>
+    <th>ID</th>
+<% if (has_name) do %>
+    <th><%= name_property %></th>
+<% end %>
+    <th></th>
+  </thead>
+  <tbody>
+<%% for (const <%= classname %>& model : models) do %>
+<%%   const string id = boost::lexical_cast<string>(model.get_id()) %>
+    <tr>
+      <td><%%= model.get_id() %></td>
+<% if (has_name) do %>
+      <td><%%= model.get_<%= name_property %>() %></td>
+<% end %>
+      <td>
+        <%%= tag("a", {{"href", '/' + route + '/' + id}}) yields %>Show<%% yend %>
+        <%%= tag("a", {{"href", '/' + route + '/' + id + "/edit"}}) yields %>Edit<%% yend %>
+      </td>
+    </tr>
+<%% end %>
+  </tbody>
+</table>
+

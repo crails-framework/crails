@@ -9,7 +9,8 @@ public:
     Crails::Template(renderer, vars), 
     filename(Crails::cast<std::string>(vars, "filename")), 
     classname(Crails::cast<std::string>(vars, "classname")), 
-    odb_at_once(Crails::cast<bool>(vars, "odb_at_once"))
+    odb_at_once(Crails::cast<bool>(vars, "odb_at_once")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
   {}
 
   std::string render()
@@ -23,7 +24,15 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "-odb.hxx\"";
  };
   ecpp_stream << "\n\nodb_instantiable_impl(" << ( classname );
-  ecpp_stream << ")\n";
+  ecpp_stream << ")\n\nvoid " << ( classname );
+  ecpp_stream << "::edit(Data params)\n{";
+ for (auto it = properties.begin() ; it != properties.end() ; ++it){
+  ecpp_stream << "\n  if (params[\"" << ( it->first );
+  ecpp_stream << "\"].exists())\n    set_" << ( it->first );
+  ecpp_stream << "(params[\"" << ( it->first );
+  ecpp_stream << "\"]);";
+ };
+  ecpp_stream << "\n}\n";
     return ecpp_stream.str();
   }
 private:
@@ -31,6 +40,7 @@ private:
   std::string filename;
   std::string classname;
   bool odb_at_once;
+  std::map<std::string, std::string>& properties;
 };
 
 std::string render_scaffolds_odb_model_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)

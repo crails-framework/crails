@@ -5,7 +5,7 @@ using namespace std;
 
 FileCollector::FileCollector(const string& input, const string& pattern) : root_path(input), pattern(pattern)
 {
-  root_path_length = root_path.string().length();
+  root_path_length = boost::filesystem::canonical(root_path).string().length();
 }
 
 void FileCollector::collect_files(const boost::filesystem::path& directory, Callback callback) const

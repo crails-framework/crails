@@ -1,0 +1,32 @@
+#include <algorithm>
+#include <crails/utils/string.hpp>
+std::string @classname;
+std::string @resource_name = Crails::underscore(classname);
+std::string @header;
+std::string @route;
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#include "<%= header %>"
+#include <boost/lexical_cast.hpp>
+
+using namespace std;
+
+<%= classname %>& @model;
+string method = model.is_persistent() ? "put" : "post";
+string action = "/<%= route %>";
+// END LINKING
+<%% if (model.is_persistent()) { action += '/' + boost::lexical_cast<string>(model.get_id()); } -%>
+<%%= form({{"method",method}, {"action",action}}) yields %>
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+  <div class="form-group">
+    <%%= tag("label", {{"for","<%= resource_name %>[<%= it->first %>]"}}) yields %><%= it->first %><%% yields-end %>
+    <%%= tag("input", {
+          {"class","form-control"},
+          {"type","text"},
+          {"name","<%= resource_name %>[<%= it->first %>]"},
+          {"value",boost::lexical_cast<string>(model.get_<%= it->first %>())}}
+        ) %>
+  </div>
+<% end %>
+  <button type="submit" class="btn btn-primary">Save</button>
+<%% yields-end %>

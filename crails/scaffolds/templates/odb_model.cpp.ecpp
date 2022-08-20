@@ -1,6 +1,7 @@
 std::string @filename;
 std::string @classname;
 bool        @odb_at_once;
+std::map<std::string, std::string>& @properties;
 // END LINKING
 #include "<%= filename %>.hpp"
 <% if (odb_at_once) do %>
@@ -10,3 +11,11 @@ bool        @odb_at_once;
 <% end %>
 
 odb_instantiable_impl(<%= classname %>)
+
+void <%= classname %>::edit(Data params)
+{
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+  if (params["<%= it->first %>"].exists())
+    set_<%= it->first %>(params["<%= it->first %>"]);
+<% end %>
+}

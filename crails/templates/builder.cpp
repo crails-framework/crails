@@ -70,6 +70,7 @@ void TemplateBuilder::collect_files()
     classname = Crails::uppercase(classname);
     targets.emplace(filepath, Target{alias, classname, Crails::underscore(classname)});
   });
+  all_targets = targets;
 }
 
 string TemplateBuilder::command_for_target(const pair<string, Target>& target) const
@@ -181,7 +182,7 @@ bool TemplateBuilder::generate_renderer_ctor()
   FileRenderer renderer;
   map<string, string>  target_var;
 
-  for (auto it = targets.begin() ; it != targets.end() ; ++it)
+  for (auto it = all_targets.begin() ; it != all_targets.end() ; ++it)
     target_var.emplace(it->second.alias, Crails::underscore(it->second.classname));
   renderer.should_overwrite = true;
   renderer.vars["renderer_name"] = this->renderer;

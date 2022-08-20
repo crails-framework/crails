@@ -1,0 +1,11 @@
+std::string @classname;
+std::string @header;
+std::string @view_path;
+// END LINKING
+#include "<%= header %>"
+
+<%= classname %> model;
+// END LINKING
+<h1>New <%= classname %></h1>
+
+<%%= partial("<%= view_path %>/form", {{"model", &model}}) %>

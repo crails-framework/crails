@@ -26,8 +26,18 @@ declare_renderer(scaffolds_controller_cpp)
 declare_renderer(scaffolds_controller_hpp)
 declare_renderer(scaffolds_odb_model_cpp)
 declare_renderer(scaffolds_odb_model_hpp)
+declare_renderer(scaffolds_view_index_html)
+declare_renderer(scaffolds_view_show_html)
+declare_renderer(scaffolds_view_new_html)
+declare_renderer(scaffolds_view_edit_html)
+declare_renderer(scaffolds_view_form_html)
+declare_renderer(scaffolds_view_index_json)
+declare_renderer(scaffolds_view_show_json)
+declare_renderer(scaffolds_task_cmakelists_txt)
+declare_renderer(scaffolds_task_main_cpp)
 declare_renderer(odb_hpp)
 declare_renderer(odb_cpp)
+declare_renderer(odb_migrate_cpp)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -53,7 +63,17 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/controller.hpp", scaffolds_controller_hpp);
   add_renderer("scaffolds/odb_model.cpp", scaffolds_odb_model_cpp);
   add_renderer("scaffolds/odb_model.hpp", scaffolds_odb_model_hpp);
+  add_renderer("scaffolds/view_index.html", scaffolds_view_index_html);
+  add_renderer("scaffolds/view_show.html", scaffolds_view_show_html);
+  add_renderer("scaffolds/view_new.html", scaffolds_view_new_html);
+  add_renderer("scaffolds/view_edit.html", scaffolds_view_edit_html);
+  add_renderer("scaffolds/view_form.html", scaffolds_view_form_html);
+  add_renderer("scaffolds/view_index.json", scaffolds_view_index_json);
+  add_renderer("scaffolds/view_show.json", scaffolds_view_show_json);
+  add_renderer("scaffolds/task/CMakeLists.txt", scaffolds_task_cmakelists_txt);
+  add_renderer("scaffolds/task/main.cpp", scaffolds_task_main_cpp);
 
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
+  add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
 }

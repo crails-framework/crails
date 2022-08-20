@@ -3,12 +3,26 @@
 using namespace std;
 
 string @classname;
+string @router_path;
+string @path;
+string @view_path;
 string @parent_class = "ApplicationController";
-string path = Crails::underscore(classname);
+string @model_class       = "";
+string @model_header      = "";
+string @resource_name     = Crails::underscore(model_class);
 bool   @resource_scaffold = false;
 bool   @crud_scaffold     = false;
 // END LINKING
 #include "<%= path %>.hpp"
+#include <crails/params.hpp>
+<% if (model_header.length() > 0) do %>
+#include <crails/odb/to_vector.hpp>
+#include <boost/lexical_cast.hpp>
+#include "lib/odb/application-odb.hxx"
+#include "<%= model_header %>"
+<% end %>
+
+using namespace std;
 
 <%= classname + "::" + classname %>(Crails::Context& context) : <%= parent_class %>(context)
 {
@@ -16,46 +30,94 @@ bool   @crud_scaffold     = false;
 
 void <%= classname %>::initialize()
 {
+  <%= parent_class %>::initialize();
+<% if (model_class.length() > 0) do %>
+  string action_name = get_action_name();
+
+  if (response.sent()) return;
+  if (action_name == "show" || action_name == "edit" || action_name == "update" || action_name == "destroy")
+    require_model(params["id"]);
+<% end %>
 }
 
 void <%= classname %>::finalize()
 {
+  <%= parent_class %>::finalize();
 }
+
+<% if (model_class.length() > 0) do %>
+shared_ptr<<%= model_class %>> <%= classname %>::find_model(Crails::Odb::id_type id)
+{
+  database.find_one(model, odb::query<<%= model_class %>>::id == id);
+  vars["model"] = model.get();
+  return model;
+}
+
+void <%= classname %>::require_model(Crails::Odb::id_type id)
+{
+  if (!model && !find_model(id))
+    respond_with(Crails::HttpStatus::not_found);
+}
+
+void <%= classname %>::find_list()
+{
+  odb::result<<%= model_class %>> results;
+
+  database.find(results);
+  model_list = Crails::Odb::to_vector<<%= model_class %>>(results);
+  vars["models"] = &model_list;
+}
+<% end %>
 
 <% if (resource_scaffold || crud_scaffold) do -%>
 void <%= classname %>::index()
 {
-  render("<%= path %>/index");
+<% if (model_class.length() > 0) do %>
+  find_list();
+<% end %>
+  render("<%= view_path %>/index");
 }
 
 void <%= classname %>::show()
 {
-  render("<%= path %>/show");
+  render("<%= view_path %>/show");
 }
 
 void <%= classname %>::create()
 {
-  render("<%= path %>/show");
+<% if (model_class.length() > 0) do %>
+  <%= model_class %> model;
+  model.edit(params["<%= resource_name %>"]);
+  database.save(model);
+  redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model.get_id()));
+<% end %>
 }
 
 void <%= classname %>::update()
 {
-  render("<%= path %>/show");
+<% if (model_class.length() > 0) do %>
+  model->edit(params["<%= resource_name %>"]);
+  database.save(*model);
+  redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model->get_id()));
+<% end %>
 }
 
 void <%= classname %>::destroy()
 {
+<% if (model_class.length() > 0) do %>
+  database.destroy(*model);
+<% end %>
   redirect_to("<%= path %>");
 }
 <% if (resource_scaffold) do -%>
 void <%= classname %>::new_()
 {
-  render("<%= path %>/new");
+  render("<%= view_path %>/new");
 }
 
 void <%= classname %>::edit()
 {
-  render("<%= path %>/edit");
+  render("<%= view_path %>/edit");
 }
 <% end -%>
 <% end -%>

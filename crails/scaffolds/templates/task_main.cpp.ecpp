@@ -1,0 +1,20 @@
+#include <boost/program_options.hpp>
+#include <iostream>
+
+using namespace std;
+
+int main(int argc, char** argv)
+{
+  boost::program_options::options_description options_description("Options");
+  boost::program_options::variables_map options;
+
+  options_description.add_options()("help,h", "produce help message");
+  boost::program_options::store(
+    boost::program_options::parse_command_line(argc, argv, options_description),
+    options
+  );
+  boost::program_options::notify(options);
+  if (options.count("help"))
+    cout << "usage: " << argv[0] << " [options]" << endl << options_description;
+  return 0;
+}

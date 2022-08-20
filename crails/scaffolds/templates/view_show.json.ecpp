@@ -1,0 +1,12 @@
+#include <algorithm>
+std::string @classname;
+std::string @header;
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#include "<%= header %>"
+
+<%= classname %>& @model;
+// END LINKING
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+json("<%= it->first %>", model.get_<%= it->first %>());
+<% end %>

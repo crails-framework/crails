@@ -16,9 +16,9 @@ public:
   void options_description(boost::program_options::options_description& desc) const override
   {
     desc.add_options()
-      ("name,n",       boost::program_options::value<std::string>(), "classname")
-      ("target,t",     boost::program_options::value<std::string>(), "target folder (defaults to `app/controllers`)")
-      ("properties,p", boost::program_options::value<std::vector<std::string>>(), "properties, such as: -p std::string;name \"unsigned int;age\"");
+      ("model,m",    boost::program_options::value<std::string>(), "classname")
+      ("target,t",   boost::program_options::value<std::string>(), "target folder (defaults to `app/controllers`)")
+      ("property,p", boost::program_options::value<std::vector<std::string>>(), "properties, such as: -p std::string-name -p 'unsigned int-age'");
   }
 
   int create(boost::program_options::variables_map& options) override
@@ -26,18 +26,18 @@ public:
     ProjectConfiguration configuration;
 
     configuration.initialize();
-    if (!options.count("name"))
+    if (!options.count("model"))
     {
-      std::cerr << "Option --name required" << std::endl;
+      std::cerr << "Option --model required" << std::endl;
       return -1;
     }
-    classname = options["name"].as<std::string>();
+    classname = options["model"].as<std::string>();
     path_name = Crails::underscore(classname);
-    if (options.count("properties"))
+    if (options.count("property"))
     {
-      for (const std::string& property_decl : options["properties"].as<std::vector<std::string>>())
+      for (const std::string& property_decl : options["property"].as<std::vector<std::string>>())
       {
-        auto parts = Crails::split(property_decl, ';');
+        auto parts = Crails::split(property_decl, '-');
         properties.emplace(*parts.rbegin(), *parts.begin());
       }
     }

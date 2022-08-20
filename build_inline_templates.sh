@@ -97,3 +97,47 @@ $ECPP \
   -n ScaffoldsOdbModelHpp \
   -i $SCAFFOLDS_TPL/odb_model.hpp.ecpp \
   >  $SCAFFOLDS_TPL/build/odb_model.hpp.cpp
+$ECPP \
+  -n ScaffoldsViewIndexHtml \
+  -i $SCAFFOLDS_TPL/view_index.html.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_index.html.cpp
+$ECPP \
+  -n ScaffoldsViewShowHtml \
+  -i $SCAFFOLDS_TPL/view_show.html.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_show.html.cpp
+$ECPP \
+  -n ScaffoldsViewNewHtml \
+  -i $SCAFFOLDS_TPL/view_new.html.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_new.html.cpp
+$ECPP \
+  -n ScaffoldsViewEditHtml \
+  -i $SCAFFOLDS_TPL/view_edit.html.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_edit.html.cpp
+$ECPP \
+  -n ScaffoldsViewFormHtml \
+  -i $SCAFFOLDS_TPL/view_form.html.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_form.html.cpp
+$ECPP \
+  -n ScaffoldsViewIndexJson \
+  -i $SCAFFOLDS_TPL/view_index.json.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_index.json.cpp
+$ECPP \
+  -n ScaffoldsViewShowJson \
+  -i $SCAFFOLDS_TPL/view_show.json.ecpp \
+  >  $SCAFFOLDS_TPL/build/view_show.json.cpp
+$ECPP \
+  -n ScaffoldsTaskCmakelistsTxt \
+  -i $SCAFFOLDS_TPL/task_CMakeLists.txt.ecpp \
+  >  $SCAFFOLDS_TPL/build/task_CMakeLists.txt.cpp
+$ECPP \
+  -n ScaffoldsTaskMainCpp \
+  -i $SCAFFOLDS_TPL/task_main.cpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/task_main.cpp.cpp
+
+##
+## Odb Module
+##
+$ECPP \
+  -n OdbMigrateCpp \
+  -i crails/modules/odb/migrate.cpp.ecpp \
+  >  $PROJECT_TPL/build/odb_migrate.cpp.cpp

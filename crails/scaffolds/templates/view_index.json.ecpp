@@ -1,0 +1,17 @@
+#include <crails/utils/string.hpp>
+
+std::string @classname;
+std::string @resource_name = Crails::underscore(classname);
+std::string @header;
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#include "<%= header %>"
+
+std::vector<<%= classname %>>& @models;
+// END LINKING
+json_array("<%= Crails::pluralize(resource_name) %>", [&](const <<%= classname %>>& model)
+{
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+  json("<%= it->first %>", model.get_<%= it->first %>());
+<% end %>
+});

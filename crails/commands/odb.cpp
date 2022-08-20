@@ -17,10 +17,24 @@ void BuildOdb::options_description(boost::program_options::options_description& 
     ("input-dirs,i",  boost::program_options::value<std::string>(), "input directories, separated by commas");
 }
 
+static bool create_directory(boost::filesystem::path path)
+{
+  boost::system::error_code ec;
+
+  boost::filesystem::create_directories(path, ec);
+  if (ec)
+  {
+    cerr << "Cannot create directory " << path.string() << endl;
+    return false;
+  }
+  return true;
+}
+
 int BuildOdb::run()
 {
   FileList files;
 
+  temporary_dir = ".tmp-odb";
   backends = Crails::split(configuration.variable("odb-backends"), ',');
   at_once = configuration.variable("odb-at-once") == "1";
   default_pointer = configuration.variable("odb-default-pointer");
@@ -33,15 +47,14 @@ int BuildOdb::run()
   files = collect_files();
   if (files.size() > 0)
   {
-    boost::system::error_code ec;
-
-    boost::filesystem::create_directories(output_dir, ec);
-    if (ec)
+    if (create_directory(output_dir)
+     && create_directory(temporary_dir)
+     && compile_models(files))
     {
-      cerr << "Cannot create directory " << output_dir << endl;
-      return -1;
+      apply_new_version();
+      return 0;
     }
-    return compile_models(files) ? 0 : -1;
+    return -1;
   }
   else
     cout << "[crails-odb] Nothing to compile." << endl;
@@ -51,7 +64,7 @@ int BuildOdb::run()
 bool BuildOdb::compile_models(const FileList& files)
 {
   if (at_once)
-    return compile_models_at_once(files);
+    return compile_models_at_once(files) && generate_schema(files);
   return compile_models_one_by_one(files) && generate_schema(files);
 }
 
@@ -60,7 +73,7 @@ bool BuildOdb::compile_models_at_once(const FileList& files)
   boost::filesystem::path project_dir = boost::filesystem::canonical(configuration.project_directory());
   stringstream command;
 
-  command << odb_command() << ' ';
+  command << odb_command(temporary_dir) << ' ';
   for (auto file : files)
     command << boost::filesystem::relative(file, project_dir) << ' ';
   cout << "+ " << command.str() << endl;
@@ -75,9 +88,9 @@ bool BuildOdb::at_once_fix_include_paths(const FileList& files) const
 {
   Crails::RenderFile render_file;
   boost::filesystem::path project_dir = boost::filesystem::canonical(configuration.project_directory());
-  string source_path_base = output_dir + '/' + input_name;
+  string source_path_base = temporary_dir + '/' + input_name;
   vector<string> targets;
-  string source_path = output_dir + '/' + input_name + "-odb.hxx";
+  string source_path = temporary_dir + '/' + input_name + "-odb.hxx";
   string source;
 
   targets.push_back(source_path_base + "-odb.hxx");
@@ -134,7 +147,7 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
   for (auto file : files)
   {
     boost::filesystem::path include_path = boost::filesystem::relative(file, project_dir).parent_path();
-    string command = odb_command()
+    string command = odb_command(temporary_dir)
       + ' ' + "--include-prefix \"" + include_path.string() + '"'
       + ' ' + file.string();
     cout << "+ " << command << endl;
@@ -149,6 +162,20 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
 
 bool BuildOdb::generate_schema(const FileList& files)
 {
+  boost::filesystem::path project_dir = boost::filesystem::canonical(configuration.project_directory());
+  stringstream command;
+  bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
+  string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");
+
+  at_once = true;
+  command << odb_command(schema_output_dir) << ' ' << "--generate-schema-only" << ' ';
+  for (auto file : files)
+    command << boost::filesystem::relative(file, project_dir) << ' ';
+  cout << "+ " << command.str() << endl;
+  boost::process::child odb(command.str());
+  odb.wait();
+  if (odb.exit_code() != 0)
+    return false;
   return true;
 }
 
@@ -179,7 +206,31 @@ BuildOdb::FileList BuildOdb::collect_files()
   return results;
 }
 
-string BuildOdb::odb_command()
+void BuildOdb::apply_new_version()
+{
+  FileCollector collector(temporary_dir, ".*");
+  FileCollector clearer(output_dir, ".*");
+  vector<string> existing_files;
+
+  collector.collect_files([&existing_files, this](const boost::filesystem::path& path)
+  {
+    boost::filesystem::path old_path(output_dir + '/' + path.filename().string());
+    string new_contents, old_contents;
+
+    existing_files.push_back(path.filename().string());
+    Crails::read_file(path.string(), new_contents);
+    Crails::read_file(old_path.string(), old_contents);
+    if (new_contents != old_contents)
+      boost::filesystem::copy(path, old_path);
+  });
+  clearer.collect_files([&existing_files](const boost::filesystem::path& path)
+  {
+    if (std::find(existing_files.begin(), existing_files.end(), path.filename().string()) == existing_files.end())
+      boost::filesystem::remove(path);
+  });
+}
+
+string BuildOdb::odb_command(const string& output_dir)
 {
   stringstream stream;
 
@@ -187,7 +238,6 @@ string BuildOdb::odb_command()
          << " -I."
          << " --std " << configuration.variable("std")
          << " --schema-format separate"
-         << " --output-dir " << output_dir
          << " --hxx-prologue \"" << hxx_prologue() << '"'
          << " --output-dir " << output_dir;
   if (default_pointer.length() > 0)

@@ -38,6 +38,7 @@ public:
   std::string module_config_line() const;
   void update_modules();
   void add_dependency(const std::string& name);
+  void add_task(const std::string& name);
 
 private:
   ProjectConfiguration& configuration;

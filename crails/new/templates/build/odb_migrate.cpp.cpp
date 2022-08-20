@@ -1,0 +1,24 @@
+#include <sstream>
+#include "crails/shared_vars.hpp"
+#include "crails/template.hpp"
+
+class OdbMigrateCpp : public Crails::Template
+{
+public:
+  OdbMigrateCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
+    Crails::Template(renderer, vars)
+  {}
+
+  std::string render()
+  {
+ecpp_stream << "#include <crails/odb/database.hpp>\n#include <odb/schema-catalog.hxx>\n\nusing namespace std;\n\nint help(char* arg_command)\n{\n  cout << \"Usage: \" << arg_command << \" [options] database_key\" << endl;\n  cout << \"Options:\" << endl;\n  cout << \"\t-c: create the database before performing the migration\" << endl;\n  cout << \"\t-d: drop the schema instead of performing a migration\" << endl;\n  return -1;\n}\n\nvoid create_database(const std::string& database_name)\n{\n  const auto& settings = Crails::Databases::settings.at(Crails::environment).at(database_name);\n\n  // The second and third parameters are the user and password for the database,\n  // If left empty, it uses the identity specified in the database settings.\n  // Make sure to use the credentials of a user which can create users and databases.\n  Crails::Odb::Database::create_from_settings(settings, \"\", \"\");\n}\n\nint main(int argc, char** argv)\n{\n  if (argc < 2)\n    return help(argv[0]);\n  else\n  {\n    string database_name = argv[argc - 1];\n    string option        = argc > 2 ? string(argv[1]) : string(\"\");\n\n    if (option == \"-c\")\n      create_database(database_name);\n    {\n      Crails::Odb::Database& database = CRAILS_DATABASE(Crails::Odb, database_name);\n\n      if (option == \"-d\")\n        database.drop();\n      else\n        database.migrate();\n    }\n  }\n  return 0;\n}\n";
+    return ecpp_stream.str();
+  }
+private:
+  std::stringstream ecpp_stream;
+};
+
+std::string render_odb_migrate_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+{
+  return OdbMigrateCpp(renderer, vars).render();
+}

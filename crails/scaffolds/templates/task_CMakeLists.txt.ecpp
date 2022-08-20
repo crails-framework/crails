@@ -1,0 +1,12 @@
+std::string @task_name;
+// END LINKING
+cmake_minimum_required(VERSION 3.0)
+
+file(GLOB task_files
+     *.cpp *.cxx)
+
+add_executable(<%= task_name %> ${task_files})
+
+target_link_libraries(<%= task_name %> ${dependencies})
+
+set_target_properties(<%= task_name %> PROPERTIES OUTPUT_NAME "task")

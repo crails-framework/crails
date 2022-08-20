@@ -1,0 +1,22 @@
+#include <algorithm>
+std::string @classname;
+std::string @header;
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#include "<%= header %>"
+
+<%= classname %>& @model;
+// END LINKING
+<% if (properties.find("name") != properties.end()) do %>
+<h1><%%= model.get_<%= properties.find("name")->first %>() %></h1>
+<h2><%= classname %></h2>
+<% end else do %>
+<h1><%= classname %></h1>
+<% end %>
+
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<div class="attribute-group">
+  <label><%= it->first %>:</label>
+  <%%= model.get_<%= it->first %>() %>
+</div>
+<% end %>

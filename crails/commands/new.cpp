@@ -134,6 +134,8 @@ bool New::validate_options()
 
 void New::prepare_renderers()
 {
+  if (formats.size())
+    configuration.add_module("libcrails-templates");
   if (find(formats.begin(), formats.end(), "html") != formats.end())
   {
     project_renderers.push_back({"html_renderer", "HtmlRenderer"});
@@ -151,6 +153,8 @@ void New::prepare_renderers()
 void New::prepare_request_pipeline()
 {
   project_handlers.push_back({"file", "FileRequestHandler"});
+  project_parsers.push_back({"url_parser", "RequestUrlParser"});
+  configuration.add_module("libcrails-url-parser");
   if (configuration_type == "full" || configuration_type == "webservice")
   {
     project_handlers.push_back({"action", "ActionRequestHandler"});
@@ -159,10 +163,8 @@ void New::prepare_request_pipeline()
   if (configuration_type == "full")
   {
     project_parsers.push_back({"form_parser", "RequestFormParser"});
-    project_parsers.push_back({"url_parser", "RequestUrlParser"});
     project_parsers.push_back({"multipart_parser", "RequestMultipartParser"});
     configuration.add_module("libcrails-form-parser");
-    configuration.add_module("libcrails-url-parser");
     configuration.add_module("libcrails-multipart-parser");
     configuration.add_module("libcrails-cookies");
     configuration.add_module("libcrails-databases");

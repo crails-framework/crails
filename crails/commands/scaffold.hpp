@@ -2,6 +2,9 @@
 #include "../command.hpp"
 #include "../scaffolds/controller.hpp"
 #include "../scaffolds/odb_model.hpp"
+#include "../scaffolds/view.hpp"
+#include "../scaffolds/task.hpp"
+#include "../scaffolds/resource.hpp"
 
 class Scaffold : public Crails::Command
 {
@@ -18,8 +21,14 @@ public:
       type = argv[1];
       if (type == "controller")
         model = new ControllerScaffold;
-      else if (type == "odb-model")
+      else if ((type == "model" || type == "model-odb") && configuration.has_module("libcrails-odb"))
         model = new OdbModelScaffold;
+      else if (type == "view")
+        model = new ViewScaffold;
+      else if (type == "task")
+        model = new TaskScaffold;
+      else if (type == "resource")
+        model = new ResourceScaffold;
       else
       {
         std::cerr << "Unknown scaffold type " << type << std::endl;

@@ -7,7 +7,7 @@ using namespace std;
 bool FileRenderer::overwrite_prompt(string_view template_name, string_view local_path, boost::filesystem::path path)
 {
   char overwrite = 'n';
-  std::cout << "[FILE] `" << path.string() << "` already exists. Overwrite ? [y/n]" << std::endl;
+  std::cout << "[FILE] `" << path.string() << "` already exists. Overwrite ? [y/n] ";
   std::cin >> overwrite;
   if (overwrite == 'n')
     return true;
