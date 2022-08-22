@@ -27,6 +27,7 @@ private:
   void             generate_build2_files();
   bool             generate_project_structure();
   bool             generate_file(std::string_view filepath) { return renderer.generate_file(filepath, filepath); }
+  bool             generate_database(const std::string& backend);
 
   void             prepare_renderers();
   void             prepare_request_pipeline();

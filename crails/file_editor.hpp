@@ -21,9 +21,9 @@ public:
 class CppFileEditor : public CrailsFileEditor
 {
 public:
-  CppFileEditor(const std::string& path) : CrailsFileEditor(path)
+  CppFileEditor(const std::string& path, const std::string& prefix = "//") : CrailsFileEditor(path)
   {
-    prefix_pattern = "//";
+    prefix_pattern = prefix;
   }
 
   void add_include(const std::string& path) { contents.insert(0, "#include \"" + path + "\"\n"); }

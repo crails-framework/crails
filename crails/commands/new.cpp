@@ -1,11 +1,14 @@
 #include "new.hpp"
 #include <boost/filesystem.hpp>
+#include <boost/process.hpp>
 #include <crails/version.hpp>
 #include <crails/utils/string.hpp>
 #include <regex>
 #include <iostream>
 
 using namespace std;
+
+const vector<string> odb_backends{"sqlite","pgsql","mysql","oracle"};
 
 New::New() : vars(renderer.vars)
 {
@@ -23,6 +26,7 @@ void New::options_description(boost::program_options::options_description& desc)
     ("target,o",        boost::program_options::value<string>(), "folder in which the project will be generated (equal to `name` by default)")
     ("toolchain,t",     boost::program_options::value<string>(), "options: cmake or build2 (defaults to cmake)")
     ("configuration,c", boost::program_options::value<string>(), "options: full or webservice (defaults to full)")
+    ("database,d",      boost::program_options::value<string>(), "options: sqlite, pgsql, mysql, oracle")
     ("session-store",   boost::program_options::value<string>(), "options: NoSessionStore, CookieStore")
     ("formats,p",       boost::program_options::value<string>(), "options: html,json,xml")
     ("force,f", "overwrite existing files without asking");
@@ -59,11 +63,22 @@ bool New::generate_project_structure()
     generate_file("app/controllers/application.hpp");
   if (configuration.has_module("libcrails-cookies"))
     generate_file("config/salt.cpp");
-  if (configuration.has_module("libcrails-databases"))
-    generate_file("config/databases.cpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
   configuration.save();
+  return true;
+}
+
+bool New::generate_database(const string& backend)
+{
+  generate_file("config/databases.cpp");
+  if (find(odb_backends.begin(), odb_backends.end(), backend) != odb_backends.end())
+  {
+    boost::process::child command(configuration.crails_bin_path() + "/crails modules odb install -b " + backend);
+
+    command.wait();
+    return command.exit_code() == 0;
+  }
   return true;
 }
 
@@ -91,6 +106,7 @@ int New::run()
       configuration.asset_roots({"app/assets"});
       configuration.add_module("libcrails");
       configuration.variable("std", "c++17");
+      configuration.variable("name", project_name);
       vars["project_name"] = project_name;
       vars["crails_version"] = configuration.version();
       vars["configuration_type"] = configuration_type;
@@ -102,7 +118,12 @@ int New::run()
       prepare_renderers();
       prepare_request_pipeline();
       modules = configuration.modules();
-      return generate_project_structure();
+      if (generate_project_structure())
+      {
+        if (options.count("database"))
+          generate_database(options["database"].as<string>());
+        return 0;
+      }
     }
   }
   return -1;
@@ -128,6 +149,15 @@ bool New::validate_options()
   {
     cerr << "Invalid toolchain `" << build_system << "`. Options are: " << Crails::join(available_toolchains, ',') << '.' << endl;
     return false;
+  }
+  if (options.count("database"))
+  {
+    string database = options["database"].as<string>();
+    if (database != "none" && find(odb_backends.begin(), odb_backends.end(), database) == odb_backends.end())
+    {
+      cerr << "Unknown database type `" << database << "`. Options are: " << Crails::join(odb_backends, ',') << '.' << endl;
+      return false;
+    }
   }
   return true;
 }
@@ -167,7 +197,6 @@ void New::prepare_request_pipeline()
     configuration.add_module("libcrails-form-parser");
     configuration.add_module("libcrails-multipart-parser");
     configuration.add_module("libcrails-cookies");
-    configuration.add_module("libcrails-databases");
     configuration.add_module("libcrails-controllers");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())

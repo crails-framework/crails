@@ -15,6 +15,25 @@ OdbModule::OdbModule()
   add_command("backends", []() { return make_shared<OdbBackendManager>(); });
 }
 
+static void add_database(const ProjectConfiguration& configuration, const std::string& backend)
+{
+  CppFileEditor databases("config/databases.cpp", "");
+  stringstream  desc;
+  const std::map<std::string, unsigned short> ports = {{"mysql", 3306}, {"pgsql", 5432}};
+
+  desc << "{\"odb\",{";
+  desc << "{\"type\",\" << backend << \"}";
+  desc << ",{\"name\", \"" << configuration.variable("name") << "\"}";
+  if (backend != "sqlite")
+    desc << ",{\"host\",\"127.0.0.1\"}";
+  if (ports.find(backend) != ports.end())
+    desc << ",{\"port\", static_cast<unsigned int>(" << ports.at(backend) << ")}";
+  desc << "}}\n";
+  databases.use_symbol("Development, \\{");
+  databases.insert(desc.str());
+  databases.save_file();
+}
+
 int OdbModule::OdbInstaller::run()
 {
   list<string>    backends;
@@ -26,6 +45,8 @@ int OdbModule::OdbInstaller::run()
   if (!check_backends_validity(backends))
     return -1;
   renderer.vars["task_name"] = string("odb_migrate");
+  if (!boost::filesystem::exists("config/databases.cpp"))
+    renderer.generate_file("config/databases.cpp");
   renderer.generate_file("config/odb.hpp");
   renderer.generate_file("config/odb.cpp");
   renderer.generate_file("tasks/odb_migrate/main.cpp");
@@ -44,6 +65,8 @@ int OdbModule::OdbInstaller::run()
     cmakefile.add_dependency("odb-" + backend);
   cmakefile.add_task("odb_migrate");
   cmakefile.save_file();
+  add_database(configuration, *backends.begin());
+  cout << "(i) Don't forget to run `build/tasks/odb_migrate/task -c odb` to create or update your database." << endl;
   return 0;
 }
 
@@ -121,7 +144,6 @@ std::string render_odb_hpp(const Crails::Renderer*, Crails::SharedVars&)
 "#pragma once\n"
 "#pragma db model version(1,1)\n"
 "#pragma db map type(\"INTEGER\\\\[\\\\]\") as(\"TEXT\") to(\"(?)::INTEGER[]\") from(\"(?)::TEXT\")\n";
-
 }
 
 std::string render_odb_cpp(const Crails::Renderer*, Crails::SharedVars&)

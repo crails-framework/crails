@@ -8,6 +8,9 @@ class ApplicationController : public Crails::Controller
 protected:
   ApplicationController(Crails::Context& context) : Crails::Controller(context)
   {
+    // Uncomment the following line to set `layouts/application` as your default layout
+    // Use `crails scaffold layout` to generate a layout using Bootstrap
+    //vars["layout"] = std::string("layouts/application");
   }
 
   // Uncomment the following line to disable CSRF protection (useful for webservices)
