@@ -10,22 +10,25 @@ FileCollector::FileCollector(const string& input, const string& pattern) : root_
 
 void FileCollector::collect_files(const boost::filesystem::path& directory, Callback callback) const
 {
-  boost::filesystem::recursive_directory_iterator dir(directory);
-
-  for (auto& entry : dir)
+  if (boost::filesystem::is_directory(directory))
   {
-    string filepath = boost::filesystem::canonical(entry.path()).string();
-    string filename = entry.path().filename().string();
-    auto   match    = sregex_iterator(filename.begin(), filename.end(), pattern);
+    boost::filesystem::recursive_directory_iterator dir(directory);
 
-    if (boost::filesystem::is_directory(entry))
+    for (auto& entry : dir)
     {
-      collect_files(entry.path(), callback);
-      continue ;
+      string filepath = boost::filesystem::canonical(entry.path()).string();
+      string filename = entry.path().filename().string();
+      auto   match    = sregex_iterator(filename.begin(), filename.end(), pattern);
+
+      if (boost::filesystem::is_directory(entry))
+      {
+        collect_files(entry.path(), callback);
+        continue ;
+      }
+      else if (match == sregex_iterator())
+        continue ;
+      callback(entry.path());
     }
-    else if (match == sregex_iterator())
-      continue ;
-    callback(entry.path());
   }
 }
 

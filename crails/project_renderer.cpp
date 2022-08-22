@@ -35,6 +35,7 @@ declare_renderer(scaffolds_view_index_json)
 declare_renderer(scaffolds_view_show_json)
 declare_renderer(scaffolds_task_cmakelists_txt)
 declare_renderer(scaffolds_task_main_cpp)
+declare_renderer(scaffolds_layout_bootstrap_html)
 declare_renderer(odb_hpp)
 declare_renderer(odb_cpp)
 declare_renderer(odb_migrate_cpp)
@@ -72,6 +73,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/view_show.json", scaffolds_view_show_json);
   add_renderer("scaffolds/task/CMakeLists.txt", scaffolds_task_cmakelists_txt);
   add_renderer("scaffolds/task/main.cpp", scaffolds_task_main_cpp);
+  add_renderer("scaffolds/layouts/bootstrap.html", scaffolds_layout_bootstrap_html);
 
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);

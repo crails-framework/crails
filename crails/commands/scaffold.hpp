@@ -5,6 +5,7 @@
 #include "../scaffolds/view.hpp"
 #include "../scaffolds/task.hpp"
 #include "../scaffolds/resource.hpp"
+#include "../scaffolds/layout.hpp"
 
 class Scaffold : public Crails::Command
 {
@@ -29,6 +30,8 @@ public:
         model = new TaskScaffold;
       else if (type == "resource")
         model = new ResourceScaffold;
+      else if (type == "layout")
+        model = new LayoutScaffold;
       else
       {
         std::cerr << "Unknown scaffold type " << type << std::endl;
