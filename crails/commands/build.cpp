@@ -62,12 +62,25 @@ bool BuildManager::generate_assets()
   return true;
 }
 
+static string model_input_dirs(ProjectConfiguration& configuration)
+{
+  stringstream model_input_dirs;
+
+  model_input_dirs << "app/models";
+  for (const string& module_ : configuration.modules())
+    model_input_dirs << ",modules/" << module_ << "/models";
+  return model_input_dirs.str();
+}
+
 bool BuildManager::generate_database()
 {
   if (configuration.has_plugin("libcrails-odb"))
   {
     BuildOdb odb_builder;
-    std::vector<std::string> argv_array{"--input-dirs","app/models","--output-dir","lib/odb"};
+    std::vector<std::string> argv_array{
+      "--input-dirs", model_input_dirs(configuration),
+      "--output-dir","lib/odb"
+    };
     const char* argv[argv_array.size() + 1];
 
     std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
