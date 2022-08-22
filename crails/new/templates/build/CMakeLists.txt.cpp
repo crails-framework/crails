@@ -14,7 +14,7 @@ public:
     configuration_type(Crails::cast<std::string>(vars, "configuration_type",  "full")), 
     cpp_version(Crails::cast<std::string>(vars, "cpp_version",  "c++17")), 
     formats(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "formats"))), 
-    modules(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "modules")))
+    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "plugins")))
   {}
 
   std::string render()
@@ -22,8 +22,8 @@ public:
 ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nproject(" << ( project_name );
   ecpp_stream << ")\n\nset(CMAKE_CXX_FLAGS \"-std=" << ( cpp_version );
   ecpp_stream << " -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic\")\n\nfind_package(PkgConfig)\nfind_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)\npkg_check_modules(CRAILS REQUIRED";
- for (auto module_ : modules){
-  ecpp_stream << " " << ( module_ );
+ for (auto plugin : plugins){
+  ecpp_stream << " " << ( plugin );
   ecpp_stream << ">=" << ( crails_version );
   ecpp_stream << "";
  };
@@ -37,7 +37,7 @@ private:
   std::string configuration_type;
   std::string cpp_version;
   std::list<std::string>& formats;
-  std::list<std::string>& modules;
+  std::list<std::string>& plugins;
 };
 
 std::string render_project_cmakelists_txt(const Crails::Renderer* renderer, Crails::SharedVars& vars)

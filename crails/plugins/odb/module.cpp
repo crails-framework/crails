@@ -21,14 +21,16 @@ static void add_database(const ProjectConfiguration& configuration, const std::s
   stringstream  desc;
   const std::map<std::string, unsigned short> ports = {{"mysql", 3306}, {"pgsql", 5432}};
 
+  desc << "      ";
   desc << "{\"odb\",{";
-  desc << "{\"type\",\" << backend << \"}";
+  desc << "{\"type\",\"" << backend << "\"}";
   desc << ",{\"name\", \"" << configuration.variable("name") << "\"}";
   if (backend != "sqlite")
     desc << ",{\"host\",\"127.0.0.1\"}";
   if (ports.find(backend) != ports.end())
     desc << ",{\"port\", static_cast<unsigned int>(" << ports.at(backend) << ")}";
   desc << "}}\n";
+  databases.load_file();
   databases.use_symbol("Development, \\{");
   databases.insert(desc.str());
   databases.save_file();
@@ -51,15 +53,15 @@ int OdbModule::OdbInstaller::run()
   renderer.generate_file("config/odb.cpp");
   renderer.generate_file("tasks/odb_migrate/main.cpp");
   renderer.generate_file("scaffolds/task/CMakeLists.txt", "tasks/odb_migrate/CMakeLists.txt");
-  configuration.remove_module("libcrails-databases"); // must be included after libcrails-odb
-  configuration.add_module("libcrails-odb");
-  configuration.add_module("libcrails-databases");
+  configuration.remove_plugin("libcrails-databases"); // must be included after libcrails-odb
+  configuration.add_plugin("libcrails-odb");
+  configuration.add_plugin("libcrails-databases");
   configuration.variable("odb-backends", Crails::join(backends, ','));
   configuration.variable("odb-at-once", "1");
   configuration.variable("odb-default-pointer", "std::shared_ptr");
   configuration.save();
   cmakefile.load_file();
-  cmakefile.update_modules();
+  cmakefile.update_plugins();
   cmakefile.add_dependency("odb");
   for (const string& backend : backends)
     cmakefile.add_dependency("odb-" + backend);

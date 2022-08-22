@@ -139,5 +139,5 @@ $ECPP \
 ##
 $ECPP \
   -n OdbMigrateCpp \
-  -i crails/modules/odb/migrate.cpp.ecpp \
+  -i crails/plugins/odb/migrate.cpp.ecpp \
   >  $PROJECT_TPL/build/odb_migrate.cpp.cpp

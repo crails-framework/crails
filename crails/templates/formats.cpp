@@ -19,12 +19,12 @@ int TemplateFormatsManager::run()
   }
   if (options.count("add"))
   {
-    if (!configuration.has_module("libcrails-templates"))
-      configuration.add_module("libcrails-templates");
+    if (!configuration.has_plugin("libcrails-templates"))
+      configuration.add_plugin("libcrails-templates");
     for (const auto& entry : Crails::split(options["add"].as<string>(), ','))
     {
       configuration.add_renderer(entry);
-      configuration.add_module("libcrails-" + entry + "-views");
+      configuration.add_plugin("libcrails-" + entry + "-views");
     }
   }
   if (options.count("remove"))

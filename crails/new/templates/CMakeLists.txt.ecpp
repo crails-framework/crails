@@ -6,7 +6,7 @@ std::string @project_name;
 std::string @configuration_type = "full";
 std::string @cpp_version = "c++17";
 std::list<std::string>& @formats;
-std::list<std::string>& @modules;
+std::list<std::string>& @plugins;
 
 // END LINKING
 cmake_minimum_required(VERSION 3.0)
@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "-std=<%= cpp_version %> -Wall -Wno-unknown-pragmas -Wno-dep
 
 find_package(PkgConfig)
 find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
-pkg_check_modules(CRAILS REQUIRED<% for (auto module_ : modules) do %> <%= module_ %>>=<%= crails_version %><% end %>)
+pkg_check_modules(CRAILS REQUIRED<% for (auto plugin : plugins) do %> <%= plugin %>>=<%= crails_version %><% end %>)
 pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests)
 
 include_directories(/usr/local/include ${Boost_INCLUDE_DIRS} ${CRAILS_INCLUDE_DIRS} .)

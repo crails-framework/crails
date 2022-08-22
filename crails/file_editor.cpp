@@ -33,11 +33,6 @@ void CrailsFileEditor::insert(const std::string& text)
   contents.insert(position, text);
 }
 
-void CrailsFileEditor::add_include(const std::string& path)
-{
-  contents.insert(0, "#include \"" + path + "\"\n");
-}
-
 void CrailsFileEditor::save_file()
 {
   Crails::RenderFile render_target;

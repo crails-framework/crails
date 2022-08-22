@@ -57,11 +57,11 @@ bool New::generate_project_structure()
   generate_file("config/session_store.cpp");
   generate_file("public/index.html");
   generate_file("spec/main.cpp");
-  if (configuration.has_module("libcrails-action"))
+  if (configuration.has_plugin("libcrails-action"))
     generate_file("app/routes.cpp");
-  if (configuration.has_module("libcrails-controllers"))
+  if (configuration.has_plugin("libcrails-controllers"))
     generate_file("app/controllers/application.hpp");
-  if (configuration.has_module("libcrails-cookies"))
+  if (configuration.has_plugin("libcrails-cookies"))
     generate_file("config/salt.cpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
@@ -74,7 +74,7 @@ bool New::generate_database(const string& backend)
   generate_file("config/databases.cpp");
   if (find(odb_backends.begin(), odb_backends.end(), backend) != odb_backends.end())
   {
-    boost::process::child command(configuration.crails_bin_path() + "/crails modules odb install -b " + backend);
+    boost::process::child command(configuration.crails_bin_path() + "/crails plugins odb install -b " + backend);
 
     command.wait();
     return command.exit_code() == 0;
@@ -104,20 +104,20 @@ int New::run()
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
       configuration.asset_roots({"app/assets"});
-      configuration.add_module("libcrails");
+      configuration.add_plugin("libcrails");
       configuration.variable("std", "c++17");
       configuration.variable("name", project_name);
       vars["project_name"] = project_name;
       vars["crails_version"] = configuration.version();
       vars["configuration_type"] = configuration_type;
       vars["formats"] = &formats;
-      vars["modules"] = &modules;
+      vars["plugins"] = &plugins;
       vars["cpp_version"] = configuration.variable("std");
       use_actions(configuration_type == "full" || configuration_type == "webservice");
       use_cookies(Crails::cast<string>(vars, "session_store", "NoCookieStore") != "NoCookieStore");
       prepare_renderers();
       prepare_request_pipeline();
-      modules = configuration.modules();
+      plugins = configuration.plugins();
       if (generate_project_structure())
       {
         if (options.count("database"))
@@ -165,18 +165,18 @@ bool New::validate_options()
 void New::prepare_renderers()
 {
   if (formats.size())
-    configuration.add_module("libcrails-templates");
+    configuration.add_plugin("libcrails-templates");
   if (find(formats.begin(), formats.end(), "html") != formats.end())
   {
     project_renderers.push_back({"html_renderer", "HtmlRenderer"});
     configuration.add_renderer("html");
-    configuration.add_module("libcrails-html-views");
+    configuration.add_plugin("libcrails-html-views");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
     project_renderers.push_back({"json_renderer", "JsonRenderer"});
     configuration.add_renderer("json");
-    configuration.add_module("libcrails-json-views");
+    configuration.add_plugin("libcrails-json-views");
   }
 }
 
@@ -184,30 +184,30 @@ void New::prepare_request_pipeline()
 {
   project_handlers.push_back({"file", "FileRequestHandler"});
   project_parsers.push_back({"url_parser", "RequestUrlParser"});
-  configuration.add_module("libcrails-url-parser");
+  configuration.add_plugin("libcrails-url-parser");
   if (configuration_type == "full" || configuration_type == "webservice")
   {
     project_handlers.push_back({"action", "ActionRequestHandler"});
-    configuration.add_module("libcrails-action");
+    configuration.add_plugin("libcrails-action");
   }
   if (configuration_type == "full")
   {
     project_parsers.push_back({"form_parser", "RequestFormParser"});
     project_parsers.push_back({"multipart_parser", "RequestMultipartParser"});
-    configuration.add_module("libcrails-form-parser");
-    configuration.add_module("libcrails-multipart-parser");
-    configuration.add_module("libcrails-cookies");
-    configuration.add_module("libcrails-controllers");
+    configuration.add_plugin("libcrails-form-parser");
+    configuration.add_plugin("libcrails-multipart-parser");
+    configuration.add_plugin("libcrails-cookies");
+    configuration.add_plugin("libcrails-controllers");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
     project_parsers.push_back({"json_parser", "RequestJsonParser"});
-    configuration.add_module("libcrails-json-parser");
+    configuration.add_plugin("libcrails-json-parser");
   }
   if (find(formats.begin(), formats.end(), "xml") != formats.end())
   {
     project_parsers.push_back({"xml_parser", "RequestXmlParser"});
-    configuration.add_module("libcrails-xml-parser");
+    configuration.add_plugin("libcrails-xml-parser");
   }
 }
 

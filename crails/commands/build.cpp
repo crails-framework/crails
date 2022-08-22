@@ -50,8 +50,10 @@ bool BuildManager::generate_assets()
 
     cout << "[assets] generate assets..." << endl;
     command << configuration.crails_bin_path() + "/crails-assets"
-      << " -i " << Crails::join(configuration.asset_roots(), ',')
-      << " -o public";
+      << " -o public"
+      << " -i " << Crails::join(configuration.asset_roots(), ',');
+    for (const string& module_ : configuration.modules())
+      command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
     boost::process::child process(command.str());
     process.wait();
     if (process.exit_code() != 0)
@@ -62,7 +64,7 @@ bool BuildManager::generate_assets()
 
 bool BuildManager::generate_database()
 {
-  if (configuration.has_module("libcrails-odb"))
+  if (configuration.has_plugin("libcrails-odb"))
   {
     BuildOdb odb_builder;
     std::vector<std::string> argv_array{"--input-dirs","app/models","--output-dir","lib/odb"};

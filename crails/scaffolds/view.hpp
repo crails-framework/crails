@@ -22,7 +22,7 @@ public:
       ("target,t", boost::program_options::value<std::string>(), "target view folder (defaults to `app/views`)")
       ("view-path,v", boost::program_options::value<std::string>(), "view path (defaults to classname)")
       ("format,f", boost::program_options::value<std::string>(), "views format (html, json)")
-      ("property,p", boost::program_options::value<std::vector<std::string>>(), "properties, such as: -p std::string-name -p 'unsigned int-age'");
+      ("property,p", boost::program_options::value<std::vector<std::string>>()->multitoken(), properties_help());
   }
 
   int create(boost::program_options::variables_map& options) override
@@ -48,14 +48,7 @@ public:
       target_folder = options["target"].as<std::string>() + '/' + view_path;
     else
       target_folder = "app/views/" + view_path;
-    if (options.count("property"))
-    {
-      for (const std::string& property_decl : options["property"].as<std::vector<std::string>>())
-      {
-        auto parts = Crails::split(property_decl, '-');
-        properties.emplace(*parts.rbegin(), *parts.begin());
-      }
-    }
+    properties = properties_option(options);
     renderer.vars["classname"]  = model_classname;
     renderer.vars["header"]     = model_header;
     renderer.vars["properties"] = &properties;

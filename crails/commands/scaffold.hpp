@@ -6,6 +6,7 @@
 #include "../scaffolds/task.hpp"
 #include "../scaffolds/resource.hpp"
 #include "../scaffolds/layout.hpp"
+#include "../scaffolds/module.hpp"
 
 class Scaffold : public Crails::Command
 {
@@ -22,7 +23,7 @@ public:
       type = argv[1];
       if (type == "controller")
         model = new ControllerScaffold;
-      else if ((type == "model" || type == "model-odb") && configuration.has_module("libcrails-odb"))
+      else if ((type == "model" || type == "model-odb") && configuration.has_plugin("libcrails-odb"))
         model = new OdbModelScaffold;
       else if (type == "view")
         model = new ViewScaffold;
@@ -32,12 +33,20 @@ public:
         model = new ResourceScaffold;
       else if (type == "layout")
         model = new LayoutScaffold;
+      else if (type == "module")
+        model = new ModuleScaffold;
       else
       {
         std::cerr << "Unknown scaffold type " << type << std::endl;
         return false;
       }
       return Command::initialize(argc - 1, &argv[1]);
+    }
+    else
+    {
+      std::cout << "Available scaffolds:" << std::endl;
+      for (const std::string& type : std::vector<std::string>{"resource","controller","model","view","layout","task","module"})
+        std::cout << " - " << type << std::endl;
     }
     return false;
   }

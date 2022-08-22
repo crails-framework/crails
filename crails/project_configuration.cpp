@@ -76,23 +76,54 @@ void ProjectConfiguration::toolchain(const string& value)
   variables["build_system"] = value;
 }
 
-list<string> ProjectConfiguration::modules() const
+list<string> ProjectConfiguration::plugins() const
 {
-  auto it = variables.find("modules");
+  auto it = variables.find("plugins");
 
   return it == variables.end() ? list<string>() : Crails::split(it->second, ',');
 }
 
-void ProjectConfiguration::modules(const list<string>& value)
+void ProjectConfiguration::plugins(const list<string>& value)
 {
-  variables["modules"] = Crails::join(value, ',');
+  variables["plugins"] = Crails::join(value, ',');
+}
+
+void ProjectConfiguration::add_plugin(const std::string& value)
+{
+  auto list = plugins();
+  if (find(list.begin(), list.end(), value) == list.end()) list.push_back(value);
+  plugins(list);
+}
+
+void ProjectConfiguration::remove_plugin(const std::string& value)
+{
+  auto list = plugins();
+  auto it = find(list.begin(), list.end(), value);
+  if (it != list.end())
+  {
+    list.erase(it);
+    plugins(list);
+  }
+}
+
+bool ProjectConfiguration::has_plugin(const std::string& name) const
+{
+  auto list = plugins();
+  return find(list.begin(), list.end(), name) != list.end();
+}
+
+list<string> ProjectConfiguration::modules() const
+{
+  if (variables.find("modules") != variables.end())
+    return Crails::split(variables.at("modules"), ',');
+  return {};
 }
 
 void ProjectConfiguration::add_module(const std::string& value)
 {
-  auto list = modules();
+  auto list = plugins();
   if (find(list.begin(), list.end(), value) == list.end()) list.push_back(value);
-  modules(list);
+  variables["modules"] = Crails::join(list, ',');
 }
 
 void ProjectConfiguration::remove_module(const std::string& value)
@@ -102,16 +133,9 @@ void ProjectConfiguration::remove_module(const std::string& value)
   if (it != list.end())
   {
     list.erase(it);
-    modules(list);
+    variables["modules"] = Crails::join(list, ',');
   }
 }
-
-bool ProjectConfiguration::has_module(const std::string& name) const
-{
-  auto list = modules();
-  return find(list.begin(), list.end(), name) != list.end();
-}
-
 
 list<string> ProjectConfiguration::renderers() const
 {

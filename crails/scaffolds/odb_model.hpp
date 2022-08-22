@@ -18,7 +18,7 @@ public:
     desc.add_options()
       ("model,m",    boost::program_options::value<std::string>(), "classname")
       ("target,t",   boost::program_options::value<std::string>(), "target folder (defaults to `app/controllers`)")
-      ("property,p", boost::program_options::value<std::vector<std::string>>(), "properties, such as: -p std::string-name -p 'unsigned int-age'");
+      ("property,p", boost::program_options::value<std::vector<std::string>>()->multitoken(), properties_help());
   }
 
   int create(boost::program_options::variables_map& options) override
@@ -33,14 +33,7 @@ public:
     }
     classname = options["model"].as<std::string>();
     path_name = Crails::underscore(classname);
-    if (options.count("property"))
-    {
-      for (const std::string& property_decl : options["property"].as<std::vector<std::string>>())
-      {
-        auto parts = Crails::split(property_decl, '-');
-        properties.emplace(*parts.rbegin(), *parts.begin());
-      }
-    }
+    properties = properties_option(options);
     renderer.vars["classname"] = classname;
     renderer.vars["properties"] = &properties;
     renderer.vars["filename"] = path_name;
