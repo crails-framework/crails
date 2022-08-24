@@ -21,6 +21,26 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
     "</html>";
 }
 
+std::string render_scaffolds_layout_bare_html(const Crails::Renderer*, Crails::SharedVars& vars)
+{
+  return
+    "const char* @yield;\n"
+    "// END LINKING\n"
+    "<html>\n"
+    "  <head>\n"
+    "  </head>\n"
+    "  <body>\n"
+    "    <%= yield %>\n"
+    "  </body>\n"
+    "</html>";
+}
+
+int LayoutScaffold::create_bare_layout()
+{
+  renderer.generate_file("scaffolds/layouts/bare.html", target_folder + "/views/layouts/" + name + ".html");
+  return 0;
+}
+
 int LayoutScaffold::create_bootstrap_layout()
 {
   const std::string bootstrap_output_dir = "app/assets/stylesheets/bootstrap";

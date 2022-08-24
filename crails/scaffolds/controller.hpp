@@ -21,7 +21,7 @@ public:
       ("model,m",  boost::program_options::value<std::string>(), "model class to use")
       ("header,i", boost::program_options::value<std::string>(), "model include path (defaults to `app/models/{model}.hpp`)")
       ("target,t", boost::program_options::value<std::string>(), "target folder (defaults to `app/controllers`)")
-      ("mode,z",   boost::program_options::value<std::string>(), "generates methods and routes `crud` or `resource`");
+      ("mode,z",   boost::program_options::value<std::string>(), "generates methods and routes, options are: `crud` or `resource`");
   }
 
   int create(boost::program_options::variables_map& options) override

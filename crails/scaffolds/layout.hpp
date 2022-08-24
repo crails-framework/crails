@@ -29,11 +29,14 @@ public:
       name = options["name"].as<std::string>();
     if (toolkit == "bootstrap")
       return create_bootstrap_layout();
+    else if (toolkit == "none")
+      return create_bare_layout();
     std::cerr << "Unknown toolkit " << toolkit << std::endl;
     return -1;
   }
 private:
   int create_bootstrap_layout();
+  int create_bare_layout();
   int download_bootstrap(const boost::filesystem::path& output_dir);
 };
 

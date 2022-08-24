@@ -35,6 +35,7 @@ declare_renderer(scaffolds_view_index_json)
 declare_renderer(scaffolds_view_show_json)
 declare_renderer(scaffolds_task_cmakelists_txt)
 declare_renderer(scaffolds_task_main_cpp)
+declare_renderer(scaffolds_layout_bare_html)
 declare_renderer(scaffolds_layout_bootstrap_html)
 declare_renderer(scaffolds_module_cmakelists_txt)
 declare_renderer(scaffolds_module_module_hpp)
@@ -76,6 +77,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/view_show.json", scaffolds_view_show_json);
   add_renderer("scaffolds/task/CMakeLists.txt", scaffolds_task_cmakelists_txt);
   add_renderer("scaffolds/task/main.cpp", scaffolds_task_main_cpp);
+  add_renderer("scaffolds/layouts/bare.html", scaffolds_layout_bare_html);
   add_renderer("scaffolds/layouts/bootstrap.html", scaffolds_layout_bootstrap_html);
   add_renderer("scaffolds/modules/CMakeLists.txt", scaffolds_module_cmakelists_txt);
   add_renderer("scaffolds/modules/module.hpp", scaffolds_module_module_hpp);
