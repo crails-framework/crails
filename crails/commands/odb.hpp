@@ -18,6 +18,7 @@ public:
   void             options_description(boost::program_options::options_description&) const override;
 
 private:
+  bool        increment_schema_version();
   bool        compile_models_at_once(const FileList& files);
   bool        compile_models_one_by_one(const FileList& files);
   bool        compile_models(const FileList& files);

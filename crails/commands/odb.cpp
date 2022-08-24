@@ -30,6 +30,36 @@ static bool create_directory(boost::filesystem::path path)
   return true;
 }
 
+bool BuildOdb::increment_schema_version()
+{
+  string odb_hpp;
+  Crails::RenderFile odb_hpp_output;
+
+  if (Crails::read_file("config/odb.hpp", odb_hpp))
+  {
+    regex version_pattern("^#pragma db model version\\([0-9]+,([0-9]+)\\)$", std::regex_constants::multiline);
+    auto match = sregex_iterator(odb_hpp.begin(), odb_hpp.end(), version_pattern);
+    if (match != sregex_iterator() && match->size() > 1)
+    {
+      unsigned int current_version = boost::lexical_cast<unsigned int>(odb_hpp.substr(match->position(1), match->length(1)));
+      odb_hpp.erase(match->position(1), match->length(1));
+      odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1)));
+      if (odb_hpp_output.open("config/odb.hpp"))
+      {
+        odb_hpp_output.set_body(odb_hpp.c_str(), odb_hpp.length());
+        return true;
+      }
+      else
+        std::cerr << "Cannot write into config/odb.hpp" << std::endl;
+    }
+    else
+      std::cerr << "Cannot find #pragma db model version in odb.hpp" << std::endl;
+  }
+  else
+    std::cerr << "Cannot open config/odb.hpp" << std::endl;
+  return false;
+}
+
 int BuildOdb::run()
 {
   FileList files;
@@ -162,21 +192,24 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
 
 bool BuildOdb::generate_schema(const FileList& files)
 {
-  boost::filesystem::path project_dir = boost::filesystem::canonical(configuration.project_directory());
-  stringstream command;
-  bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
-  string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");
+  if (increment_schema_version())
+  {
+    boost::filesystem::path project_dir = boost::filesystem::canonical(configuration.project_directory());
+    stringstream command;
+    bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
+    string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");
 
-  at_once = true;
-  command << odb_command(schema_output_dir) << ' ' << "--generate-schema-only" << ' ';
-  for (auto file : files)
-    command << boost::filesystem::relative(file, project_dir) << ' ';
-  cout << "+ " << command.str() << endl;
-  boost::process::child odb(command.str());
-  odb.wait();
-  if (odb.exit_code() != 0)
-    return false;
-  return true;
+    at_once = true;
+    command << odb_command(schema_output_dir) << ' ' << "--generate-schema-only" << ' ';
+    for (auto file : files)
+      command << boost::filesystem::relative(file, project_dir) << ' ';
+    cout << "+ " << command.str() << endl;
+    boost::process::child odb(command.str());
+    odb.wait();
+    if (odb.exit_code() == 0)
+      return true;
+  }
+  return false;
 }
 
 BuildOdb::FileList BuildOdb::collect_files()
