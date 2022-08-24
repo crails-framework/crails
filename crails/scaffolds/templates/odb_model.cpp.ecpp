@@ -10,6 +10,8 @@ std::map<std::string, std::string>& @properties;
 #include "lib/odb/<%= filename %>-odb.hxx"
 <% end %>
 
+const std::string <%= classname %>::resource_name = "<%= Crails::underscore(classname) %>";
+
 odb_instantiable_impl(<%= classname %>)
 
 void <%= classname %>::edit(Data params)

@@ -9,7 +9,6 @@ string @view_path;
 string @parent_class = "ApplicationController";
 string @model_class       = "";
 string @model_header      = "";
-string @resource_name     = Crails::underscore(model_class);
 bool   @resource_scaffold = false;
 bool   @crud_scaffold     = false;
 // END LINKING
@@ -83,20 +82,34 @@ void <%= classname %>::show()
   render("<%= view_path %>/show");
 }
 
+<% if (resource_scaffold) do -%>
+void <%= classname %>::new_()
+{
+  render("<%= view_path %>/new");
+}
+<% end -%>
+
 void <%= classname %>::create()
 {
 <% if (model_class.length() > 0) do %>
   <%= model_class %> model;
-  model.edit(params["<%= resource_name %>"]);
+  model.edit(params[<%= classname %>::resource_name]);
   database.save(model);
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model.get_id()));
 <% end %>
 }
 
+<% if (resource_scaffold) do -%>
+void <%= classname %>::edit()
+{
+  render("<%= view_path %>/edit");
+}
+<% end -%>
+
 void <%= classname %>::update()
 {
 <% if (model_class.length() > 0) do %>
-  model->edit(params["<%= resource_name %>"]);
+  model->edit(params[<%= classname %>::resource_name]);
   database.save(*model);
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model->get_id()));
 <% end %>
@@ -109,15 +122,4 @@ void <%= classname %>::destroy()
 <% end %>
   redirect_to("<%= path %>");
 }
-<% if (resource_scaffold) do -%>
-void <%= classname %>::new_()
-{
-  render("<%= view_path %>/new");
-}
-
-void <%= classname %>::edit()
-{
-  render("<%= view_path %>/edit");
-}
-<% end -%>
 <% end -%>

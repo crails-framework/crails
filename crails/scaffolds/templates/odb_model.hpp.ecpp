@@ -12,6 +12,8 @@ class <%= classname %> : public Crails::Odb::Model
 {
   odb_instantiable()
 public:
+  static const std::string resource_name;
+
   #pragma db view object(<%= classname %>)
   struct Count
   {

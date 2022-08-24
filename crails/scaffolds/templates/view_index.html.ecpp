@@ -12,7 +12,7 @@ bool has_name = properties.find(name_property) != properties.end();
 using namespace std;
 
 vector<<%= classname %>>& @models;
-std::string route = "<%= resource_name %>";
+string route = "<%= resource_name %>";
 // END LINKING
 <h1><%= classname %> index</h1>
 
