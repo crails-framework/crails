@@ -67,13 +67,24 @@ void ProjectConfiguration::version(const string& version)
 
 string ProjectConfiguration::toolchain() const
 {
-  auto it = variables.find("build_system");
+  auto it = variables.find("build-system");
   return it == variables.end() ? string("cmake") : string(it->second);
 }
 
 void ProjectConfiguration::toolchain(const string& value)
 {
-  variables["build_system"] = value;
+  variables["build-system"] = value;
+}
+
+string ProjectConfiguration::build_type() const
+{
+  auto it = variables.find("build-type");
+  return it == variables.end() ? string("Release") : string(it->second);
+}
+
+void ProjectConfiguration::build_type(const string& value)
+{
+  variables["build-type"] = value;
 }
 
 list<string> ProjectConfiguration::plugins() const

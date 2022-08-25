@@ -24,6 +24,9 @@ public:
   std::string toolchain() const;
   void        toolchain(const std::string&);
 
+  std::string            build_type() const;
+  void                   build_type(const std::string&);
+
   std::list<std::string> plugins() const;
   void                   plugins(const std::list<std::string>&);
   void                   add_plugin(const std::string&);

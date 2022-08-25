@@ -7,6 +7,7 @@ using namespace std;
 class CMakeBuilder : private WithPath
 {
   boost::filesystem::path project_directory;
+  std::stringstream options;
 public:
   CMakeBuilder(const boost::filesystem::path& project_directory, const boost::filesystem::path& build_directory) :
     WithPath(build_directory),
@@ -14,9 +15,14 @@ public:
   {
   }
 
+  CMakeBuilder& option(const std::string& name, const std::string& value)
+  {
+    options << "-D" << name << '=' << value << ' ';
+  }
+
   bool configure()
   {
-    boost::process::child cmake("cmake " + project_directory.string());
+    boost::process::child cmake("cmake " + options.str() + project_directory.string());
 
     cmake.wait();
     return cmake.exit_code() == 0;
@@ -41,7 +47,8 @@ static bool build_server(ProjectConfiguration& configuration)
   return CMakeBuilder(
     configuration.project_directory(),
     configuration.application_build_path()
-  ).build();
+  ).option("CMAKE_BUILD_TYPE", configuration.build_type())
+   .build();
 }
 
 static bool build_client(ProjectConfiguration& configuration)
@@ -51,7 +58,9 @@ static bool build_client(ProjectConfiguration& configuration)
     return CMakeBuilder(
       configuration.variable("comet-path"),
       *configuration.asset_roots().begin()
-    ).build();
+    ).option("CMAKE_TOOLCHAIN_FILE", configuration.variable("cheerp-path") + "/share/cmake/Modules/CheerpToolchain.cmake")
+     .option("CMAKE_BUILD_TYPE", configuration.build_type())
+     .build();
   }
   return true;
 }
