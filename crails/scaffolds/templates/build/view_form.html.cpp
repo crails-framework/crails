@@ -9,6 +9,7 @@ class ScaffoldsViewFormHtml : public Crails::Template
 public:
   ScaffoldsViewFormHtml(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
     Crails::Template(renderer, vars), 
+    numerical_types( {"int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","float","double"}), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
     header(Crails::cast<std::string>(vars, "header")), 
@@ -19,23 +20,47 @@ public:
   std::string render()
   {
 ecpp_stream << "#include \"" << ( header );
-  ecpp_stream << "\"\n#include <boost/lexical_cast.hpp>\n\nusing namespace std;\n" << ( classname );
-  ecpp_stream << "& @model;\nstring method = model.is_persistent() ? \"put\" : \"post\";\nstring action = \"/" << ( route );
-  ecpp_stream << "\";\n// END LINKING\n<% if (model.is_persistent()) { action += '/' + boost::lexical_cast<string>(model.get_id()); } -%>\n<%= form({{\"method\",method}, {\"action\",action}}) yields %>";
+  ecpp_stream << "\"\n#include <crails/html_form_builder.hpp>\n\nusing namespace std;\n" << ( classname );
+  ecpp_stream << "& @model;\nFormBuilder<" << ( classname );
+  ecpp_stream << " form = FormBuilder(this, model);\nstring action = \"/" << ( route );
+  ecpp_stream << "\";\n// END LINKING\n<% form_for(model, \"/" << ( route );
+  ecpp_stream << "\") yields %>";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){
-  ecpp_stream << "\n  <div class=\"form-group\">\n    <%= tag(\"label\", {{\"for\",\"" << ( resource_name );
-  ecpp_stream << "[" << ( it->first );
-  ecpp_stream << "]\"}}) yields %>" << ( it->first );
-  ecpp_stream << "<% yields-end %>\n    <%= tag(\"input\", {\n          {\"class\",\"form-control\"},\n          {\"type\",\"text\"},\n          {\"name\",\"" << ( resource_name );
-  ecpp_stream << "[" << ( it->first );
-  ecpp_stream << "]\"},\n          {\"value\",boost::lexical_cast<string>(model.get_" << ( it->first );
-  ecpp_stream << "())}}\n        ) %>\n  </div>";
+  ecpp_stream << "\n  <div class=\"form-group\">\n    <%= form.label_for(\"" << ( it->first );
+  ecpp_stream << "\") %>";
+  if (it->second == "std::string"){
+  ecpp_stream << "\n    <%= form.text_field(\"" << ( it->first );
+  ecpp_stream << "\", &" << ( classname );
+  ecpp_stream << "::get_" << ( it->first );
+  ecpp_stream << ") %>";
+ }else if (it->second == "std::time_t"){
+  ecpp_stream << "\n    <%= form.date_field(\"" << ( it->first );
+  ecpp_stream << "\", &" << ( classname );
+  ecpp_stream << "::get_" << ( it->first );
+  ecpp_stream << ") %>";
+ }else if (std::find(numerical_types.begin(), numerical_types.end(), std::string(it->second)) != numerical_types.end()){
+  ecpp_stream << "";
+    if (it->second == "double" || it->second == "float"){
+  ecpp_stream << "\n    <%= form.number_field(\"" << ( it->first );
+  ecpp_stream << "\", &" << ( classname );
+  ecpp_stream << "::get_" << ( it->first );
+  ecpp_stream << ", {{\"step\",\"0.1\"}}) %>";
+ }else{
+  ecpp_stream << "\n    <%= form.number_field(\"" << ( it->first );
+  ecpp_stream << "\", &" << ( classname );
+  ecpp_stream << "::get_" << ( it->first );
+  ecpp_stream << ") %>";
+ };
+  ecpp_stream << "";
+ };
+  ecpp_stream << "\n  </div>";
  };
   ecpp_stream << "\n  <button type=\"submit\" class=\"btn btn-primary\">Save</button>\n<% yields-end %>\n";
     return ecpp_stream.str();
   }
 private:
   std::stringstream ecpp_stream;
+  std::vector<std::string> numerical_types;
   std::string classname;
   std::string resource_name;
   std::string header;

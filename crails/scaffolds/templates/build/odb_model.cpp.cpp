@@ -1,6 +1,7 @@
 #include <sstream>
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
+#include <crails/utils/string.hpp>
 
 class ScaffoldsOdbModelCpp : public Crails::Template
 {
@@ -23,7 +24,9 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "\n#include \"lib/odb/" << ( filename );
   ecpp_stream << "-odb.hxx\"";
  };
-  ecpp_stream << "\n\nodb_instantiable_impl(" << ( classname );
+  ecpp_stream << "\n\nconst std::string " << ( classname );
+  ecpp_stream << "::resource_name = \"" << ( Crails::underscore(classname) );
+  ecpp_stream << "\";\n\nodb_instantiable_impl(" << ( classname );
   ecpp_stream << ")\n\nvoid " << ( classname );
   ecpp_stream << "::edit(Data params)\n{";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){

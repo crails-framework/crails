@@ -16,7 +16,7 @@ public:
   std::string render()
   {
 ecpp_stream << "#pragma once\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>\n\n#pragma db object\nclass " << ( classname );
-  ecpp_stream << " : public Crails::Odb::Model\n{\n  odb_instantiable()\npublic:\n  #pragma db view object(" << ( classname );
+  ecpp_stream << " : public Crails::Odb::Model\n{\n  odb_instantiable()\npublic:\n  static const std::string resource_name;\n\n  #pragma db view object(" << ( classname );
   ecpp_stream << ")\n  struct Count\n  {\n    #pragma db column(\"count(\" + " << ( classname );
   ecpp_stream << "::id + \")\")\n    size_t value;\n  };\n\n  void edit(Data);";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){

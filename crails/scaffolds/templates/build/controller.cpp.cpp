@@ -16,7 +16,6 @@ public:
     parent_class(Crails::cast<string>(vars, "parent_class",  "ApplicationController")), 
     model_class(Crails::cast<string>(vars, "model_class",  "")), 
     model_header(Crails::cast<string>(vars, "model_header",  "")), 
-    resource_name(Crails::cast<string>(vars, "resource_name",  Crails::underscore(model_class))), 
     resource_scaffold(Crails::cast<bool>(vars, "resource_scaffold",  false)), 
     crud_scaffold(Crails::cast<bool>(vars, "crud_scaffold",  false))
   {}
@@ -60,19 +59,31 @@ ecpp_stream << "#include \"" << ( path );
   ecpp_stream << "\n  render(\"" << ( view_path );
   ecpp_stream << "/index\");\n}\n\nvoid " << ( classname );
   ecpp_stream << "::show()\n{\n  render(\"" << ( view_path );
-  ecpp_stream << "/show\");\n}\n\nvoid " << ( classname );
+  ecpp_stream << "/show\");\n}\n";
+ if (resource_scaffold){
+  ecpp_stream << "\nvoid " << ( classname );
+  ecpp_stream << "::new_()\n{\n  render(\"" << ( view_path );
+  ecpp_stream << "/new\");\n}";
+ };
+  ecpp_stream << "\nvoid " << ( classname );
   ecpp_stream << "::create()\n{";
  if (model_class.length() > 0){
   ecpp_stream << "\n  " << ( model_class );
-  ecpp_stream << " model;\n  model.edit(params[\"" << ( resource_name );
-  ecpp_stream << "\"]);\n  database.save(model);\n  redirect_to(\"" << ( router_path );
+  ecpp_stream << " model;\n  model.edit(params[" << ( classname );
+  ecpp_stream << "::resource_name]);\n  database.save(model);\n  redirect_to(\"" << ( router_path );
   ecpp_stream << "/\" + boost::lexical_cast<std::string>(model.get_id()));";
  };
-  ecpp_stream << "\n}\n\nvoid " << ( classname );
+  ecpp_stream << "\n}\n";
+ if (resource_scaffold){
+  ecpp_stream << "\nvoid " << ( classname );
+  ecpp_stream << "::edit()\n{\n  render(\"" << ( view_path );
+  ecpp_stream << "/edit\");\n}";
+ };
+  ecpp_stream << "\nvoid " << ( classname );
   ecpp_stream << "::update()\n{";
  if (model_class.length() > 0){
-  ecpp_stream << "\n  model->edit(params[\"" << ( resource_name );
-  ecpp_stream << "\"]);\n  database.save(*model);\n  redirect_to(\"" << ( router_path );
+  ecpp_stream << "\n  model->edit(params[" << ( classname );
+  ecpp_stream << "::resource_name]);\n  database.save(*model);\n  redirect_to(\"" << ( router_path );
   ecpp_stream << "/\" + boost::lexical_cast<std::string>(model->get_id()));";
  };
   ecpp_stream << "\n}\n\nvoid " << ( classname );
@@ -82,14 +93,6 @@ ecpp_stream << "#include \"" << ( path );
  };
   ecpp_stream << "\n  redirect_to(\"" << ( path );
   ecpp_stream << "\");\n}";
- if (resource_scaffold){
-  ecpp_stream << "\nvoid " << ( classname );
-  ecpp_stream << "::new_()\n{\n  render(\"" << ( view_path );
-  ecpp_stream << "/new\");\n}\n\nvoid " << ( classname );
-  ecpp_stream << "::edit()\n{\n  render(\"" << ( view_path );
-  ecpp_stream << "/edit\");\n}";
- };
-  ecpp_stream << "";
  };
   ecpp_stream << "";
     return ecpp_stream.str();
@@ -103,7 +106,6 @@ private:
   string parent_class;
   string model_class;
   string model_header;
-  string resource_name;
   bool resource_scaffold;
   bool crud_scaffold;
 };

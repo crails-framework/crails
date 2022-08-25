@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <crails/utils/string.hpp>
+std::vector<std::string> numerical_types = {"int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","float","double"};
 std::string @classname;
 std::string @resource_name = Crails::underscore(classname);
 std::string @header;
@@ -7,26 +8,30 @@ std::string @route;
 std::map<std::string, std::string>& @properties;
 // END LINKING
 #include "<%= header %>"
-#include <boost/lexical_cast.hpp>
+#include <crails/html_form_builder.hpp>
 
 using namespace std;
 
 <%= classname %>& @model;
-string method = model.is_persistent() ? "put" : "post";
+Crails::FormBuilder<<%= classname %>> form = Crails::FormBuilder(this, model);
 string action = "/<%= route %>";
 // END LINKING
-<%% if (model.is_persistent()) { action += '/' + boost::lexical_cast<string>(model.get_id()); } -%>
-<%%= form({{"method",method}, {"action",action}}) yields %>
+<%%= form_for(model, "/<%= route %>") yields %>
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
   <div class="form-group">
-    <%%= tag("label", {{"for","<%= resource_name %>[<%= it->first %>]"}}) yields %><%= it->first %><%% yields-end %>
-    <%%= tag("input", {
-          {"class","form-control"},
-          {"type","text"},
-          {"name","<%= resource_name %>[<%= it->first %>]"},
-          {"value",boost::lexical_cast<string>(model.get_<%= it->first %>())}}
-        ) %>
+    <%%= form.label_for("<%= it->first %>") %>
+<%  if (it->second == "std::string") do %>
+    <%%= form.text_field("<%= it->first %>", &<%= classname %>::get_<%= it->first %>) %>
+<%  end else if (it->second == "std::time_t") do %>
+    <%%= form.date_field("<%= it->first %>", &<%= classname %>::get_<%= it->first %>) %>
+<%  end else if (std::find(numerical_types.begin(), numerical_types.end(), std::string(it->second)) != numerical_types.end()) do %>
+<%    if (it->second == "double" || it->second == "float") do %>
+    <%%= form.number_field("<%= it->first %>", &<%= classname %>::get_<%= it->first %>, {{"step","0.1"}}) %>
+<%    end else do %>
+    <%%= form.number_field("<%= it->first %>", &<%= classname %>::get_<%= it->first %>) %>
+<%    end %>
+<%  end %>
   </div>
-<% end %>
+<%  end %>
   <button type="submit" class="btn btn-primary">Save</button>
 <%% yields-end %>

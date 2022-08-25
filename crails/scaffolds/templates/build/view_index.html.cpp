@@ -20,7 +20,7 @@ public:
   {
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n#include <boost/lexical_cast.hpp>\n\nusing namespace std;\n\nvector<" << ( classname );
-  ecpp_stream << ">& @models;\nstd::string route = \"" << ( resource_name );
+  ecpp_stream << ">& @models;\nstring route = \"" << ( resource_name );
   ecpp_stream << "\";\n// END LINKING\n<h1>" << ( classname );
   ecpp_stream << " index</h1>\n\n<%= tag(\"a\", {{\"href\", '/' + route + \"/new\"}}) yields %>\n  New\n<% yields-end %>\n\n<table class=\"table\">\n  <thead>\n    <th>ID</th>";
  if (has_name){

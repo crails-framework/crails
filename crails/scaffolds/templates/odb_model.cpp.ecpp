@@ -1,3 +1,4 @@
+#include <crails/utils/string.hpp>
 std::string @filename;
 std::string @classname;
 bool        @odb_at_once;
