@@ -4,6 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <crails/utils/string.hpp>
 #include "odb.hpp"
+#include "../plugins/comet/plugin.hpp"
 
 using namespace std;
 
@@ -87,6 +88,7 @@ int BuildManager::run()
   if (!prebuild_renderers()) return false;
   if (!generate_assets()) return false;
   if (!generate_database()) return false;
+  if (configuration.has_plugin("comet") && !CometPlugin::generate_comet_views(configuration)) return false;
   if (configuration.toolchain() == "cmake")
     return crails_cmake_builder(configuration) ? 0 : -1;
   else

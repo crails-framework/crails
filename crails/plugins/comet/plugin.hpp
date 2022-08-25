@@ -20,4 +20,7 @@ public:
   CometPlugin();
 
   std::string_view description() const override { return "the comet plugins integrates a C++ to JavaScript transpiler"; }
+
+  static std::string find_comet_html_generator();
+  static bool generate_comet_views(const ProjectConfiguration&);
 };

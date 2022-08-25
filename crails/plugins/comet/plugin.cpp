@@ -1,5 +1,7 @@
 #include "plugin.hpp"
 #include "../../file_renderer.hpp"
+#include <boost/process.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace std;
 
@@ -17,9 +19,16 @@ int CometPlugin::CometInstaller::run()
 
   if (!options.count("cheerp-path"))
   {
-    std::cout << "Option --cheerp-path required." << std::endl;
+    std::cerr << "Option --cheerp-path required." << std::endl;
     return -1;
   }
+  if (find_comet_html_generator().length() == 0)
+  {
+    std::cerr << "comet-html not found. Please install comet using `gem install comet-cpp`" << std::endl;
+    return -1;
+  }
+  boost::filesystem::create_directories(path);
+  boost::filesystem::create_directories(vendor_path);
   if (options.count("comet-path"))
     path = options["comet-path"].as<string>();
   relative_vendor_path = boost::filesystem::relative(vendor_path, path).string();
@@ -49,4 +58,35 @@ std::string render_comet_cmakelists_txt(const Crails::Renderer*, Crails::SharedV
     "file(GLOB_RECURSE application_src *.cpp *.cxx)\n"
     "\n"
     "add_executable(application ${vendor_src} ${application_src})";
+}
+
+string CometPlugin::find_comet_html_generator()
+{
+  boost::process::ipstream pipe_stream;
+  boost::process::child process("which comet-html", boost::process::std_out > pipe_stream);
+  string path;
+
+  process.wait();
+  if (process.exit_code() == 0)
+    getline(pipe_stream, path);
+  return path;
+}
+
+bool CometPlugin::generate_comet_views(const ProjectConfiguration& configuration)
+{
+  string script = find_comet_html_generator();
+
+  if (script.length() > 0)
+  {
+    string source = configuration.variable("comet-path");
+    string output = "app/assets";
+    string config = "config/comet.json";
+    boost::process::child process(script + " -i " + source + " -o " + output + " -c " + config);
+
+    process.wait();
+    return process.exit_code() == 0;
+  }
+  else
+    cerr << "comet-html not found. Perhaps it is not installed, or not reachable via the PATH environment variable ?" << endl;
+  return false;
 }
