@@ -18,7 +18,7 @@ public:
       ("model,m",    boost::program_options::value<std::string>(), "model's classname")
       ("target,t",   boost::program_options::value<std::string>(), "target view folder (defaults to `app`)")
       ("format,f",   boost::program_options::value<std::vector<std::string>>(), "views format (html, json)")
-      ("property,p", boost::program_options::value<std::vector<std::string>>(), "properties, such as: -p std::string-name -p 'unsigned int-age'");
+      ("property,p", boost::program_options::value<std::vector<std::string>>()->multitoken(), "properties, such as: -p std::string-name -p 'unsigned int-age'");
   }
 
   int create(boost::program_options::variables_map& options) override

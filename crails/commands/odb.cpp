@@ -254,7 +254,7 @@ void BuildOdb::apply_new_version()
     Crails::read_file(path.string(), new_contents);
     Crails::read_file(old_path.string(), old_contents);
     if (new_contents != old_contents)
-      boost::filesystem::copy(path, old_path);
+      boost::filesystem::copy(path, old_path, boost::filesystem::copy_options::overwrite_existing);
   });
   clearer.collect_files([&existing_files](const boost::filesystem::path& path)
   {

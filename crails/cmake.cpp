@@ -18,6 +18,7 @@ public:
   CMakeBuilder& option(const std::string& name, const std::string& value)
   {
     options << "-D" << name << '=' << value << ' ';
+    return *this;
   }
 
   bool configure()
