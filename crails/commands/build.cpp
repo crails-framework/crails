@@ -85,12 +85,12 @@ bool BuildManager::generate_database()
 
 int BuildManager::run()
 {
-  if (!prebuild_renderers()) return false;
-  if (!generate_assets()) return false;
-  if (!generate_database()) return false;
-  if (configuration.has_plugin("comet") && !CometPlugin::generate_comet_views(configuration)) return false;
+  if (!prebuild_renderers()) return 1;
+  if (!generate_assets()) return 2;
+  if (!generate_database()) return 3;
+  if (configuration.has_plugin("comet") && !CometPlugin::generate_comet_views(configuration)) return 4;
   if (configuration.toolchain() == "cmake")
-    return crails_cmake_builder(configuration) ? 0 : -1;
+    return crails_cmake_builder(configuration) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   return -1;
