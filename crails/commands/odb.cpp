@@ -43,7 +43,7 @@ bool BuildOdb::increment_schema_version()
     {
       unsigned int current_version = boost::lexical_cast<unsigned int>(odb_hpp.substr(match->position(1), match->length(1)));
       odb_hpp.erase(match->position(1), match->length(1));
-      odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1)));
+      odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1));
       if (odb_hpp_output.open("config/odb.hpp"))
       {
         odb_hpp_output.set_body(odb_hpp.c_str(), odb_hpp.length());
