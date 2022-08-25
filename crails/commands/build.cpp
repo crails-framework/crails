@@ -3,24 +3,19 @@
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
 #include <crails/utils/string.hpp>
-
 #include "odb.hpp"
 
 using namespace std;
 
-struct WithPath
+bool crails_cmake_builder(ProjectConfiguration& configuration);
+
+static bool run_command(const string& command)
 {
-  const boost::filesystem::path old_path;
-  WithPath(boost::filesystem::path new_path) : old_path(boost::filesystem::current_path())
-  {
-    boost::filesystem::create_directories(new_path);
-    boost::filesystem::current_path(new_path);
-  }
-  ~WithPath()
-  {
-    boost::filesystem::current_path(old_path);
-  }
-};
+  boost::process::child process(command);
+
+  process.wait();
+  return process.exit_code() != 0;
+}
 
 bool BuildManager::prebuild_renderers()
 {
@@ -34,10 +29,7 @@ bool BuildManager::prebuild_renderers()
       << " -t Crails::" << Crails::uppercase(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
-    boost::process::child process(command.str());
-    process.wait();
-    if (process.exit_code() != 0)
-      return false;
+    return run_command(command.str());
   }
   return true;
 }
@@ -54,10 +46,7 @@ bool BuildManager::generate_assets()
       << " -i " << Crails::join(configuration.asset_roots(), ',');
     for (const string& module_ : configuration.modules())
       command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
-    boost::process::child process(command.str());
-    process.wait();
-    if (process.exit_code() != 0)
-      return false;
+    return run_command(command.str());
   }
   return true;
 }
@@ -93,29 +82,13 @@ bool BuildManager::generate_database()
   return true;
 }
 
-bool BuildManager::build_with_cmake()
-{
-  WithPath path_lock(configuration.application_build_path());
-  boost::process::child cmake("cmake " + configuration.project_directory());
-
-  cmake.wait();
-  if (cmake.exit_code() == 0)
-  {
-    boost::process::child make("make");
-
-    make.wait();
-    return make.exit_code() == 0;
-  }
-  return false;
-}
-
 int BuildManager::run()
 {
   if (!prebuild_renderers()) return false;
   if (!generate_assets()) return false;
   if (!generate_database()) return false;
   if (configuration.toolchain() == "cmake")
-    return build_with_cmake() ? 0 : -1;
+    return crails_cmake_builder(configuration) ? 0 : -1;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   return -1;

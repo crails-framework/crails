@@ -11,5 +11,4 @@ private:
   bool prebuild_renderers();
   bool generate_assets();
   bool generate_database();
-  bool build_with_cmake();
 };

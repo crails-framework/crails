@@ -40,5 +40,5 @@ public:
 
   OdbModule();
 
-  std::string_view description() const override { return "the odb module provides SQL-backed models"; }
+  std::string_view description() const override { return "the odb plugin provides SQL-backed models"; }
 };
