@@ -1,4 +1,4 @@
-#include <crails/utils/string.hpp>
+#include <crails/utils/random_string.hpp>
 
 using namespace Crails;
 using namespace std;

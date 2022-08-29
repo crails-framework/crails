@@ -10,10 +10,11 @@
 #include "commands/build.hpp"
 #include "commands/plugins.hpp"
 #include "templates/index.hpp"
-#include <crails/_libcrails_placeholder.hpp>
 
 using namespace Crails;
 using namespace std;
+
+const string Renderer::default_format = "*";
 
 class Index : public CommandIndex
 {

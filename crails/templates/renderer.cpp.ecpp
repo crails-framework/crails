@@ -3,7 +3,7 @@
 using namespace std;
 
 string               @renderer_name;
-string               classname = Crails::uppercase(renderer_name) + "Renderer";
+string               classname = Crails::camelize(renderer_name) + "Renderer";
 map<string, string>& @targets;
 // END LINKING
 #include <crails/renderers/<%= renderer_name %>_renderer.hpp>

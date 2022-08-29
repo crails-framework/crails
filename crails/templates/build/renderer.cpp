@@ -10,7 +10,7 @@ public:
   RendererCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
     Crails::Template(renderer, vars), 
     renderer_name(Crails::cast<string>(vars, "renderer_name")), 
-    classname( Crails::uppercase(renderer_name) + "Renderer"), 
+    classname( Crails::camelize(renderer_name) + "Renderer"), 
     targets(reinterpret_cast<map<string, string>&>(*Crails::cast<map<string, string>*>(vars, "targets")))
   {}
 

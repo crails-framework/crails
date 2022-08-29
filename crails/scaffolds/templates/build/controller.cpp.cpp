@@ -69,7 +69,7 @@ ecpp_stream << "#include \"" << ( path );
   ecpp_stream << "::create()\n{";
  if (model_class.length() > 0){
   ecpp_stream << "\n  " << ( model_class );
-  ecpp_stream << " model;\n  model.edit(params[" << ( classname );
+  ecpp_stream << " model;\n  model.edit(params[" << ( model_class );
   ecpp_stream << "::resource_name]);\n  database.save(model);\n  redirect_to(\"" << ( router_path );
   ecpp_stream << "/\" + boost::lexical_cast<std::string>(model.get_id()));";
  };
@@ -82,7 +82,7 @@ ecpp_stream << "#include \"" << ( path );
   ecpp_stream << "\nvoid " << ( classname );
   ecpp_stream << "::update()\n{";
  if (model_class.length() > 0){
-  ecpp_stream << "\n  model->edit(params[" << ( classname );
+  ecpp_stream << "\n  model->edit(params[" << ( model_class );
   ecpp_stream << "::resource_name]);\n  database.save(*model);\n  redirect_to(\"" << ( router_path );
   ecpp_stream << "/\" + boost::lexical_cast<std::string>(model->get_id()));";
  };

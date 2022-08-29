@@ -27,7 +27,7 @@ bool BuildManager::prebuild_renderers()
     cout << "[renderers] generate " << renderer << "..." << endl;
     command << configuration.crails_bin_path() + "/crails"
       << " templates build -r " << renderer << " -i app/views "
-      << " -t Crails::" << Crails::uppercase(renderer) << "Template"
+      << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
     return run_command(command.str());

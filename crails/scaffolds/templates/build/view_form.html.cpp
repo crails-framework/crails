@@ -21,9 +21,9 @@ public:
   {
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n#include <crails/html_form_builder.hpp>\n\nusing namespace std;\n" << ( classname );
-  ecpp_stream << "& @model;\nFormBuilder<" << ( classname );
-  ecpp_stream << " form = FormBuilder(this, model);\nstring action = \"/" << ( route );
-  ecpp_stream << "\";\n// END LINKING\n<% form_for(model, \"/" << ( route );
+  ecpp_stream << "& @model;\nCrails::FormBuilder<" << ( classname );
+  ecpp_stream << "> form = Crails::FormBuilder(this, model);\nstring action = \"/" << ( route );
+  ecpp_stream << "\";\n// END LINKING\n<%= form_for(model, \"/" << ( route );
   ecpp_stream << "\") yields %>";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){
   ecpp_stream << "\n  <div class=\"form-group\">\n    <%= form.label_for(\"" << ( it->first );

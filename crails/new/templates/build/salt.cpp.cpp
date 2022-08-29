@@ -1,7 +1,7 @@
 #include <sstream>
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
-#include <crails/utils/string.hpp>
+#include <crails/utils/random_string.hpp>
 using namespace Crails;
 using namespace std;
 

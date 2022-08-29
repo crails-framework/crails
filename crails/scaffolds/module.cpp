@@ -56,7 +56,7 @@ int ModuleScaffold::create(boost::program_options::variables_map& options)
   define.reserve(name.length());
   std::transform(name.begin(), name.end(), define.begin(), [](unsigned char c) { return std::toupper(c); });
   define         = "WITH_MODULE_" + define;
-  namespace_name = Crails::uppercase(name);
+  namespace_name = Crails::camelize(name);
   path           = boost::filesystem::path("modules/" + name);
   boost::filesystem::create_directories(path);
   renderer.vars = {{"name", name}, {"namespace_name", namespace_name}, {"define", define}};

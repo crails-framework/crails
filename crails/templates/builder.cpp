@@ -67,7 +67,7 @@ void TemplateBuilder::collect_files()
       if (alias[i] == '/' || alias[i] == '.') classname += '_';
       else classname += alias[i];
     }
-    classname = Crails::uppercase(classname);
+    classname = Crails::camelize(classname);
     targets.emplace(filepath, Target{alias, classname, Crails::underscore(classname)});
   });
   all_targets = targets;

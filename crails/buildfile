@@ -1,9 +1,11 @@
 libs =
 import libs += libboost-program-options%lib{boost_program_options}
 import libs += libboost-filesystem%lib{boost_filesystem}
-import libs += libboost-random%lib{boost_random}
-import libs += libcrails%lib{crails}
+import libs += libcrails-renderer%lib{crails-renderer}
 import libs += libcrails-templates%lib{crails-templates}
+import libs += libcrails-semantics%lib{crails-semantics}
+import libs += libcrails-random%lib{crails-random}
+import libs += libcrails-readfile%lib{crails-readfile}
 
 exe{crails}: {hxx ixx txx cxx}{**} $libs testscript
 
