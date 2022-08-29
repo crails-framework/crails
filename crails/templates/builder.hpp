@@ -7,7 +7,7 @@
 
 namespace Crails { class RenderFile; }
 
-class TemplateBuilder : public Crails::Command
+class TemplateBuilder : public ::Command
 {
   struct Target { std::string alias, classname, function; };
   typedef std::map<std::string, Target> Targets;

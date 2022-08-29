@@ -1,7 +1,7 @@
 #pragma once
 #include "../command_index.hpp"
 
-class PluginManager : public CommandIndex
+class PluginManager : public ::CommandIndex
 {
 public:
   PluginManager();

@@ -1,25 +1,20 @@
 #pragma once
-#include <string_view>
-#include <boost/program_options.hpp>
-#include <iostream>
+#include <crails/cli/command.hpp>
 #include "project_configuration.hpp"
 
-namespace Crails
+class Command : public Crails::Command
 {
-  class Command
+public:
+  virtual int run(int argc, char** argv) override
   {
-  public:
-    Command() {}
-    virtual ~Command() {}
+    int result = Crails::Command::run(argc, argv);
 
-    virtual int run() { return 0; }
-    virtual std::string_view description() const { return ""; }
-    virtual void options_description(boost::program_options::options_description&) const {}
-    virtual bool initialize(int argc, const char** argv);
+    if (result == 0 && with_configuration)
+      configuration.initialize();
+    return result;
+  }
 
-  protected:
-    boost::program_options::variables_map options;
-    ProjectConfiguration                  configuration;
-    bool with_configuration = true;
-  };
-}
+protected:
+  ProjectConfiguration configuration;
+  bool with_configuration = true;
+};

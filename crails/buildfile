@@ -6,6 +6,7 @@ import libs += libcrails-templates%lib{crails-templates}
 import libs += libcrails-semantics%lib{crails-semantics}
 import libs += libcrails-random%lib{crails-random}
 import libs += libcrails-readfile%lib{crails-readfile}
+import libs += libcrails-cli%lib{crails-cli}
 
 exe{crails}: {hxx ixx txx cxx}{**} $libs testscript
 

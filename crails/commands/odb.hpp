@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <list>
 
-class BuildOdb : public Crails::Command
+class BuildOdb : public ::Command
 {
 public:
   typedef std::vector<boost::filesystem::path> FileList;

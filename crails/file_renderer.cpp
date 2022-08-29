@@ -4,6 +4,21 @@
 
 using namespace std;
 
+bool prompt_write_file(std::filesystem::path path)
+{
+  if (std::filesystem::exists(path))
+  {
+    char overwrite = 'n';
+    cout << "[FILE] `" << path.string() << "` already exists. Overwrite ? [y/n] ";
+    cin >> overwrite;
+    if (overwrite == 'n')
+      return false;
+    cout << "\33[2K\r";
+  }
+  cout << "[FILE] Generating `" << path.string() << '`' << endl;
+  return true;
+}
+
 bool FileRenderer::overwrite_prompt(string_view template_name, string_view local_path, boost::filesystem::path path)
 {
   char overwrite = 'n';

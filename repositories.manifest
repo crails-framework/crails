@@ -18,6 +18,9 @@ location: https://github.com/crails-framework/libcrails-random.git#master
 :
 role: prerequisite
 location: https://github.com/crails-framework/libcrails-readfile.git#master
+:
+role: prerequisite
+location: https://github.com/crails-framework/libcrails-cli.git#master
 
 :
 role: prerequisite

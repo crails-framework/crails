@@ -1,7 +1,7 @@
 #pragma once
 #include "../command.hpp"
 
-class TemplateFormatsManager : public Crails::Command
+class TemplateFormatsManager : public ::Command
 {
 public:
   int              run() override;

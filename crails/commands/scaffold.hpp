@@ -8,7 +8,7 @@
 #include "../scaffolds/layout.hpp"
 #include "../scaffolds/module.hpp"
 
-class Scaffold : public Crails::Command
+class Scaffold : public ::Command
 {
   std::string type;
   ScaffoldModel* model = nullptr;

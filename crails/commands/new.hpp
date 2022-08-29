@@ -3,7 +3,7 @@
 #include "../file_renderer.hpp"
 #include <crails/template.hpp>
 
-class New : public Crails::Command
+class New : public ::Command
 {
   typedef std::pair<std::string, std::string> IncludeAndConstructor;
   typedef std::vector<IncludeAndConstructor> IncludeAndConstructors;

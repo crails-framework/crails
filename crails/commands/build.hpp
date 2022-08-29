@@ -1,7 +1,7 @@
 #pragma once
 #include "../command.hpp"
 
-class BuildManager : public Crails::Command
+class BuildManager : public ::Command
 {
 public:
   std::string_view description() const override { return "Builds a Crails server."; }
