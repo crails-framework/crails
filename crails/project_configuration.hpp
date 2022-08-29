@@ -1,28 +1,20 @@
 #pragma once
-#include <map>
+#include <crails/cli/project_variables.hpp>
 #include <list>
-#include <string>
 
-class ProjectConfiguration
+class ProjectConfiguration : public Crails::ProjectVariables
 {
-  std::map<std::string, std::string> variables;
 public:
   ProjectConfiguration();
 
   static std::string project_directory();
   static void        move_to_project_directory();
 
-  void initialize();
-  void save();
+  std::string            version() const;
+  void                   version(const std::string&);
 
-  std::string variable(const std::string& name) const { return variables.find(name) != variables.end() ? variables.at(name) : ""; }
-  void        variable(const std::string& name, const std::string& value) { variables[name] = value; }
-
-  std::string version() const;
-  void        version(const std::string&);
-
-  std::string toolchain() const;
-  void        toolchain(const std::string&);
+  std::string            toolchain() const;
+  void                   toolchain(const std::string&);
 
   std::string            build_type() const;
   void                   build_type(const std::string&);

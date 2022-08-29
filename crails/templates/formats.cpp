@@ -1,5 +1,6 @@
 #include "formats.hpp"
 #include <crails/utils/string.hpp>
+#include <iostream>
 
 using namespace std;
 

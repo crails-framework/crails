@@ -10,7 +10,7 @@ public:
 
   static bool check_backends_validity(const std::list<std::string>& backends);
 
-  struct OdbInstaller : public Command
+  struct OdbInstaller : public ::Command
   {
     int  run() override;
     void options_description(boost::program_options::options_description& desc) const override
@@ -21,12 +21,12 @@ public:
     }
   };
 
-  struct OdbDisabler : public Command
+  struct OdbDisabler : public ::Command
   {
     int run() override;
   };
 
-  struct OdbBackendManager : public Command
+  struct OdbBackendManager : public ::Command
   {
     int  run() override;
     void options_description(boost::program_options::options_description& desc) const override

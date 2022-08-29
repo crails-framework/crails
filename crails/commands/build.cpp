@@ -5,6 +5,7 @@
 #include <crails/utils/string.hpp>
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
+#include <iostream>
 
 using namespace std;
 

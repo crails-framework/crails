@@ -5,9 +5,9 @@
 class Command : public Crails::Command
 {
 public:
-  virtual int run(int argc, char** argv) override
+  virtual bool initialize(int argc, const char** argv) override
   {
-    int result = Crails::Command::run(argc, argv);
+    bool result = Crails::Command::initialize(argc, argv);
 
     if (result == 0 && with_configuration)
       configuration.initialize();

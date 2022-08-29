@@ -14,5 +14,4 @@ public:
   bool generate_file(std::string_view template_name, std::string_view filepath);
 private:
   bool render_file(std::string_view template_name, boost::filesystem::path);
-  bool require_folder(boost::filesystem::path);
 };

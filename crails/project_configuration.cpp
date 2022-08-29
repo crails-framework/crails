@@ -7,36 +7,8 @@
 
 using namespace std;
 
-ProjectConfiguration::ProjectConfiguration()
+ProjectConfiguration::ProjectConfiguration() : Crails::ProjectVariables(".crails")
 {
-}
-
-void ProjectConfiguration::initialize()
-{
-  string       configuration_contents;
-  list<string> configuration_lines;
-
-  move_to_project_directory();
-  Crails::read_file(".crails", configuration_contents);
-  configuration_lines = Crails::split(configuration_contents, '\n');
-  for (auto configuration_line : configuration_lines)
-  {
-    auto parts = Crails::split(configuration_line, ':', true);
-
-    if (parts.size() >= 2)
-      variables.emplace(*parts.begin(), Crails::join(++parts.begin(), parts.end(), ':'));
-  }
-}
-
-void ProjectConfiguration::save()
-{
-  Crails::RenderFile target;
-  stringstream stream;
-
-  for (auto it = variables.begin() ; it != variables.end() ; ++it)
-    stream << it->first << ':' << it->second << '\n';
-  target.open(".crails");
-  target.set_body(stream.str().c_str(), stream.str().length());
 }
 
 string ProjectConfiguration::crails_bin_path() const
@@ -53,39 +25,15 @@ string ProjectConfiguration::application_build_path() const
   return project_directory();
 }
 
-string ProjectConfiguration::version() const
-{
-  auto it = variables.find("crails-version");
-  return it == variables.end() ? string(LIBCRAILS_VERSION_STR) : string(it->second);
-}
-
-void ProjectConfiguration::version(const string& version)
-{
-  variables["crails-version"] = version;
-}
+string ProjectConfiguration::version() const { return variable_or("crails-version", LIBCRAILS_VERSION_STR); }
+void ProjectConfiguration::version(const string& version) { variables["crails-version"] = version; }
 
 
-string ProjectConfiguration::toolchain() const
-{
-  auto it = variables.find("build-system");
-  return it == variables.end() ? string("cmake") : string(it->second);
-}
+string ProjectConfiguration::toolchain() const { return variable_or("build-system", "cmake"); }
+void ProjectConfiguration::toolchain(const string& value) { variables["build-system"] = value; }
 
-void ProjectConfiguration::toolchain(const string& value)
-{
-  variables["build-system"] = value;
-}
-
-string ProjectConfiguration::build_type() const
-{
-  auto it = variables.find("build-type");
-  return it == variables.end() ? string("Release") : string(it->second);
-}
-
-void ProjectConfiguration::build_type(const string& value)
-{
-  variables["build-type"] = value;
-}
+string ProjectConfiguration::build_type() const { return variable_or("build-type", "Release"); }
+void ProjectConfiguration::build_type(const string& value) { variables["build-type"] = value; }
 
 list<string> ProjectConfiguration::plugins() const
 {
@@ -191,18 +139,9 @@ void ProjectConfiguration::asset_roots(const std::list<std::string>& value)
   variables["asset-roots"] = Crails::join(value, ';');
 }
 
-
 string ProjectConfiguration::project_directory()
 {
-  auto path = boost::filesystem::canonical(boost::filesystem::current_path());
-
-  while (!boost::filesystem::exists(path.string() + "/.crails"))
-  {
-    if (path == path.parent_path())
-      throw std::runtime_error("Not in a Crails project.");
-    path = path.parent_path();
-  }
-  return path.string();
+  return ProjectConfiguration().lookup_variable_path();
 }
 
 void ProjectConfiguration::move_to_project_directory()

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string_view>
 #include <unordered_map>
-#include <crails/cli/command_index.hpp>
+#include "command_index.hpp"
 #include "commands/new.hpp"
 #include "commands/scaffold.hpp"
 #include "commands/build.hpp"

@@ -6,7 +6,7 @@
 class CometPlugin : public CommandIndex
 {
 public:
-  struct CometInstaller : public Command
+  struct CometInstaller : public ::Command
   {
     int run() override;
     void options_description(boost::program_options::options_description& desc) const override

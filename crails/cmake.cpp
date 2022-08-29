@@ -1,16 +1,17 @@
 #include <boost/process.hpp>
+#include <crails/cli/with_path.hpp>
 #include "project_configuration.hpp"
-#include "with_path.hpp"
+#include <filesystem>
 
 using namespace std;
 
-class CMakeBuilder : private WithPath
+class CMakeBuilder : private Crails::WithPath
 {
-  boost::filesystem::path project_directory;
+  std::filesystem::path project_directory;
   std::stringstream options;
 public:
-  CMakeBuilder(const boost::filesystem::path& project_directory, const boost::filesystem::path& build_directory) :
-    WithPath(build_directory),
+  CMakeBuilder(const std::filesystem::path& project_directory, const std::filesystem::path& build_directory) :
+    Crails::WithPath(build_directory),
     project_directory(project_directory)
   {
   }
@@ -43,30 +44,11 @@ public:
   }
 };
 
-static bool build_server(ProjectConfiguration& configuration)
+bool crails_cmake_builder(ProjectConfiguration& configuration)
 {
   return CMakeBuilder(
     configuration.project_directory(),
     configuration.application_build_path()
   ).option("CMAKE_BUILD_TYPE", configuration.build_type())
    .build();
-}
-
-static bool build_client(ProjectConfiguration& configuration)
-{
-  if (configuration.has_plugin("comet"))
-  {
-    return CMakeBuilder(
-      configuration.variable("comet-path"),
-      *configuration.asset_roots().begin()
-    ).option("CMAKE_TOOLCHAIN_FILE", configuration.variable("cheerp-path") + "/share/cmake/Modules/CheerpToolchain.cmake")
-     .option("CMAKE_BUILD_TYPE", configuration.build_type())
-     .build();
-  }
-  return true;
-}
-
-bool crails_cmake_builder(ProjectConfiguration& configuration)
-{
-  return build_server(configuration) && build_client(configuration);
 }
