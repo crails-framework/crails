@@ -1,35 +1,9 @@
 #include "file_renderer.hpp"
 #include <boost/filesystem.hpp>
+#include <crails/cli/filesystem.hpp>
 #include <iostream>
 
 using namespace std;
-
-bool prompt_write_file(std::filesystem::path path)
-{
-  if (std::filesystem::exists(path))
-  {
-    char overwrite = 'n';
-    cout << "[FILE] `" << path.string() << "` already exists. Overwrite ? [y/n] ";
-    cin >> overwrite;
-    if (overwrite == 'n')
-      return false;
-    cout << "\33[2K\r";
-  }
-  cout << "[FILE] Generating `" << path.string() << '`' << endl;
-  return true;
-}
-
-bool FileRenderer::overwrite_prompt(string_view template_name, string_view local_path, boost::filesystem::path path)
-{
-  char overwrite = 'n';
-  std::cout << "[FILE] `" << path.string() << "` already exists. Overwrite ? [y/n] ";
-  std::cin >> overwrite;
-  if (overwrite == 'n')
-    return true;
-  else if (overwrite != 'y')
-    return generate_file(template_name, local_path);
-  return render_file(template_name, path);
-}
 
 bool FileRenderer::require_folder(boost::filesystem::path path)
 {
@@ -73,7 +47,6 @@ bool FileRenderer::generate_file(string_view template_name, string_view filepath
 {
   boost::filesystem::path path(filepath.data());
 
-  if (should_overwrite == 0 && boost::filesystem::exists(path))
-    return overwrite_prompt(template_name, filepath, path);
-  return render_file(template_name, path);
+  return (should_overwrite || Crails::prompt_write_file(path.string()))
+      && render_file(template_name, path);
 }
