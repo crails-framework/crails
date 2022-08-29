@@ -3,7 +3,7 @@
 #include <crails/read_file.hpp>
 #include <crails/utils/string.hpp>
 #include <boost/filesystem.hpp>
-#include <crails/version.hpp>
+#include "version.hpp"
 
 using namespace std;
 

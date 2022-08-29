@@ -1,10 +1,10 @@
 #include "new.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/process.hpp>
-#include <crails/version.hpp>
 #include <crails/utils/string.hpp>
 #include <regex>
 #include <iostream>
+#include "../version.hpp"
 
 using namespace std;
 

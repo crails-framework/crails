@@ -1,0 +1,3 @@
+#ifndef LIBCRAILS_VERSION_STR
+# define LIBCRAILS_VERSION_STR "2.0.0"
+#endif
