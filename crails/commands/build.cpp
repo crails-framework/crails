@@ -10,14 +10,7 @@
 using namespace std;
 
 bool crails_cmake_builder(ProjectConfiguration& configuration);
-
-static bool run_command(const string& command)
-{
-  boost::process::child process(command);
-
-  process.wait();
-  return process.exit_code() == 0;
-}
+bool run_command(const string& command);
 
 bool BuildManager::prebuild_renderers()
 {
@@ -89,7 +82,7 @@ int BuildManager::run()
   if (!prebuild_renderers()) return 1;
   if (!generate_assets()) return 2;
   if (!generate_database()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::generate_comet_views(configuration)) return 4;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration)) return 4;
   if (configuration.toolchain() == "cmake")
     return crails_cmake_builder(configuration) ? 0 : 5;
   else

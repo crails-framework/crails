@@ -43,7 +43,6 @@ declare_renderer(scaffolds_module_routes_cpp)
 declare_renderer(odb_hpp)
 declare_renderer(odb_cpp)
 declare_renderer(odb_migrate_cpp)
-declare_renderer(comet_cmakelists_txt)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -87,6 +86,4 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
   add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
-
-  add_renderer("app/comet/CMakeLists.txt", comet_cmakelists_txt);
 }

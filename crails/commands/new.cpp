@@ -1,6 +1,7 @@
 #include "new.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/process.hpp>
+#include <boost/program_options.hpp>
 #include <crails/utils/string.hpp>
 #include <regex>
 #include <iostream>
