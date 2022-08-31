@@ -166,7 +166,10 @@ bool New::validate_options()
 void New::prepare_renderers()
 {
   if (formats.size())
+  {
+    configuration.add_plugin("libcrails-renderer");
     configuration.add_plugin("libcrails-templates");
+  }
   if (find(formats.begin(), formats.end(), "html") != formats.end())
   {
     project_renderers.push_back({"html_renderer", "HtmlRenderer"});
