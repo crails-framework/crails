@@ -27,7 +27,7 @@ int CometPlugin::CometInstaller::run()
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();
     command << comet << " new "
-      << " -n " << configuration.variable("project_name")
+      << " -n " << configuration.variable("name")
       << " -o " << output_path
       << " -t " << configuration.toolchain()
       << " --html-config config/comet.json"

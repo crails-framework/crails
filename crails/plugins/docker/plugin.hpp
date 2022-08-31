@@ -5,14 +5,23 @@
 class DockerPlugin : public CommandIndex
 {
 public:
+  DockerPlugin();
+
+  std::string_view description() const override { return "generates and interact with docker machines to build, test and package your application for a given target"; }
+
   static void refresh_environment(const ProjectConfiguration&);
 
-  struct DockerInstaller : public Command
+  struct DockerInstaller : public ::Command
   {
     int run() override;
+    void options_description(boost::program_options::options_description& desc) const override
+    {
+      desc.add_options()
+        ("image", boost::program_options::value<std::string>(), "docker image to use (defaults to debian:sid)");
+    }
   };
 
-  struct DockerShell : public Command
+  struct DockerShell : public ::Command
   {
     int run() override;
     void options_description(boost::program_options::options_description& desc) const override
@@ -27,7 +36,7 @@ public:
     }
   };
 
-  struct DockerPackage : public Command
+  struct DockerPackage : public ::Command
   {
     int run() override;
     void options_description(boost::program_options::options_description& desc) const override

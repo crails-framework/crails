@@ -1,6 +1,7 @@
 std::string @crails_version = "master";
 std::string @build2_fingerprint;
-bool @include_odb = false;
+bool @with_odb = false;
+bool @with_comet = false;
 // END LINKING
 #!/bin/bash -e
 
@@ -35,9 +36,11 @@ bpkg fetch --trust "$CPPGET_FINGERPRINT"
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
 bpkg build libcrails --yes ${system_packages[@]}
+<% if (with_comet) do %>
 bpkg build comet     --yes ${system_packages[@]}
+<% end %>
 
-<% if (include_odb) do %>
+<% if (with_odb) do %>
 if [ -z ${sql_backends[@]} ] ; then
   echo "+ no sql backend selected, skipping libcrails-odb"
 else

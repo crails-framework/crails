@@ -2,6 +2,7 @@
 #include <boost/process.hpp>
 #include <crails/cli/process.hpp>
 #include <filesystem>
+#include <iostream>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ static vector<string> make_shell_command(const string& machine_name, const boost
 static string make_build_command(const string& machine_name, const boost::program_options::variables_map& options)
 {
   stringstream command;
-  string dockerfile_path = "docker";
+  string dockerfile_path = "docker/base";
 
   if (options.count("dockerfile"))
     dockerfile_path  = options["dockerfile"].as<string>();

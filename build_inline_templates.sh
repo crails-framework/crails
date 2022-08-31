@@ -151,9 +151,13 @@ $ECPP \
   -i $DOCKER_TPL/Dockerfile.ecpp \
   >  $DOCKER_TPL/build/Dockerfile.cpp
 $ECPP \
-  -n DockerOdbCompiler \
-  -i $DOCKER_TPL/odb-compiler.sh.ecpp \
-  >  $DOCKER_TPL/build/odb-compiler.sh.cpp
+  -n DockerBuildBuild2 \
+  -i $DOCKER_TPL/build-build2.sh.ecpp \
+  >  $DOCKER_TPL/build/build-build2.sh.cpp
+$ECPP \
+  -n DockerBuildOdbCompiler \
+  -i $DOCKER_TPL/build-odb-compiler.sh.ecpp \
+  >  $DOCKER_TPL/build/build-odb-compiler.sh.cpp
 $ECPP \
   -n DockerBuildCrails \
   -i $DOCKER_TPL/build-crails.sh.ecpp \

@@ -2,16 +2,14 @@ using namespace std;
 
 string @image = "debian:sid";
 bool   @include_assets = true;
-bool   @include_cheerp = false;
-bool   @include_odb = false;
+bool   @with_comet = false;
+bool   @with_odb = false;
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
-string @build2_fingerprint = "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43"
 // END LINKING
 FROM <%= image %>
 
+WORKDIR /tmp
 ENV LD_LIBRARY_PATH /usr/local/lib
-ENV BUILD2_VERSION 0.15.0
-ENV BUILD2_FINGERPRINT <%= build2_fingerprint %>
 
 RUN apt-get -y --allow-unauthenticated update && \
     apt-get -y --allow-unauthenticated upgrade && \
@@ -32,22 +30,21 @@ RUN apt-get -y install \
   libboost-random1.74-dev \
   libboost-system1.74-dev
 
-RUN curl -sSfo https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh
-RUN chmod +x build2-install-$BUILD2_VERSION.sh
-RUN sh build2-install-$BUILD2_VERSION.sh --yes --trust "$BUILD2_FINGERPRINT"
+COPY build-build2.sh build-build2.sh
+RUN bash build-build2.sh
 
 <% if (include_assets) do %>
 RUN apt-get install -y nodejs npm
 RUN npm install -g node-sass
 <% end %>
 
-<% if (include_odb) do %>
+<% if (with_odb) do %>
 RUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev
-COPY odb-compiler.sh odb-compiler.sh
-RUN bash odb-compiler.sh
+COPY build-odb-compiler.sh build-odb-compiler.sh
+RUN bash build-odb-compiler.sh
 <% end %>
 
-<% if (include_cheerp) do %>
+<% if (with_comet) do %>
 RUN echo "deb http://ppa.launchpad.net/leaningtech-dev/<%= cheerp_repository %>" >> /etc/apt/sources.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 84540D4B9BF457D5
 RUN apt-get -y --allow-unauthenticated update
@@ -57,8 +54,10 @@ RUN apt-get -y install cheerp-core
 COPY build-environment.sh build-environment.sh
 COPY build-crails.sh build-crails.sh
 RUN bash build-crails.sh
+<% if (with_comet) do %>
 COPY build-comet.sh build-comet.sh
 RUN bash build-comet.sh
+<% end %>
 
 RUN mkdir -p /opt/webapp
 WORKDIR /opt/webapp

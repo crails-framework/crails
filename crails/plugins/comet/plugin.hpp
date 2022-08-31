@@ -6,6 +6,8 @@
 class CometPlugin : public CommandIndex
 {
 public:
+  std::string_view description() const override { return "integrates the comet framework using a C++ to JavaScript and WebAssembly compiler"; }
+
   struct CometInstaller : public ::Command
   {
     int run() override;
@@ -18,8 +20,6 @@ public:
   };
 
   CometPlugin();
-
-  std::string_view description() const override { return "the comet plugins integrates a C++ to JavaScript transpiler"; }
 
   static std::string find_comet_command(const ProjectConfiguration&);
   static bool build(const ProjectConfiguration&);

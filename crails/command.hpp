@@ -9,7 +9,7 @@ public:
   {
     bool result = Crails::Command::initialize(argc, argv);
 
-    if (result == 0 && with_configuration)
+    if (result && with_configuration)
       configuration.initialize();
     return result;
   }
