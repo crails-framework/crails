@@ -22,5 +22,5 @@ public:
   CometPlugin();
 
   static std::string find_comet_command(const ProjectConfiguration&);
-  static bool build(const ProjectConfiguration&);
+  static bool build(const ProjectConfiguration&, bool verbose);
 };

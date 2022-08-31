@@ -54,14 +54,17 @@ string CometPlugin::find_comet_command(const ProjectConfiguration& configuration
   return default_path;
 }
 
-bool CometPlugin::build(const ProjectConfiguration& configuration)
+bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose)
 {
   string comet = find_comet_command(configuration);
   string source = configuration.variable("comet-client-path");
+  string command = comet + " build";
 
+  if (verbose)
+    command += " -v";
   boost::filesystem::current_path(source);
   if (comet.length() > 0)
-    return Crails::run_command(comet + " build");
+    return Crails::run_command(command);
   else
     cerr << "comet does not seem to be installed on your system" << endl;
   return false;

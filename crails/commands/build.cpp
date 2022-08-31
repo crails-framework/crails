@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool crails_cmake_builder(ProjectConfiguration& configuration);
+bool crails_cmake_builder(ProjectConfiguration& configuration, bool verbose);
 
 bool BuildManager::prebuild_renderers()
 {
@@ -81,9 +81,9 @@ int BuildManager::run()
   if (!prebuild_renderers()) return 1;
   if (!generate_assets()) return 2;
   if (!generate_database()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration)) return 4;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 4;
   if (configuration.toolchain() == "cmake")
-    return crails_cmake_builder(configuration) ? 0 : 5;
+    return crails_cmake_builder(configuration, options.count("verbose")) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   return -1;
