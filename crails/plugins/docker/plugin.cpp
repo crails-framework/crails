@@ -38,7 +38,7 @@ int DockerPlugin::DockerInstaller::run()
 
   if (options.count("image"))
     renderer.vars["image"] = options["image"].as<string>();
-  renderer.vars["crails_version"] = string(LIBCRAILS_VERSION_STR);
+  renderer.vars["crails_version"] = configuration.version();
   renderer.vars["with_odb"] = with_odb;
   renderer.vars["with_comet"] = with_comet;
   renderer.vars["build2_fingerprint"] = build2_fingerprint;

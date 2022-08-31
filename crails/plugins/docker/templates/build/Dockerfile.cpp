@@ -24,7 +24,7 @@ ecpp_stream << "FROM " << ( image );
  };
   ecpp_stream << "\n";
  if (with_odb){
-  ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY odb-compiler.sh odb-compiler.sh\nRUN bash odb-compiler.sh";
+  ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY build-odb-compiler.sh build-odb-compiler.sh\nRUN bash build-odb-compiler.sh";
  };
   ecpp_stream << "\n";
  if (with_comet){

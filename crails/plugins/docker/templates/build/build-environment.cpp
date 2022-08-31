@@ -22,7 +22,7 @@ ecpp_stream << "crails_packages=(";
   ecpp_stream << "\n  " << ( package );
   ecpp_stream << "";
  };
-  ecpp_stream << "\n)";
+  ecpp_stream << ")";
  if (with_odb){
   ecpp_stream << "\n\nsql_backends=(";
  for (const auto& backend : sql_backends){

@@ -217,13 +217,10 @@ BuildOdb::FileList BuildOdb::collect_files()
   FileList results;
   regex pattern("#\\s*pragma\\s+db\\s+object", regex_constants::ECMAScript);
 
-  std::cout << "BuildOdb::collect_files in dirs: " << input_dirs.size() << " dirs" << std::endl;
   for (const string& input_dir : input_dirs)
   {
-    FileCollector collector(input_dir, "\\.h(pp|xx)?$");
-
     if (!boost::filesystem::is_directory(input_dir)) continue ;
-    collector.collect_files([&results, pattern](const boost::filesystem::path& path)
+    FileCollector(input_dir, "\\.h(pp|xx)?$").collect_files([&results, pattern](const boost::filesystem::path& path)
     {
       string file_contents;
 
