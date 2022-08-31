@@ -1,0 +1,33 @@
+#!/bin/bash -e
+
+CRAILS_VERSION=master
+CHEERP_PATH=/opt/cheerp
+COMPILER_VERSION=`$CHEERP_PATH/bin/clang++ --version | grep Cheerp | cut -d' ' -f5`
+INSTALL_ROOT=/usr/local
+BUILD_DIR="build-cheerp-$COMPILER_VERSION"
+
+source ./build-environment.sh
+
+echo "+ creating package at $BUILD_DIR"
+bpkg create -d "$BUILD_DIR" cc \
+  config.cxx="$CHEERP_PATH/bin/clang++" \
+  config.cxx.poptions="-target cheerp-genericjs -D__CHEERP_CLIENT__ -I/usr/local/include" \
+  config.c{,xx}.version=$COMPILER_VERSION \
+  config.install.sudo=sudo \
+  config.install.root=$INSTALL_ROOT \
+  config.install.lib=exec_root/lib/genericjs
+
+cd "$BUILD_DIR"
+
+echo "+ fetching dependencies"
+for package in ${comet_packages[@]} ; do
+  bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
+done
+bpkg fetch
+
+for package in ${comet_packages[@]} ; do
+  echo "+ building $package"
+  bpkg build $package --yes
+  echo "+ installing $package at $INSTALL_ROOT"
+  bpkg install $package
+done

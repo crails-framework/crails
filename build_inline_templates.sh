@@ -141,3 +141,28 @@ $ECPP \
   -n OdbMigrateCpp \
   -i crails/plugins/odb/migrate.cpp.ecpp \
   >  $PROJECT_TPL/build/odb_migrate.cpp.cpp
+
+##
+## Docker plugin
+##
+DOCKER_TPL=crails/plugins/docker/templates
+$ECPP \
+  -n DockerDockerfile \
+  -i $DOCKER_TPL/Dockerfile.ecpp \
+  >  $DOCKER_TPL/build/Dockerfile.cpp
+$ECPP \
+  -n DockerOdbCompiler \
+  -i $DOCKER_TPL/odb-compiler.sh.ecpp \
+  >  $DOCKER_TPL/build/odb-compiler.sh.cpp
+$ECPP \
+  -n DockerBuildCrails \
+  -i $DOCKER_TPL/build-crails.sh.ecpp \
+  >  $DOCKER_TPL/build/build-crails.cpp
+$ECPP \
+  -n DockerBuildComet \
+  -i $DOCKER_TPL/build-comet.sh.ecpp \
+  >  $DOCKER_TPL/build/build-comet.cpp
+$ECPP \
+  -n DockerBuildEnvironment \
+  -i $DOCKER_TPL/build-environment.sh.ecpp \
+  >  $DOCKER_TPL/build/build-environment.cpp

@@ -1,0 +1,66 @@
+std::string @crails_version = "master";
+std::string @build2_fingerprint;
+bool @include_odb = false;
+// END LINKING
+#!/bin/bash -e
+
+CRAILS_VERSION=<%= crails_version %>
+COMPILER_VERSION=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`
+CPPGET_FINGERPRINT="<%= build2_fingerprint %>"
+INSTALL_ROOT=/usr/local
+BUILD_DIR="build-gcc-$COMPILER_VERSION"
+
+source ./build-environment.sh
+
+##
+## Build libraries
+##
+echo "+ creating package at $BUILD_DIR"
+bpkg create -d "$BUILD_DIR" cc \
+  config.cxx=g++ \
+  config.cc.coptions=-O3 \
+  config.bin.rpath="$INSTALL_ROOT/lib" \
+  config.install.root="$INSTALL_ROOT" \
+  config.install.sudo=sudo
+
+cd "$BUILD_DIR"
+
+echo "+ fetching dependencies"
+bpkg add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
+for package in crails comet.cpp libcrails ${crails_packages[@]} ; do
+  bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
+done
+bpkg fetch --trust "$CPPGET_FINGERPRINT"
+
+echo "+ building core components"
+bpkg build crails    --yes ${system_packages[@]}
+bpkg build libcrails --yes ${system_packages[@]}
+bpkg build comet     --yes ${system_packages[@]}
+
+<% if (include_odb) do %>
+if [ -z ${sql_backends[@]} ] ; then
+  echo "+ no sql backend selected, skipping libcrails-odb"
+else
+  echo "+ building libcrails-odb"
+  config_file="libcrails-odb-2.0.0/build/config.build"
+  bpkg build libodb
+  bpkg build libcrails-odb --yes --configure-only ${system_packages[@]}
+  for backend in sqlite pgsql mysql oracle ; do
+    echo ${sql_backends[@]} | grep $backend \
+      && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
+      || echo "config.libcrails_odb.with_$backend = false" >> $config_file
+  done
+  for backend in ${sql_backends[@]} ; do
+    bpkg build libodb-$backend ${system_packages[@]}
+  done
+  bpkg build libcrails-odb ${system_packages[@]}
+fi
+<% end %>
+
+for package in ${crails_packages[@]} ; do
+  echo "+ building $package"
+  bpkg build $package --yes ${system_packages[@]}
+done
+
+echo "+ installing at $INSTALL_ROOT"
+bpkg install --all --recursive

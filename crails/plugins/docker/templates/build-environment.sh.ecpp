@@ -1,0 +1,51 @@
+using namespace std;
+
+bool          @with_odb = false;
+bool          @with_comet = false;
+list<string>& @plugins;
+list<string>& @sql_backends;
+// END LINKING
+
+crails_packages=(
+<% for (const auto& plugin : plugins) do %>
+<%   if (plugin.substr(0, 3) == "lib") do %>
+  <%= plugin %>
+<%   end %>
+<% end %>
+)
+
+<% if (with_odb) do %>
+sql_backends=(
+<% for (const auto& backend : sql_backends) do %>
+  <%= backend %>
+<% end %>
+)
+<% end %>
+
+<% if (with_comet) do %>
+comet_packages=(
+  libcrails-semantics
+  libcrails-router
+  libcomet
+)
+<% end %>
+
+system_packages=(
+  ?sys:libboost-any
+  ?sys:libboost-beast
+  ?sys:libboost-config
+  ?sys:libboost-filesystem
+  ?sys:libboost-fusion
+  ?sys:libboost-json
+  ?sys:libboost-lexical-cast
+  ?sys:libboost-program-options
+  ?sys:libboost-property-tree
+  ?sys:libboost-process
+  ?sys:libboost-random
+  ?sys:libssl
+<% if (with_odb) do %>
+  ?sys:libsqlite3
+  ?sys:libpq
+  ?sys:libmysqlclient
+<% end %>
+)

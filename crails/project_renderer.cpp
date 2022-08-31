@@ -43,6 +43,11 @@ declare_renderer(scaffolds_module_routes_cpp)
 declare_renderer(odb_hpp)
 declare_renderer(odb_cpp)
 declare_renderer(odb_migrate_cpp)
+declare_renderer(docker_dockerfile)
+declare_renderer(docker_odb_compiler)
+declare_renderer(docker_build_crails)
+declare_renderer(docker_build_comet)
+declare_renderer(docker_build_environment)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -86,4 +91,10 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
   add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
+
+  add_renderer("docker/Dockerfile",           docker_dockerfile);
+  add_renderer("docker/odb-compiler.sh",      docker_odb_compiler);
+  add_renderer("docker/build-crails.sh",      docker_build_crails);
+  add_renderer("docker/build-comet.sh",       docker_build_comet);
+  add_renderer("docker/build-environment.sh", docker_build_environment);
 }
