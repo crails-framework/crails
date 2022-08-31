@@ -1,8 +1,8 @@
 #include "build.hpp"
 #include <crails/utils/string.hpp>
+#include <crails/cli/process.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
-#include <crails/utils/string.hpp>
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
 #include <iostream>
@@ -10,7 +10,6 @@
 using namespace std;
 
 bool crails_cmake_builder(ProjectConfiguration& configuration);
-bool run_command(const string& command);
 
 bool BuildManager::prebuild_renderers()
 {
@@ -24,7 +23,7 @@ bool BuildManager::prebuild_renderers()
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
-    return run_command(command.str());
+    return Crails::run_command(command.str());
   }
   return true;
 }
@@ -41,7 +40,7 @@ bool BuildManager::generate_assets()
       << " -i " << Crails::join(configuration.asset_roots(), ',');
     for (const string& module_ : configuration.modules())
       command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
-    return run_command(command.str());
+    return Crails::run_command(command.str());
   }
   return true;
 }

@@ -2,10 +2,9 @@
 #include "../../file_renderer.hpp"
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
+#include <crails/cli/process.hpp>
 
 using namespace std;
-
-bool run_command(const string& command);
 
 CometPlugin::CometPlugin()
 {
@@ -35,7 +34,7 @@ int CometPlugin::CometInstaller::run()
       << " --html-output lib-client";
     if (options.count("cheerp-path"))
       command << " --cheerp-path " << options["cheerp-path"].as<string>();
-    if (run_command(command.str()))
+    if (Crails::run_command(command.str()))
     {
       configuration.add_plugin("comet");
       configuration.variable("comet-client-path", output_path);
@@ -51,16 +50,7 @@ string CometPlugin::find_comet_command(const ProjectConfiguration& configuration
   string default_path = configuration.crails_bin_path() + "/comet";
 
   if (!boost::filesystem::exists(default_path))
-  {
-    boost::process::ipstream pipe_stream;
-    boost::process::child process("which comet", boost::process::std_out > pipe_stream);
-    string path;
-
-    process.wait();
-    if (process.exit_code() == 0)
-      getline(pipe_stream, path);
-    return path;
-  }
+    return Crails::which("comet");
   return default_path;
 }
 
@@ -71,7 +61,7 @@ bool CometPlugin::build(const ProjectConfiguration& configuration)
 
   boost::filesystem::current_path(source);
   if (comet.length() > 0)
-    return run_command(comet + " build");
+    return Crails::run_command(comet + " build");
   else
     cerr << "comet does not seem to be installed on your system" << endl;
   return false;

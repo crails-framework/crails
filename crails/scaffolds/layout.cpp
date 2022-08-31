@@ -1,4 +1,5 @@
 #include "layout.hpp"
+#include <crails/cli/process.hpp>
 #include <iostream>
 
 using namespace std;
@@ -53,10 +54,7 @@ int LayoutScaffold::create_bootstrap_layout()
 
 static bool command_exists(const std::string& command)
 {
-  boost::process::child process("which " + command);
-
-  process.wait();
-  if (process.exit_code() != 0)
+  if (Crails::which(command).length() == 0)
   {
     std::cout << "Requires `" << command << "` to be installed." << std::endl;
     return false;
