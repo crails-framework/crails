@@ -66,8 +66,8 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
     string define = "__CHEERP_CLIENT__";
 
     return define
-      + ':' + boost::filesystem::weakly_canonical(asset_root + "/application.js").string()
-      + ':' + boost::filesystem::weakly_canonical(asset_root + "/application.js.map").string();
+      + ':' + boost::filesystem::path(asset_root + "/application.js").string()
+      + ':' + boost::filesystem::path(asset_root + "/application.js.map").string();
   }
   return "err:missing-asset-roots";
 }

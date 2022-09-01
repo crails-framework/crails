@@ -1,6 +1,7 @@
 #include "formats.hpp"
 #include <crails/utils/string.hpp>
 #include <iostream>
+#include "../cmake_module_updater.hpp"
 
 using namespace std;
 
@@ -26,6 +27,14 @@ int TemplateFormatsManager::run()
     {
       configuration.add_renderer(entry);
       configuration.add_plugin("libcrails-" + entry + "-views");
+    }
+    if (configuration.toolchain() == "cmake")
+    {
+      if (!CrailsPackageListEditor().update_plugins_list(configuration.plugins(), configuration.version()))
+      {
+        cerr << "Failed to update CMakeLists.txt" << endl;
+        return -1;
+      }
     }
   }
   if (options.count("remove"))

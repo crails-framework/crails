@@ -7,19 +7,19 @@ using namespace std;
 
 bool FileRenderer::render_file(string_view template_name, boost::filesystem::path path)
 {
-  Crails::RenderFile render_target;
+  Crails::RenderString render_target;
 
   if (renderer.can_render("", template_name.data()))
   {
     if (Crails::require_folder("DIR", path.string()))
     {
-      render_target.open(path.string());
       renderer.render_template(template_name.data(), render_target, vars);
+      Crails::write_file("FILE", path.string(), string(render_target.value()));
       return true;
     }
   }
   else
-    cout << "[FILE] `" << path.string() << "` could not be generated: template not found." << endl;
+    cerr << "[FILE] `" << path.string() << "` could not be generated: template not found." << endl;
   return false;
 }
 

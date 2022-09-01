@@ -23,6 +23,8 @@ bool BuildManager::prebuild_renderers()
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
+    if (options.count("verbose"))
+      cout << "+ " << command.str();
     return Crails::run_command(command.str());
   }
   return true;
@@ -42,6 +44,8 @@ bool BuildManager::generate_assets()
       command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
     if (configuration.has_plugin("comet"))
       command << " --ifndef " << CometPlugin::asset_exclusion_pattern(configuration);
+    if (options.count("verbose"))
+      cout << "+ " << command.str();
     return Crails::run_command(command.str());
   }
   return true;
@@ -83,7 +87,8 @@ int BuildManager::run()
 {
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 3;
+  if (!generate_assets()) return 3;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 10;
   if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
     return crails_cmake_builder(configuration, options.count("verbose")) ? 0 : 5;
