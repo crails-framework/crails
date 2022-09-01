@@ -14,7 +14,8 @@ void BuildOdb::options_description(boost::program_options::options_description& 
     ("includes,b",    boost::program_options::value<std::string>(), "custom includes, separated by commas")
     ("use-session,c", boost::program_options::value<bool>(),        "use odb session")
     ("output-dir,o",  boost::program_options::value<std::string>(), "output directory")
-    ("input-dirs,i",  boost::program_options::value<std::string>(), "input directories, separated by commas");
+    ("input-dirs,i",  boost::program_options::value<std::string>(), "input directories, separated by commas")
+    ("verbose,v", "verbose mode (disabled by default)");
 }
 
 static bool create_directory(boost::filesystem::path path)
@@ -50,13 +51,13 @@ bool BuildOdb::increment_schema_version()
         return true;
       }
       else
-        std::cerr << "Cannot write into config/odb.hpp" << std::endl;
+        cerr << "Cannot write into config/odb.hpp" << endl;
     }
     else
-      std::cerr << "Cannot find #pragma db model version in odb.hpp" << std::endl;
+      cerr << "Cannot find #pragma db model version in odb.hpp" << endl;
   }
   else
-    std::cerr << "Cannot open config/odb.hpp" << std::endl;
+    cerr << "Cannot open config/odb.hpp" << endl;
   return false;
 }
 
@@ -86,7 +87,7 @@ int BuildOdb::run()
     }
     return -1;
   }
-  else
+  else if (options.count("verbose"))
     cout << "[crails-odb] Nothing to compile." << endl;
   return 0;
 }
@@ -106,7 +107,8 @@ bool BuildOdb::compile_models_at_once(const FileList& files)
   command << odb_command(temporary_dir) << ' ';
   for (auto file : files)
     command << boost::filesystem::relative(file, project_dir) << ' ';
-  cout << "+ " << command.str() << endl;
+  if (options.count("verbose"))
+    cout << "+ " << command.str() << endl;
   boost::process::child odb(command.str());
   odb.wait();
   if (odb.exit_code() != 0)
@@ -180,7 +182,8 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
     string command = odb_command(temporary_dir)
       + ' ' + "--include-prefix \"" + include_path.string() + '"'
       + ' ' + file.string();
-    cout << "+ " << command << endl;
+    if (options.count("verbose"))
+      cout << "+ " << command << endl;
     boost::process::child odb(command);
 
     odb.wait();
@@ -203,7 +206,8 @@ bool BuildOdb::generate_schema(const FileList& files)
     command << odb_command(schema_output_dir) << ' ' << "--generate-schema-only" << ' ';
     for (auto file : files)
       command << boost::filesystem::relative(file, project_dir) << ' ';
-    cout << "+ " << command.str() << endl;
+    if (options.count("verbose"))
+      cout << "+ " << command.str() << endl;
     boost::process::child odb(command.str());
     odb.wait();
     if (odb.exit_code() == 0)
@@ -216,20 +220,22 @@ BuildOdb::FileList BuildOdb::collect_files()
 {
   FileList results;
   regex pattern("#\\s*pragma\\s+db\\s+object", regex_constants::ECMAScript);
+  bool verbose = options.count("verbose");
 
   for (const string& input_dir : input_dirs)
   {
     if (!boost::filesystem::is_directory(input_dir)) continue ;
-    FileCollector(input_dir, "\\.h(pp|xx)?$").collect_files([&results, pattern](const boost::filesystem::path& path)
+    FileCollector(input_dir, "\\.h(pp|xx)?$").collect_files([&results, pattern, verbose](const boost::filesystem::path& path)
     {
       string file_contents;
 
       if (Crails::read_file(path.string(), file_contents) && sregex_iterator(file_contents.begin(), file_contents.end(), pattern) != sregex_iterator())
       {
-        cout << "[crails-odb] detected odb header " << path.string() << endl;
+        if (verbose)
+           cout << "[crails-odb] detected odb header " << path.string() << endl;
         results.push_back(path);
       }
-      else
+      else if (verbose)
         cout << "[crails-odb] rejected potential odb header " << path.string() << endl;
     });
   }

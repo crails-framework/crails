@@ -3,6 +3,7 @@
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
 #include <crails/cli/process.hpp>
+#include <crails/cli/with_path.hpp>
 
 using namespace std;
 
@@ -23,6 +24,7 @@ int CometPlugin::CometInstaller::run()
   {
     stringstream command;
     string output_path = "app/client";
+    string asset_cpp_path = boost::filesystem::relative("lib/assets.cpp", output_path).string();
 
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();
@@ -30,8 +32,10 @@ int CometPlugin::CometInstaller::run()
       << " -n " << configuration.variable("name")
       << " -o " << output_path
       << " -t " << configuration.toolchain()
+      << " -b \"" << configuration.application_build_path() + "/client" << '"'
       << " --html-config config/comet.json"
-      << " --html-output lib-client";
+      << " --html-output lib-client"
+      << " --include-src \"" << asset_cpp_path << "\"";
     if (options.count("cheerp-path"))
       command << " --cheerp-path " << options["cheerp-path"].as<string>();
     if (Crails::run_command(command.str()))
@@ -54,6 +58,44 @@ string CometPlugin::find_comet_command(const ProjectConfiguration& configuration
   return default_path;
 }
 
+string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configuration)
+{
+  if (configuration.asset_roots().size() > 0)
+  {
+    string asset_root = *configuration.asset_roots().begin();
+    string define = "__CHEERP_CLIENT__";
+
+    return define
+      + ':' + boost::filesystem::weakly_canonical(asset_root + "/application.js").string()
+      + ':' + boost::filesystem::weakly_canonical(asset_root + "/application.js.map").string();
+  }
+  return "err:missing-asset-roots";
+}
+
+static bool copy_build_to_assets(const ProjectConfiguration& configuration)
+{
+  if (configuration.asset_roots().size() > 0)
+  {
+    string javascript_output = configuration.application_build_path() + "/client/application.js";
+    string sourcemaps_output = javascript_output + ".map";
+    string asset_root = *configuration.asset_roots().begin();
+    boost::system::error_code ec;
+
+    boost::filesystem::create_directories(asset_root, ec);
+    if (ec)
+    {
+      cerr << "cannot create asset directory: " << ec.message() << endl;
+      return false;
+    }
+    if (boost::filesystem::exists(javascript_output)) boost::filesystem::copy(javascript_output, asset_root + "/application.js",     boost::filesystem::copy_options::overwrite_existing);
+    if (boost::filesystem::exists(sourcemaps_output)) boost::filesystem::copy(sourcemaps_output, asset_root + "/application.js.map", boost::filesystem::copy_options::overwrite_existing);
+    return true;
+  }
+  else
+    cerr << "no asset-roots found in ./.crails" << endl;
+  return false;
+}
+
 bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose)
 {
   string comet = find_comet_command(configuration);
@@ -62,10 +104,16 @@ bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose)
 
   if (verbose)
     command += " -v";
-  boost::filesystem::current_path(source);
-  if (comet.length() > 0)
-    return Crails::run_command(command);
-  else
-    cerr << "comet does not seem to be installed on your system" << endl;
-  return false;
+  {
+    Crails::WithPath with_path(source);
+
+    if (comet.length() < 0)
+    {
+      cerr << "comet does not seem to be installed on your system" << endl;
+      return false;
+    }
+    if (!Crails::run_command(command))
+      return false;
+  }
+  return copy_build_to_assets(configuration);
 }

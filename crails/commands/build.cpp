@@ -40,6 +40,8 @@ bool BuildManager::generate_assets()
       << " -i " << Crails::join(configuration.asset_roots(), ',');
     for (const string& module_ : configuration.modules())
       command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
+    if (configuration.has_plugin("comet"))
+      command << " --ifndef " << CometPlugin::asset_exclusion_pattern(configuration);
     return Crails::run_command(command.str());
   }
   return true;
@@ -64,6 +66,7 @@ bool BuildManager::generate_database()
       "--input-dirs", model_input_dirs(configuration),
       "--output-dir","lib/odb"
     };
+    if (options.count("verbose")) argv_array.push_back("--verbose");
     const char* argv[argv_array.size() + 1];
 
     std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
@@ -79,9 +82,9 @@ bool BuildManager::generate_database()
 int BuildManager::run()
 {
   if (!prebuild_renderers()) return 1;
-  if (!generate_assets()) return 2;
-  if (!generate_database()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 4;
+  if (!generate_database()) return 2;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 3;
+  if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
     return crails_cmake_builder(configuration, options.count("verbose")) ? 0 : 5;
   else

@@ -22,5 +22,6 @@ public:
   CometPlugin();
 
   static std::string find_comet_command(const ProjectConfiguration&);
+  static std::string asset_exclusion_pattern(const ProjectConfiguration&);
   static bool build(const ProjectConfiguration&, bool verbose);
 };
