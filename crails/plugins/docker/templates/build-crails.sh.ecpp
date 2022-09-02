@@ -21,8 +21,7 @@ bpkg create -d "$BUILD_DIR" cc \
   config.cxx=g++ \
   config.cc.coptions=-O3 \
   config.bin.rpath="$INSTALL_ROOT/lib" \
-  config.install.root="$INSTALL_ROOT" \
-  config.install.sudo=sudo
+  config.install.root="$INSTALL_ROOT"
 
 cd "$BUILD_DIR"
 
@@ -53,8 +52,10 @@ else
       && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
       || echo "config.libcrails_odb.with_$backend = false" >> $config_file
   done
+  bpkg install libodb
   for backend in ${sql_backends[@]} ; do
     bpkg build libodb-$backend ${system_packages[@]}
+    bpkg install libodb-$backend
   done
   bpkg build libcrails-odb ${system_packages[@]}
 fi

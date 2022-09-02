@@ -1,6 +1,7 @@
 #include "build.hpp"
 #include <crails/utils/string.hpp>
 #include <crails/cli/process.hpp>
+#include <crails/read_file.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
 #include "odb.hpp"
@@ -84,10 +85,23 @@ bool BuildManager::generate_database()
   return true;
 }
 
+static void restart_server()
+{
+  std::string pid_string;
+
+  if (Crails::read_file("crails.pid", pid_string))
+  {
+    boost::process::child kill("kill -USR2 " + pid_string);
+
+    kill.wait();
+  }
+}
+
 int BuildManager::run()
 {
   bool verbose = options.count("verbose");
   bool clean = options.count("clean");
+  int result = -1;
 
   if (options.count("mode"))
     configuration.variable("build-type", options["mode"].as<string>());
@@ -98,8 +112,9 @@ int BuildManager::run()
   if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, verbose, clean)) return 10;
   if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
-    return crails_cmake_builder(configuration, verbose, clean) ? 0 : 5;
+    result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
-  return -1;
+  if (result == 0) restart_server();
+  return result;
 }
