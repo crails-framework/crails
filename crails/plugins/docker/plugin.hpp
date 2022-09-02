@@ -37,10 +37,8 @@ public:
     }
   };
 
-  struct DockerBuild : public ::Command
+  struct ShellCommand : public ::Command
   {
-    std::string_view description() const override { return "builds the application from a docker machine"; }
-    int run() override;
     void options_description(boost::program_options::options_description& desc) const override
     {
       desc.add_options()
@@ -48,32 +46,43 @@ public:
         ("dockerfile,i", boost::program_options::value<std::string>(), "Dockerfile path (defaults to docker/base)")
         ("verbose,v", "verbose mode (quiet by default)");
     }
+  protected:
+    int call_docker_shell_with(const std::string& command);
   };
 
-  struct DockerRun : public ::Command
+  struct DockerBuild : public ShellCommand
+  {
+    std::string_view description() const override { return "builds the application from a docker machine"; }
+    int run() override;
+    void options_description(boost::program_options::options_description& desc) const override
+    {
+      ShellCommand::options_description(desc);
+      desc.add_options()
+        ("mode,m", boost::program_options::value<std::string>(), "Release or Debug, defaults to build-type value in .crails file");
+    }
+  };
+
+  struct DockerRun : public ShellCommand
   {
     std::string_view description() const override { return "runs the application from a docker machine"; }
     int run() override;
     void options_description(boost::program_options::options_description& desc) const override
     {
+      ShellCommand::options_description(desc);
       desc.add_options()
-        ("name,n",       boost::program_options::value<std::string>(),    "machine name")
-        ("dockerfile,i", boost::program_options::value<std::string>(),    "Dockerfile path (defaults to docker/base)")
-        ("port,p",       boost::program_options::value<unsigned short>(), "port to bind");
+        ("port,p", boost::program_options::value<unsigned short>(), "port to bind");
     }
   };
 
-  struct DockerPackage : public ::Command
+  struct DockerPackage : public ShellCommand
   {
     std::string_view description() const override { return "generates an exportable package of your application"; }
     int run() override;
     void options_description(boost::program_options::options_description& desc) const override
     {
+      ShellCommand::options_description(desc);
       desc.add_options()
-        ("name,n",       boost::program_options::value<std::string>(), "machine name")
-        ("dockerfile,i", boost::program_options::value<std::string>(), "Dockerfile path (defaults to docker/base)")
-        ("output,o",     boost::program_options::value<std::string>(), "output path for the package")
-        ("verbose,v", "verbose mode (quiet by default)");
+        ("output,o", boost::program_options::value<std::string>(), "output path for the package");
     }
   };
 };
