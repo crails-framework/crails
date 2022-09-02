@@ -45,7 +45,7 @@ public:
       "scaffolds/metarecord_model.rb",
       target_folder + "/../data/" + path_name + ".rb"
     );
-    renderer.vars["include"] = "lib/" + Crails::cast<std::string>(renderer.vars, "include");
+    renderer.vars["include"] = "lib/" + std::filesystem::relative(std::filesystem::weakly_canonical(target_folder + "/../data/" + path_name + ".hpp")).string();
     renderer.generate_file(
       "scaffolds/odb_model.hpp",
       target_folder + '/' + path_name + ".hpp"

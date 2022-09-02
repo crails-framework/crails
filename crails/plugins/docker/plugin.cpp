@@ -35,8 +35,9 @@ void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration
 int DockerPlugin::DockerInstaller::run()
 {
   FileRenderer renderer;
-  bool with_odb   = configuration.has_plugin("libcrails-odb");
-  bool with_comet = configuration.has_plugin("comet");
+  bool with_odb        = configuration.has_plugin("libcrails-odb");
+  bool with_comet      = configuration.has_plugin("comet");
+  bool with_metarecord = configuration.has_plugin("metarecord");
   string build2_fingerprint = "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43";
 
   if (options.count("image"))
@@ -44,6 +45,7 @@ int DockerPlugin::DockerInstaller::run()
   renderer.vars["crails_version"] = configuration.version();
   renderer.vars["with_odb"] = with_odb;
   renderer.vars["with_comet"] = with_comet;
+  renderer.vars["with_metarecord"] = with_metarecord;
   renderer.vars["build2_fingerprint"] = build2_fingerprint;
   renderer.generate_file("docker/Dockerfile", "docker/base/Dockerfile");
   renderer.generate_file("docker/build-build2.sh", "docker/base/build-build2.sh");

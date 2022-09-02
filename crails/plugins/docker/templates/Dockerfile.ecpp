@@ -4,6 +4,8 @@ string @image = "debian:sid";
 bool   @include_assets = true;
 bool   @with_comet = false;
 bool   @with_odb = false;
+bool   @with_metarecord = false;
+string sass_backend = with_metarecord ? "ruby" : "nodejs";
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
 // END LINKING
 FROM <%= image %>
@@ -33,11 +35,6 @@ RUN apt-get -y install \
 COPY build-build2.sh build-build2.sh
 RUN bash build-build2.sh
 
-<% if (include_assets) do %>
-RUN apt-get install -y nodejs npm
-RUN npm install -g node-sass
-<% end %>
-
 <% if (with_odb) do %>
 RUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev
 COPY build-odb-compiler.sh build-odb-compiler.sh
@@ -51,6 +48,20 @@ RUN apt-get -y --allow-unauthenticated update
 RUN apt-get -y install cheerp-core
 <% end %>
 
+<% if (with_metarecord) do %>
+RUN apt-get install -y ruby
+RUN gem install meta-record
+<% end %>
+
+<% if (include_assets) do %>
+<%   if (sass_backend == "nodejs") do %>
+RUN apt-get install -y nodejs npm
+RUN npm install -g node-sass
+<%   end else do %>
+RUN gem install sass
+<%   end %>
+<% end %>
+
 COPY build-environment.sh build-environment.sh
 COPY build-crails.sh build-crails.sh
 RUN bash build-crails.sh
@@ -59,5 +70,5 @@ COPY build-comet.sh build-comet.sh
 RUN bash build-comet.sh
 <% end %>
 
-RUN mkdir -p /opt/webapp
-WORKDIR /opt/webapp
+RUN mkdir -p /opt/application
+WORKDIR /opt/application

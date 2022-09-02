@@ -2,6 +2,7 @@
 #include <boost/process.hpp>
 #include <crails/cli/process.hpp>
 #include <crails/utils/join.hpp>
+#include <crails/utils/split.hpp>
 #include <filesystem>
 #include <iostream>
 
@@ -28,7 +29,8 @@ static vector<string> make_shell_command(const string& machine_name, const boost
   shell_command.push_back("-v");
   shell_command.push_back(build_path + ':' + "/opt/application/build");
   shell_command.push_back(machine_name);
-  shell_command.push_back(command);
+  for (const string& part : Crails::split(command, ' '))
+    shell_command.push_back(part);
   if (options.count("verbose"))
     cout << "+ docker " << Crails::join(shell_command, ' ') << endl;
   return shell_command;
