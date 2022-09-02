@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <crails/cli/conventions.hpp>
 std::string @classname;
-std::string @superclass = "Crails::Odb::Model";
+std::string @superclass = "public Crails::Odb::Model";
 std::string @include = "";
 std::map<std::string, std::string>& @properties;
 std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float","std::size_t","std::time_t"};
@@ -10,13 +10,12 @@ bool @metarecord = false;
 #pragma once
 <% if (metarecord) do %>
 #include "<%= include %>"
-<% end else do %>
+<% end %>
 #include <crails/odb/model.hpp>
 #include <crails/datatree.hpp>
-<% end %>
 
 #pragma db object
-class <%= classname %> : public <%= superclass %>
+class <%= classname %> : <%= superclass %>
 {
   odb_instantiable()
 public:

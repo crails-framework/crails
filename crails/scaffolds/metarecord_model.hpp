@@ -34,7 +34,7 @@ public:
     path_name = Crails::naming_convention.filenames(options["model"].as<std::string>());
     properties = properties_option(options);
     renderer.vars["metarecord"] = true;
-    renderer.vars["superclass"] = "MetaRecord::" + Crails::camelize(classname);
+    renderer.vars["superclass"] = "public Crails::Odb::Model, public MetaRecord::" + Crails::camelize(classname);
     renderer.vars["classname"] = classname;
     renderer.vars["properties"] = &properties;
     renderer.vars["filename"] = path_name;

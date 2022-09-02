@@ -26,7 +26,7 @@ bool BuildManager::prebuild_renderers()
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
     if (options.count("verbose"))
-      cout << "+ " << command.str();
+      cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str());
   }
   return true;

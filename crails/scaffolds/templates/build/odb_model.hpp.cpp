@@ -10,7 +10,7 @@ public:
   ScaffoldsOdbModelHpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
     Crails::Template(renderer, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
-    superclass(Crails::cast<std::string>(vars, "superclass",  "Crails::Odb::Model")), 
+    superclass(Crails::cast<std::string>(vars, "superclass",  "public Crails::Odb::Model")), 
     include(Crails::cast<std::string>(vars, "include",  "")), 
     properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties"))), 
     scalar_types( {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float","std::size_t","std::time_t"}), 
@@ -23,11 +23,9 @@ ecpp_stream << "#pragma once";
  if (metarecord){
   ecpp_stream << "\n#include \"" << ( include );
   ecpp_stream << "\"";
- }else{
-  ecpp_stream << "\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>";
  };
-  ecpp_stream << "\n\n#pragma db object\nclass " << ( classname );
-  ecpp_stream << " : public " << ( superclass );
+  ecpp_stream << "\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>\n\n#pragma db object\nclass " << ( classname );
+  ecpp_stream << " : " << ( superclass );
   ecpp_stream << "\n{\n  odb_instantiable()\npublic:\n  static const std::string resource_name;\n\n  #pragma db view object(" << ( classname );
   ecpp_stream << ")\n  struct Count\n  {\n    #pragma db column(\"count(\" + " << ( classname );
   ecpp_stream << "::id + \")\")\n    size_t value;\n  };\n";
