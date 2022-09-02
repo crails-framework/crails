@@ -78,6 +78,7 @@ static bool copy_build_to_assets(const ProjectConfiguration& configuration)
   if (configuration.asset_roots().size() > 0)
   {
     string javascript_output = configuration.application_build_path() + "/client/application.js";
+    string wasm_output       = configuration.application_build_path() + "/client/application.wasm";
     string sourcemaps_output = javascript_output + ".map";
     string asset_root = *configuration.asset_roots().begin();
     boost::system::error_code ec;
@@ -89,6 +90,7 @@ static bool copy_build_to_assets(const ProjectConfiguration& configuration)
       return false;
     }
     if (boost::filesystem::exists(javascript_output)) boost::filesystem::copy(javascript_output, asset_root + "/application.js",     boost::filesystem::copy_options::overwrite_existing);
+    if (boost::filesystem::exists(wasm_output))       boost::filesystem::copy(wasm_output,       asset_root + "/application.wasm",   boost::filesystem::copy_options::overwrite_existing);
     if (boost::filesystem::exists(sourcemaps_output)) boost::filesystem::copy(sourcemaps_output, asset_root + "/application.js.map", boost::filesystem::copy_options::overwrite_existing);
     return true;
   }
