@@ -5,7 +5,7 @@
 #include "../project_configuration.hpp"
 #include <crails/utils/string.hpp>
 
-class TaskScaffold : public ScaffoldModel
+class TaskScaffold : public Crails::ScaffoldModel
 {
   ProjectConfiguration configuration;
   FileRenderer renderer;

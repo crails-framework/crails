@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <iostream>
 
-class ResourceScaffold : public ScaffoldModel
+class ResourceScaffold : public Crails::ScaffoldModel
 {
   ProjectConfiguration configuration;
   std::vector<std::string> formats{"html"};

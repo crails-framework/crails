@@ -4,7 +4,7 @@
 #include <crails/utils/string.hpp>
 #include <iostream>
 
-class ViewScaffold : public ScaffoldModel
+class ViewScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
   std::string format = "html";

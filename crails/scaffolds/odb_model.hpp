@@ -5,7 +5,7 @@
 #include "../file_editor.hpp"
 #include "../project_configuration.hpp"
 
-class OdbModelScaffold : public ScaffoldModel
+class OdbModelScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
   std::map<std::string, std::string> properties;

@@ -3,7 +3,7 @@
 #include "../project_configuration.hpp"
 #include "../file_renderer.hpp"
 
-class ModuleScaffold : public ScaffoldModel
+class ModuleScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
   boost::filesystem::path path;

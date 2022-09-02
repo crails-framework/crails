@@ -4,7 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/process.hpp>
 
-class LayoutScaffold : public ScaffoldModel
+class LayoutScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
   std::string name = "application";
