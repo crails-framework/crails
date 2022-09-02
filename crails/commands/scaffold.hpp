@@ -3,6 +3,7 @@
 #include "../project_configuration.hpp"
 #include "../scaffolds/controller.hpp"
 #include "../scaffolds/odb_model.hpp"
+#include "../scaffolds/metarecord_model.hpp"
 #include "../scaffolds/view.hpp"
 #include "../scaffolds/task.hpp"
 #include "../scaffolds/resource.hpp"
@@ -29,6 +30,8 @@ public:
       {"module",     []() { return new ModuleScaffold; }}
     };
 
+    if (configuration.has_plugin("metarecord"))
+      scaffolds.emplace("model", []() { return new MetaRecordModelScaffold; });
     if (configuration.has_plugin("libcrails-odb"))
       scaffolds.emplace("model", []() { return new OdbModelScaffold; });
     return scaffolds;

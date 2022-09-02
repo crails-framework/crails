@@ -24,6 +24,7 @@ declare_renderer(project_spec_main_cpp)
 declare_renderer(renderer_cpp)
 declare_renderer(scaffolds_controller_cpp)
 declare_renderer(scaffolds_controller_hpp)
+declare_renderer(scaffolds_metarecord_model_rb)
 declare_renderer(scaffolds_odb_model_cpp)
 declare_renderer(scaffolds_odb_model_hpp)
 declare_renderer(scaffolds_view_index_html)
@@ -72,6 +73,7 @@ ProjectRenderer::ProjectRenderer()
 
   add_renderer("scaffolds/controller.cpp", scaffolds_controller_cpp);
   add_renderer("scaffolds/controller.hpp", scaffolds_controller_hpp);
+  add_renderer("scaffolds/metarecord_model.rb", scaffolds_metarecord_model_rb);
   add_renderer("scaffolds/odb_model.cpp", scaffolds_odb_model_cpp);
   add_renderer("scaffolds/odb_model.hpp", scaffolds_odb_model_hpp);
   add_renderer("scaffolds/view_index.html", scaffolds_view_index_html);

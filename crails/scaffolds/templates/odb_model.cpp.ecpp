@@ -1,7 +1,9 @@
 #include <crails/utils/string.hpp>
+#include <crails/cli/conventions.hpp>
 std::string @filename;
 std::string @classname;
 bool        @odb_at_once;
+bool        @metarecord = false;
 std::map<std::string, std::string>& @properties;
 // END LINKING
 #include "<%= filename %>.hpp"
@@ -11,14 +13,18 @@ std::map<std::string, std::string>& @properties;
 #include "lib/odb/<%= filename %>-odb.hxx"
 <% end %>
 
-const std::string <%= classname %>::resource_name = "<%= Crails::underscore(classname) %>";
+<% if (!metarecord) do %>
+const std::string <%= classname %>::resource_name = "<%= Crails::naming_convention.keys(classname) %>";
+<% end %>
 
 odb_instantiable_impl(<%= classname %>)
 
-void <%= classname %>::edit(Data params)
+<% if (!metarecord) do %>
+void <%= classname %>::<%= Crails::naming_convention.functions("edit") %>(Data params)
 {
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
   if (params["<%= it->first %>"].exists())
-    set_<%= it->first %>(params["<%= it->first %>"]);
+    <%= Crails::naming_convention.functions("set_" + it->first) %>(params["<%= it->first %>"]);
 <% end %>
 }
+<% end %>

@@ -1,12 +1,10 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
 #include <crails/cli/conventions.hpp>
-#include <crails/utils/string.hpp>
+#include <crails/utils/semantics.hpp>
 #include "../file_renderer.hpp"
-#include "../file_editor.hpp"
-#include "../project_configuration.hpp"
 
-class OdbModelScaffold : public Crails::ScaffoldModel
+class MetaRecordModelScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
   std::map<std::string, std::string> properties;
@@ -35,10 +33,17 @@ public:
     classname = Crails::naming_convention.classnames(options["model"].as<std::string>());
     path_name = Crails::naming_convention.filenames(options["model"].as<std::string>());
     properties = properties_option(options);
+    renderer.vars["metarecord"] = true;
+    renderer.vars["superclass"] = "MetaRecord::" + Crails::camelize(classname);
     renderer.vars["classname"] = classname;
     renderer.vars["properties"] = &properties;
     renderer.vars["filename"] = path_name;
+    renderer.vars["include"] = "lib/" + target_folder + '/' + path_name + ".hpp";
     renderer.vars["odb_at_once"] = configuration.variable("odb-at-once") == "1";
+    renderer.generate_file(
+      "scaffolds/metarecord_data.rb",
+      target_folder + "/../data/" + path_name + ".rb"
+    );
     renderer.generate_file(
       "scaffolds/odb_model.hpp",
       target_folder + '/' + path_name + ".hpp"

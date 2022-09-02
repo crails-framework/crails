@@ -21,6 +21,7 @@ void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration
   std::remove(packages.begin(), packages.end(), "libcrails");
   std::remove(packages.begin(), packages.end(), "libcrails-odb");
   std::remove(packages.begin(), packages.end(), "comet");
+  std::remove(packages.begin(), packages.end(), "metarecord");
   renderer.should_overwrite = true;
   renderer.vars["with_odb"]     = configuration.has_plugin("libcrails-odb");
   renderer.vars["with_comet"]   = configuration.has_plugin("comet");

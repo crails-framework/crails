@@ -1,0 +1,19 @@
+using namespace std;
+string @resource_name;
+string @classname;
+string @include;
+map<string, string>& @properties;
+// END LINKING
+Model.add '<%= classname %>', hpp: '<%= include %>' do
+  resource_name '<%= resource_name %>'
+  #order_by 'property'
+
+  visibility :protected
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (it->second == "DataTree") do %>
+  property 'DataTree', '<%= it->first %>', db: { type: "TEXT" }
+<%   end else do %>
+  property '<%= it->second %>', '<%= it->first %>'
+<%   end %>
+<% end %>
+end

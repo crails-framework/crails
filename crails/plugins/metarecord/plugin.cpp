@@ -21,34 +21,51 @@ void MetarecordPlugin::MetarecordInstaller::options_description(boost::program_o
     ("generator,g", boost::program_options::value<vector<string>>()->multitoken(), "use a generator");
 }
 
-static void cannot_find_ruby()       { cerr << "[metarecord] cannot find ruby. Maybe it is not installed ?" << endl; }
 static void cannot_find_metarecord() { cerr << "[metarecord] cannot find metarecord-make. Run `gem install metarecord`" << endl; }
-
-static bool run_ruby_command(const string& command)
-{
-  string ruby = Crails::which("ruby");
-
-  if (ruby.length() > 0)
-    return Crails::run_command(ruby + ' ' + command);
-  else
-    cannot_find_ruby();
-  return false;
-}
 
 static bool list_available_generators()
 {
   string metarecord = Crails::which("metarecord-make");
 
   if (metarecord.length())
-    return run_ruby_command(metarecord + " --list-generators");
+    return Crails::run_command(metarecord + " --list-generators");
   else
     cannot_find_metarecord();
   return false;
 }
 
+static list<string> get_generators(const ProjectConfiguration& configuration)
+{
+  list<string> generators;
+
+  if (configuration.has_plugin("odb"))
+  {
+    if (configuration.has_plugin("comet"))
+    {
+      generators.push_back("comet/data");
+      generators.push_back("comet/edit");
+    }
+    else
+    {
+      generators.push_back("comet/data");
+      generators.push_back("crails/edit");
+    }
+    generators.push_back("crails/query");
+    generators.push_back("crails/destroy");
+  }
+  for (const string& generator : Crails::split(configuration.variable(generator_key), ','))
+  {
+    if (find(generators.begin(), generators.end(), generator) == generators.end())
+      generators.push_back(generator);
+  }
+  return generators;
+}
+
 int MetarecordPlugin::MetarecordInstaller::run()
 {
-  if (!options.count("generator"))
+  auto generators = get_generators(configuration);
+
+  if (!options.count("generator") && generators.size() == 0)
   {
     cout << "please specify at least one generator:" << endl;
     list_available_generators();
@@ -70,7 +87,7 @@ void MetarecordPlugin::MetarecordGenerators::options_description(boost::program_
 
 int MetarecordPlugin::MetarecordGenerators::run()
 {
-  list<string> generators = Crails::split(configuration.variable(generator_key), ',');
+  list<string> generators = get_generators(configuration);
 
   if (options.count("list"))
     return list_available_generators() ? 0 : -1;
@@ -99,6 +116,7 @@ static list<string> get_input_paths(const ProjectConfiguration& configuration)
 {
   list<string> paths{"app/data"};
 
+  if (configuration.has_plugin("comet"))
   for (const string& mod : configuration.modules())
     paths.push_back("modules/" + mod + "/data");
   return paths;
@@ -114,11 +132,11 @@ bool MetarecordPlugin::build(const ProjectConfiguration& configuration, bool ver
     command << bin
       << " -o lib"
       << " -i " << Crails::join(get_input_paths(configuration), ',')
-      << " -g " << configuration.variable("metarecord-generators")
+      << " -g " << Crails::join(get_generators(configuration), ',')
       << " -z .tmp";
     if (verbose)
       cout << "+ " << command.str() << endl;
-    return run_ruby_command(command.str());
+    return Crails::run_command(command.str());
   }
   else
     cannot_find_metarecord();

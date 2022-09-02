@@ -90,6 +90,10 @@ $ECPP \
   -i $SCAFFOLDS_TPL/controller.hpp.ecpp \
   >  $SCAFFOLDS_TPL/build/controller.hpp.cpp
 $ECPP \
+  -n ScaffoldsMetarecordModelRb \
+  -i $SCAFFOLDS_TPL/metarecord_model.rb.ecpp \
+  >  $SCAFFOLDS_TPL/build/metarecord_model.rb.cpp
+$ECPP \
   -n ScaffoldsOdbModelCpp \
   -i $SCAFFOLDS_TPL/odb_model.cpp.ecpp \
   >  $SCAFFOLDS_TPL/build/odb_model.cpp.cpp

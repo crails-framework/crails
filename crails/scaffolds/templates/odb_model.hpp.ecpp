@@ -1,14 +1,22 @@
 #include <algorithm>
+#include <crails/cli/conventions.hpp>
 std::string @classname;
+std::string @superclass = "Crails::Odb::Model";
+std::string @include = "";
 std::map<std::string, std::string>& @properties;
 std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float","std::size_t","std::time_t"};
+bool @metarecord = false;
 // END LINKING
 #pragma once
+<% if (metarecord) do %>
+#include "<%= include %>"
+<% end else do %>
 #include <crails/odb/model.hpp>
 #include <crails/datatree.hpp>
+<% end %>
 
 #pragma db object
-class <%= classname %> : public Crails::Odb::Model
+class <%= classname %> : public <%= superclass %>
 {
   odb_instantiable()
 public:
@@ -21,23 +29,25 @@ public:
     size_t value;
   };
 
-  void edit(Data);
+<% if (!metarecord) do %>
+  void <%= Crails::naming_convention.functions("edit") %>(Data);
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
 <%   if (it->second == "DataTree") do %>
-  DataTree& get_<%= it->first %>() { return <%= it->first %>; }
-  const DataTree& get_<%= it->first %>() const { return <%= it->first %>; }
-  void set_<%= it->first %>(Data value) { this-><%= it->first %>.clear(); this-><%= it->first %>.as_data().merge(value); }
+  DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() { return <%= it->first %>; }
+  const DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(Data value) { this-><%= it->first %>.clear(); this-><%= it->first %>.as_data().merge(value); }
 <%   end else if (std::find(scalar_types.begin(), scalar_types.end(), it->second) != scalar_types.end()) do %>
-  void set_<%= it->first %>(<%= it->second %> value) { this-><%= it->first %> = value; }
-  <%= it->second %> get_<%= it->first %>() const { return <%= it->first %>; }
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(<%= it->second %> value) { this-><%= it->first %> = value; }
+  <%= it->second %> <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
 <%   end else do %>
-  void set_<%= it->first %>(const <%= it->second %>& value) { this-><%= it->first %> = value; }
-  const <%= it->second %>& get_<%= it->first %>() const { return <%= it->first %>; }
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(const <%= it->second %>& value) { this-><%= it->first %> = value; }
+  const <%= it->second %>& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
 <%   end %>
 <% end %>
 
 private:
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
   <%= it->second %> <%= it->first %>;
+<% end %>
 <% end %>
 };

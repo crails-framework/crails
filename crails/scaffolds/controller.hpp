@@ -1,6 +1,7 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
 #include <crails/utils/string.hpp>
+#include <crails/cli/conventions.hpp>
 #include "../file_renderer.hpp"
 #include "../file_editor.hpp"
 
@@ -32,9 +33,10 @@ public:
       return -1;
     }
     resource_name = options.count("name") ? options["name"].as<std::string>() : options["model"].as<std::string>();
-    classname     = resource_name + "Controller";
-    router_path   = Crails::underscore(resource_name);
-    path_name     = Crails::underscore(resource_name);
+    resource_name = Crails::naming_convention.keys(resource_name);
+    router_path   = resource_name;
+    classname     = Crails::naming_convention.classnames(resource_name + "Controller");
+    path_name     = Crails::naming_convention.filenames(resource_name);
     if (options.count("target"))
       target_folder = options["target"].as<std::string>();
     renderer.vars["classname"]   = classname;
@@ -50,7 +52,7 @@ public:
     {
       std::string model_class = options["model"].as<std::string>();
       renderer.vars["model_class"] = model_class;
-      renderer.vars["model_header"] = ("app/models/" + Crails::underscore(model_class) + ".hpp");
+      renderer.vars["model_header"] = ("app/models/" + path_name + ".hpp");
       renderer.vars["view_path"] = Crails::underscore(model_class);
       renderer.vars["parent_class"] = std::string("Crails::Odb::Controller<ApplicationController>");
     }
