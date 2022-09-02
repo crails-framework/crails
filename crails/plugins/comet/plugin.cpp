@@ -15,7 +15,9 @@ CometPlugin::CometPlugin()
 int CometPlugin::CometInstaller::run()
 {
   string comet = find_comet_command(configuration);
+  string output_path = "app/client";
 
+  boost::filesystem::create_directories(output_path);
   if (configuration.has_plugin("comet"))
     cerr << "comet plugin already installed" << endl;
   else if (comet.length() == 0)
@@ -23,8 +25,7 @@ int CometPlugin::CometInstaller::run()
   else
   {
     stringstream command;
-    string output_path = "app/client";
-    string asset_cpp_path = boost::filesystem::relative("lib/assets.cpp", output_path).string();
+    string asset_cpp_path = boost::filesystem::relative("lib/assets.cpp", boost::filesystem::canonical(output_path)).string();
 
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();

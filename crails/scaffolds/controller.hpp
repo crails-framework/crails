@@ -1,8 +1,8 @@
 #pragma once
-#include "scaffold_model.hpp"
+#include <crails/cli/scaffold_model.hpp>
+#include <crails/utils/string.hpp>
 #include "../file_renderer.hpp"
 #include "../file_editor.hpp"
-#include <crails/utils/string.hpp>
 
 class ControllerScaffold : public ScaffoldModel
 {

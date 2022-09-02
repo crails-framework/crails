@@ -1,9 +1,9 @@
 #pragma once
-#include "scaffold_model.hpp"
+#include <crails/cli/scaffold_model.hpp>
+#include <crails/utils/string.hpp>
 #include "../file_renderer.hpp"
 #include "../file_editor.hpp"
 #include "../project_configuration.hpp"
-#include <crails/utils/string.hpp>
 
 class OdbModelScaffold : public ScaffoldModel
 {

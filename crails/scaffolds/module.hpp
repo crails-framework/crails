@@ -1,5 +1,5 @@
 #pragma once
-#include "scaffold_model.hpp"
+#include <crails/cli/scaffold_model.hpp>
 #include "../project_configuration.hpp"
 #include "../file_renderer.hpp"
 
