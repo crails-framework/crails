@@ -1,12 +1,13 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
+#include <filesystem>
 #include "../project_configuration.hpp"
 #include "../file_renderer.hpp"
 
 class ModuleScaffold : public Crails::ScaffoldModel
 {
   FileRenderer renderer;
-  boost::filesystem::path path;
+  std::filesystem::path path;
   std::string name;
   std::string define;
   std::string namespace_name;

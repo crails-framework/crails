@@ -17,7 +17,7 @@ public:
   {
     desc.add_options()
       ("model,m",    boost::program_options::value<std::string>(), "classname")
-      ("target,t",   boost::program_options::value<std::string>(), "target folder (defaults to `app/controllers`)")
+      ("target,t",   boost::program_options::value<std::string>(), "target folder (defaults to `app/models`)")
       ("property,p", boost::program_options::value<std::vector<std::string>>()->multitoken(), properties_help());
   }
 

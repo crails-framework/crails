@@ -1,5 +1,6 @@
 #include "module.hpp"
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
 #include "../../file_renderer.hpp"
 #include "../../file_editor.hpp"
@@ -47,7 +48,7 @@ int OdbModule::OdbInstaller::run()
   if (!check_backends_validity(backends))
     return -1;
   renderer.vars["task_name"] = string("odb_migrate");
-  if (!boost::filesystem::exists("config/databases.cpp"))
+  if (!std::filesystem::exists("config/databases.cpp"))
     renderer.generate_file("config/databases.cpp");
   renderer.generate_file("config/odb.hpp");
   renderer.generate_file("config/odb.cpp");
