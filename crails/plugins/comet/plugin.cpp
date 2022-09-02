@@ -97,7 +97,7 @@ static bool copy_build_to_assets(const ProjectConfiguration& configuration)
   return false;
 }
 
-bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose)
+bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose, bool clean)
 {
   string comet = find_comet_command(configuration);
   string source = configuration.variable("comet-client-path");
@@ -105,6 +105,9 @@ bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose)
 
   if (verbose)
     command += " -v";
+  if (clean)
+    command += " --clean";
+  command += " -m " + configuration.variable_or("build-type", "Release");
   {
     Crails::WithPath with_path(source);
 

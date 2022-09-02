@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool crails_cmake_builder(ProjectConfiguration& configuration, bool verbose);
+bool crails_cmake_builder(ProjectConfiguration& configuration, bool verbose, bool clean);
 
 bool BuildManager::prebuild_renderers()
 {
@@ -87,15 +87,18 @@ bool BuildManager::generate_database()
 int BuildManager::run()
 {
   bool verbose = options.count("verbose");
+  bool clean = options.count("clean");
 
+  if (options.count("mode"))
+    configuration.variable("build-type", options["mode"].as<string>());
   if (configuration.has_plugin("metarecord") && !MetarecordPlugin::build(configuration, verbose)) return 11;
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
   if (!generate_assets()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, verbose)) return 10;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, verbose, clean)) return 10;
   if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
-    return crails_cmake_builder(configuration, verbose) ? 0 : 5;
+    return crails_cmake_builder(configuration, verbose, clean) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   return -1;

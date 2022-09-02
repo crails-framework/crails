@@ -55,9 +55,3 @@ int DockerPlugin::DockerInstaller::run()
   DockerPlugin::refresh_environment(configuration);
   return 0;
 }
-
-int DockerPlugin::DockerPackage::run()
-{
-  // TODO
-  return 0;
-}

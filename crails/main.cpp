@@ -9,6 +9,7 @@
 #include "commands/scaffold.hpp"
 #include "commands/build.hpp"
 #include "commands/plugins.hpp"
+#include "commands/package.hpp"
 #include "templates/index.hpp"
 
 using namespace Crails;
@@ -22,8 +23,9 @@ public:
   Index()
   {
     add_command("templates", []() { return make_shared<TemplatesIndex>(); });
-    add_command("build",     []() { return make_shared<BuildManager>(); });
     add_command("scaffold",  []() { return make_shared<::Scaffold>(); });
+    add_command("build",     []() { return make_shared<BuildManager>(); });
+    add_command("package",   []() { return make_shared<Package>(); });
     add_command("plugins",   []() { return make_shared<PluginManager>(); });
     add_command("new",       []() { return make_shared<New>(); });
   }

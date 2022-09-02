@@ -12,16 +12,20 @@ static vector<string> make_shell_command(const string& machine_name, const boost
   string application_path = options.count("application-path")
     ? options["application-path"].as<string>()
     : filesystem::current_path().string();
+  string build_path = application_path + "/docker/build-" + machine_name;
   string command = options.count("command")
     ? options["command"].as<string>()
     : "bash";
 
+  filesystem::create_directories(build_path);
   shell_command.push_back("run");
   shell_command.push_back("--net-host");
   shell_command.push_back(!options.count("noninteractive") ? "-it" : "-t");
   shell_command.push_back("--rm");
   shell_command.push_back("-v");
   shell_command.push_back(application_path + ':' + "/opt/application");
+  shell_command.push_back("-v");
+  shell_command.push_back(build_path + ':' + "/opt/application/build");
   shell_command.push_back(machine_name);
   shell_command.push_back(command);
   return shell_command;
@@ -84,6 +88,8 @@ int DockerPlugin::DockerBuild::run()
   crails_command << "crails build";
   if (options.count("verbose"))
     crails_command << " -v";
+  if (options.count("mode"))
+    crails_command << " -m " << options["mode"].as<string>();
   return call_docker_shell_with(configuration, crails_command.str(), options);
 }
 
@@ -95,4 +101,25 @@ int DockerPlugin::DockerRun::run()
   if (options.count("port"))
     crails_command << " -p " << options["port"].as<unsigned short>();
   return call_docker_shell_with(configuration, crails_command.str(), options);
+}
+
+int DockerPlugin::DockerPackage::run()
+{
+  stringstream crails_command;
+  string temporary_file = ".docker-package.tar.gz";
+  string output = "package.tar.gz";
+  int result;
+
+  crails_command << "crails package";
+  if (options.count("verbose"))
+    crails_command << " -v";
+  if (options.count("mode"))
+    crails_command << " -m " << options["mode"].as<string>();
+  crails_command << " -o " << temporary_file;
+  if (options.count("output"))
+    output = options["output"].as<string>();
+  result = call_docker_shell_with(configuration, crails_command.str(), options);
+  if (result == 0)
+    filesystem::copy(temporary_file, output);
+  return result;
 }
