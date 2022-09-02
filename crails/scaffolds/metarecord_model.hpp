@@ -38,12 +38,14 @@ public:
     renderer.vars["classname"] = classname;
     renderer.vars["properties"] = &properties;
     renderer.vars["filename"] = path_name;
-    renderer.vars["include"] = "lib/" + target_folder + '/' + path_name + ".hpp";
+    renderer.vars["resource_name"] = Crails::naming_convention.keys(options["model"].as<std::string>());
     renderer.vars["odb_at_once"] = configuration.variable("odb-at-once") == "1";
+    renderer.vars["include"] = target_folder + '/' + path_name + ".hpp";
     renderer.generate_file(
-      "scaffolds/metarecord_data.rb",
+      "scaffolds/metarecord_model.rb",
       target_folder + "/../data/" + path_name + ".rb"
     );
+    renderer.vars["include"] = "lib/" + Crails::cast<std::string>(renderer.vars, "include");
     renderer.generate_file(
       "scaffolds/odb_model.hpp",
       target_folder + '/' + path_name + ".hpp"
