@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
+#include "../plugins/metarecord/plugin.hpp"
 #include <iostream>
 
 using namespace std;
@@ -85,13 +86,16 @@ bool BuildManager::generate_database()
 
 int BuildManager::run()
 {
+  bool verbose = options.count("verbose");
+
+  if (configuration.has_plugin("metarecord") && !MetarecordPlugin::build(configuration, verbose)) return 11;
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
   if (!generate_assets()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, options.count("verbose"))) return 10;
+  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, verbose)) return 10;
   if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
-    return crails_cmake_builder(configuration, options.count("verbose")) ? 0 : 5;
+    return crails_cmake_builder(configuration, verbose) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   return -1;
