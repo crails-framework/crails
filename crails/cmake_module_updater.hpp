@@ -13,7 +13,8 @@ public:
   {
     if (use_symbol("CRAILS REQUIRED"))
     {
-      for (unsigned int i = position ; contents[i] != ')' && i < contents.length() ; ++i);
+      unsigned int i;
+      for (i = position ; contents[i] != ')' && i < contents.length() ; ++i);
       contents = contents.substr(0, position) + contents.substr(i);
       for (const std::string& plugin : plugins)
         insert(" " + plugin + ">=" + version);
