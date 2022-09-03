@@ -11,7 +11,8 @@
 
 using namespace std;
 
-bool crails_cmake_builder(ProjectConfiguration& configuration, bool verbose, bool clean);
+bool crails_cmake_builder(const ProjectConfiguration& configuration, bool verbose, bool clean);
+bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbose, bool clean);
 
 bool BuildManager::prebuild_renderers()
 {
@@ -113,6 +114,8 @@ int BuildManager::run()
   if (!generate_assets()) return 4;
   if (configuration.toolchain() == "cmake")
     result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 5;
+  else if (configuration.toolchain() == "build2")
+    result = crails_build2_builder(configuration, verbose, clean) ? 0 : 5;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   if (result == 0) restart_server();
