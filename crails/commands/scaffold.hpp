@@ -32,7 +32,7 @@ public:
 
     if (configuration.has_plugin("metarecord"))
       scaffolds.emplace("model", []() { return new MetaRecordModelScaffold; });
-    if (configuration.has_plugin("libcrails-odb"))
+    else if (configuration.has_plugin("libcrails-odb"))
       scaffolds.emplace("model", []() { return new OdbModelScaffold; });
     return scaffolds;
   }
