@@ -8,6 +8,10 @@ SCAFFOLDS_TPL=crails/scaffolds/templates
 ##
 mkdir -p $PROJECT_TPL/build
 $ECPP \
+  -n ProjectGitignore \
+  -i $PROJECT_TPL/.gitignore.ecpp \
+  >  $PROJECT_TPL/build/gitignore.cpp
+$ECPP \
   -n ProjectCmakelistsTxt \
   -i $PROJECT_TPL/CMakeLists.txt.ecpp \
   >  $PROJECT_TPL/build/CMakeLists.txt.cpp

@@ -51,6 +51,7 @@ bool New::generate_project_structure()
     generate_build2_files();
   else
     generate_file("CMakeLists.txt");
+  generate_file(".gitignore");
   generate_file("app/main.cpp");
   generate_file("config/environment.cpp");
   generate_file("config/logger.cpp");

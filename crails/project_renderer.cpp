@@ -6,6 +6,7 @@
 
 using namespace std;
 
+declare_renderer(project_gitignore)
 declare_renderer(project_cmakelists_txt)
 declare_renderer(project_app_main_cpp)
 declare_renderer(project_app_routes_cpp)
@@ -53,6 +54,7 @@ declare_renderer(docker_build_environment)
 
 ProjectRenderer::ProjectRenderer()
 {
+  add_renderer(".gitignore",                      project_gitignore);
   add_renderer("CMakeLists.txt",                  project_cmakelists_txt);
   add_renderer("app/main.cpp",                    project_app_main_cpp);
   add_renderer("app/routes.cpp",                  project_app_routes_cpp);

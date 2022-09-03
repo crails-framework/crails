@@ -1,0 +1,8 @@
+crails.pid
+/build/
+/docker/build-*
+/lib/
+/lib-client/
+/logs/
+/public/assets/
+.sass-cache
