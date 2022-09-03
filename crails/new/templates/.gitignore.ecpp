@@ -1,0 +1,9 @@
+/build/
+/docker/build-*
+/lib/
+/lib-client/
+/logs/
+/package/
+/public/assets/
+*.d
+*.o
