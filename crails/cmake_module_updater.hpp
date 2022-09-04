@@ -12,7 +12,7 @@ public:
 
   bool update_plugins_list(const std::list<std::string>& plugins, const std::string& version)
   {
-    if (use_symbol("CRAILS REQUIRED"))
+    if (load_file() && use_symbol("CRAILS REQUIRED", false))
     {
       std::vector<std::string> blacklist{"comet", "metarecord"};
       unsigned int i;

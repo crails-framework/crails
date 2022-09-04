@@ -28,7 +28,8 @@ bool BuildManager::prebuild_renderers()
       << " -p \\." << renderer << "$";
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
-    return Crails::run_command(command.str());
+    if (!Crails::run_command(command.str()))
+      return false;
   }
   return true;
 }
@@ -110,12 +111,11 @@ int BuildManager::run()
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
   if (!generate_assets()) return 3;
-  if (configuration.has_plugin("comet") && !CometPlugin::build(configuration, verbose, clean)) return 10;
-  if (!generate_assets()) return 4;
+  if (configuration.has_plugin("comet") && !(CometPlugin::build(configuration, verbose, clean) && generate_assets())) return 10;
   if (configuration.toolchain() == "cmake")
-    result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 5;
+    result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 4;
   else if (configuration.toolchain() == "build2")
-    result = crails_build2_builder(configuration, verbose, clean) ? 0 : 5;
+    result = crails_build2_builder(configuration, verbose, clean) ? 0 : 4;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
   if (result == 0) restart_server();

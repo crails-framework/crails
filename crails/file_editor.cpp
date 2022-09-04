@@ -13,10 +13,13 @@ bool CrailsFileEditor::load_file()
   return Crails::read_file(path, contents);
 }
 
-bool CrailsFileEditor::use_symbol(const std::string& symbol)
+bool CrailsFileEditor::use_symbol(const std::string& symbol, bool whole_line)
 {
-  std::regex pattern("^\\s*" + prefix_pattern + "\\s*" + symbol + "\\s*$", std::regex_constants::multiline | std::regex_constants::icase);
+  std::string pattern_str = "^\\s*" + prefix_pattern + "\\s*" + symbol;
+  if (whole_line) pattern_str += "\\s*$";
+  std::regex pattern(pattern_str.c_str(), std::regex_constants::multiline | std::regex_constants::icase);
   auto match = std::sregex_iterator(contents.begin(), contents.end(), pattern);
+  std::cout << "pattern= " << ("^\\s*" + prefix_pattern + "\\s*" + symbol + "\\s*$") << std::endl;
 
   if (match != std::sregex_iterator())
   {

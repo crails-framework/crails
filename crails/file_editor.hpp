@@ -12,7 +12,7 @@ public:
   CrailsFileEditor(const std::string& path);
 
   bool load_file();
-  bool use_symbol(const std::string& symbol);
+  bool use_symbol(const std::string& symbol, bool whole_line = true);
   void insert(const std::string& text);
   void save_file();
 };
