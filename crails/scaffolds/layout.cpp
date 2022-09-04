@@ -8,7 +8,7 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
 {
   return
     "#include \"lib/assets.hpp\"\n\n"
-    "const char* @yield;\n"
+    "const char* @yield = nullptr;\n"
     "// END LINKING\n"
     "<html>\n"
     "  <head>\n"
@@ -16,7 +16,9 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
     "  </head>\n"
     "  <body>\n"
     "    <div class=\"container-fluid\">\n"
-    "      <%= yield %>\n"
+    "      <% if (yield != nullptr) do %>\n"
+    "        <%= yield %>\n"
+    "      <% end %>\n"
     "    </div>\n"
     "  </body>\n"
     "</html>";
