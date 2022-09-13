@@ -14,7 +14,7 @@ public:
   }
 
   int              run() override;
-  std::string_view description() const { return "runs the odb compiler to generate your models queries and schema"; }
+  std::string_view description() const override { return "runs the odb compiler to generate your models queries and schema"; }
   void             options_description(boost::program_options::options_description&) const override;
 
 private:
