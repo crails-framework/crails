@@ -3,6 +3,7 @@
 #include <crails/read_file.hpp>
 #include <crails/utils/string.hpp>
 #include <crails/render_file.hpp>
+#include <crails/cli/process.hpp>
 #include <boost/process.hpp>
 #include <iostream>
 
@@ -64,7 +65,13 @@ bool BuildOdb::increment_schema_version()
 int BuildOdb::run()
 {
   FileList files;
+  odb_compiler = Crails::which("odb");
 
+  if (odb_compiler.length() == 0)
+  {
+    cerr << "[crails-odb] /!\\ odb compiler not found." << endl;
+    return -2;
+  }
   temporary_dir = ".tmp-odb";
   backends = Crails::split(configuration.variable("odb-backends"), ',');
   at_once = configuration.variable("odb-at-once") == "1";

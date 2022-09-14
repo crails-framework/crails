@@ -33,7 +33,7 @@ if [[ -z "$sql_backends" ]] ; then
 fi
 
 if [[ -z "$WITH_COMET" ]] ; then
-  echo "> Build comet.cpp (https://github.com/crails-framework/comet.cpp) (y/n): "
+  echo -n "> Build comet.cpp (https://github.com/crails-framework/comet.cpp) (y/n): "
   read WITH_COMET
 fi
 
@@ -42,6 +42,10 @@ if [[ -z "$use_system_libraries" ]] ; then
   read use_system_libraries
   if [[ -z "$use_system_libraries" ]] ; then use_system_libraries="n" ; fi
 fi
+
+echo -n "> Install path (default: $DEFAULT_INSTALL_ROOT): "
+read INSTALL_ROOT
+if [[ -z "$INSTALL_ROOT" ]] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
 
 COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk '{print $3}' | cut -d. -f1`
 BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
@@ -86,16 +90,17 @@ if [[ "$use_system_libraries" == "y" ]] ; then
   for backend in $sql_backends ; do
     case $backend in
       sqlite)
-        system_package+=(?sys:libsqlite3)
+        system_packages+=(?sys:libsqlite3)
         ;;
       pgsql)
-        system_package+=(?sys:libpq)
+        system_packages+=(?sys:libpq)
         ;;
       mysql)
-        system_package+=(?sys:libmysqlclient)
+        system_packages+=(?sys:libmysqlclient)
         ;;
     esac
   done
+  echo "+ Using system packages: ${system_packages[@]}"
 fi
 
 if [[ ! -z "$sql_backends" ]] ; then
@@ -114,7 +119,8 @@ fi
 
 bpkg create -d "$BUILD_DIR" cc \
   config.cxx=$COMPILER \
-  config.cc.coptions=-O3
+  config.cc.coptions=-O3 \
+  config.bin.rpath="$INSTALL_ROOT/lib"
 
 cd "$BUILD_DIR"
 
@@ -156,13 +162,16 @@ for package in ${crails_packages[@]} ; do
   bpkg build $package --yes ${system_packages[@]}
 done
 
-echo -n "> Install path (default: $DEFAULT_INSTALL_ROOT): "
-read INSTALL_ROOT
-if [[ -z "$INSTALL_ROOT" ]] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
-
-bpkg install --all --recursive \
-  config.install.root="$INSTALL_ROOT" \
-  config.install.sudo=sudo
+if [[ -z "$install_confirmed" ]] ; then
+  echo -n "> Install to $INSTALL_ROOT (y/n): "
+  read install_confirmed
+fi
+  
+if [[ "$install_confirmed" == "y" ]] ; then
+  bpkg install --all --recursive \
+    config.install.root="$INSTALL_ROOT" \
+    config.install.sudo=sudo
+fi
 
 if [[ "$WITH_COMET" == "y" ]] ; then
   bash <(curl -s "https://raw.githubusercontent.com/crails-framework/comet.cpp/master/install.sh")

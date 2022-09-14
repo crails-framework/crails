@@ -82,7 +82,15 @@ bool BuildManager::generate_database()
     for (int i = 0 ; i < argv_array.size() ; ++i)
       argv[i] = argv_array[i].c_str();
     odb_builder.initialize(argv_array.size(), argv);
-    return odb_builder.run() == 0;
+    switch (odb_builder.run())
+    {
+    default:
+      return false;
+    case -2:
+      cerr << "[crails-odb] Skipping odb compilation. Your models and database schema won't be updated." << endl;
+    case 0:
+      break;
+    }
   }
   return true;
 }

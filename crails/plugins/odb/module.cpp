@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
+#include "../../commands/odb.hpp"
 #include "../../file_renderer.hpp"
 #include "../../file_editor.hpp"
 
@@ -14,6 +15,7 @@ OdbModule::OdbModule()
   add_command("install",  []() { return make_shared<OdbInstaller>(); });
   add_command("disable",  []() { return make_shared<OdbDisabler>(); });
   add_command("backends", []() { return make_shared<OdbBackendManager>(); });
+  add_command("build",    []() { return make_shared<BuildOdb>(); });
 }
 
 static void add_database(const ProjectConfiguration& configuration, const std::string& backend)
