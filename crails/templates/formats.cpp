@@ -21,7 +21,7 @@ public:
 
   std::string renderer_line(const std::string& name) const
   {
-    return "renderers.push_back(new " + Crails::camelize(name) + "Renderer)";
+    return "renderers.push_back(new " + Crails::camelize(name) + "Renderer);";
   }
 
   void add_renderer(const std::string& name)
