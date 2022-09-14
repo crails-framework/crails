@@ -23,7 +23,7 @@ public:
       ("name,n",   boost::program_options::value<std::string>(), "task's name");
   }
 
-  int create(boost::program_options::variables_map& options)
+  int create(boost::program_options::variables_map& options) override
   {
     CMakeFileEditor cmakefile(configuration);
 
