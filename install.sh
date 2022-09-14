@@ -14,21 +14,29 @@ echo " ╚██████╗██║  ██║██║  ██║██║
 echo "  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝"
 echo ""
 
-echo -n "> Which version of crails would you like to install (default: $DEFAULT_CRAILS_VERSION): "
-read CRAILS_VERSION
-if [[ -z "$CRAILS_VERSION" ]] ; then CRAILS_VERSION="$DEFAULT_CRAILS_VERSION" ; fi
+if [[ -z "$CRAILS_VERSION" ]] ; then
+  echo -n "> Which version of crails would you like to install (default: $DEFAULT_CRAILS_VERSION): "
+  read CRAILS_VERSION
+  if [[ -z "$CRAILS_VERSION" ]] ; then CRAILS_VERSION="$DEFAULT_CRAILS_VERSION" ; fi
+fi
 
-echo -n "> Which compiler do you wish to use (default: $DEFAULT_COMPILER): "
-read COMPILER
-if [[ -z "$COMPILER" ]] ; then COMPILER="$DEFAULT_COMPILER" ; fi
+if [[ -z "$COMPILER" ]] ; then
+  echo -n "> Which compiler do you wish to use (default: $DEFAULT_COMPILER): "
+  read COMPILER
+  if [[ -z "$COMPILER" ]] ; then COMPILER="$DEFAULT_COMPILER" ; fi
+fi
 
-echo ": Available database backends are: sqlite pgsql mysql oracle"
-echo -n "> Which database backend(s) do you want to use (separated with spaces): "
-read sql_backends
+if [[ -z "$sql_backends" ]] ; then
+  echo ": Available database backends are: sqlite pgsql mysql oracle"
+  echo -n "> Which database backend(s) do you want to use (separated with spaces): "
+  read sql_backends
+fi
 
-echo -n "> Should we use system libraries when available (y/n): "
-read use_system_libraries
-if [[ -z "$use_system_libraries" ]] ; then use_system_libraries="n" ; fi
+if [[ -z "$use_system_libraries" ]] ; then
+  echo -n "> Should we use system libraries when available (y/n): "
+  read use_system_libraries
+  if [[ -z "$use_system_libraries" ]] ; then use_system_libraries="n" ; fi
+fi
 
 COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk '{print $3}' | cut -d. -f1`
 BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
@@ -51,6 +59,12 @@ crails_packages=(
   libcrails-xmlrpc
   libcrails-proxy
   libcrails-tests
+)
+
+comet_packages=(
+  libcrails-semantics
+  libcrails-router
+  libcomet
 )
 
 system_packages=()
@@ -147,3 +161,12 @@ if [[ -z "$INSTALL_ROOT" ]] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
 bpkg install --all --recursive \
   config.install.root="$INSTALL_ROOT" \
   config.install.sudo=sudo
+
+if [[ -z "$WITH_COMET" ]] ; then
+  echo "> Build comet.cpp (https://github.com/crails-framework/comet.cpp) (y/n): "
+  read WITH_COMET
+fi
+
+if [[ "$WITH_COMET" == "y" ]] ; then
+  bash <(curl -s "https://raw.githubusercontent.com/crails-framework/comet.cpp/master/install.sh")
+fi
