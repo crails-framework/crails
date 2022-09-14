@@ -27,13 +27,15 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
 std::string render_scaffolds_layout_bare_html(const Crails::Renderer*, Crails::SharedVars& vars)
 {
   return
-    "const char* @yield;\n"
+    "const char* @yield = nullptr;\n"
     "// END LINKING\n"
     "<html>\n"
     "  <head>\n"
     "  </head>\n"
     "  <body>\n"
-    "    <%= yield %>\n"
+    "    <% if (yield != nullptr) do %>\n"
+    "      <%= yield %>\n"
+    "    <% end %>\n"
     "  </body>\n"
     "</html>";
 }
