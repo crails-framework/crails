@@ -32,6 +32,11 @@ if [[ -z "$sql_backends" ]] ; then
   read sql_backends
 fi
 
+if [[ -z "$WITH_COMET" ]] ; then
+  echo "> Build comet.cpp (https://github.com/crails-framework/comet.cpp) (y/n): "
+  read WITH_COMET
+fi
+
 if [[ -z "$use_system_libraries" ]] ; then
   echo -n "> Should we use system libraries when available (y/n): "
   read use_system_libraries
@@ -59,12 +64,6 @@ crails_packages=(
   libcrails-xmlrpc
   libcrails-proxy
   libcrails-tests
-)
-
-comet_packages=(
-  libcrails-semantics
-  libcrails-router
-  libcomet
 )
 
 system_packages=()
@@ -129,7 +128,10 @@ bpkg fetch --trust "$CPPGET_FINGERPRINT"
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
 bpkg build libcrails --yes ${system_packages[@]}
-bpkg build comet     --yes ${system_packages[@]}
+
+if [[ "$WITH_COMET" == "y" ]] ; then
+  bpkg build comet   --yes ${system_packages[@]}
+fi
 
 if [ -z ${sql_backends} ] ; then
   echo "+ no sql backend selected, skipping libcrails-odb"
@@ -161,11 +163,6 @@ if [[ -z "$INSTALL_ROOT" ]] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
 bpkg install --all --recursive \
   config.install.root="$INSTALL_ROOT" \
   config.install.sudo=sudo
-
-if [[ -z "$WITH_COMET" ]] ; then
-  echo "> Build comet.cpp (https://github.com/crails-framework/comet.cpp) (y/n): "
-  read WITH_COMET
-fi
 
 if [[ "$WITH_COMET" == "y" ]] ; then
   bash <(curl -s "https://raw.githubusercontent.com/crails-framework/comet.cpp/master/install.sh")
