@@ -85,8 +85,10 @@ int LayoutScaffold::download_bootstrap(const boost::filesystem::path& output_dir
       {
         boost::filesystem::create_directories(output_dir.parent_path());
         boost::filesystem::rename("bootstrap-" + version + "/scss", output_dir);
+        boost::filesystem::remove_all("bootstrap-" + version);
         return 0;
       }
+      boost::filesystem::remove(tmp_file);
     }
   }
   return -1;
