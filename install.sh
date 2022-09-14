@@ -27,9 +27,23 @@ if [[ -z "$COMPILER" ]] ; then
 fi
 
 if [[ -z "$sql_backends" ]] ; then
-  echo ": Available database backends are: sqlite pgsql mysql oracle"
+  echo "(i) Available database backends are: sqlite pgsql mysql oracle"
   echo -n "> Which database backend(s) do you want to use (separated with spaces): "
   read sql_backends
+fi
+
+if [[ ! -z "$sql_backends" ]] ; then
+  if [[ -z "$WITH_ODB_COMPILER" ]] ; then
+    echo "(i) The ODB compiler is needed for SQL support. This installer will build ODB unless told otherwise."
+    if [[ ! `find /usr/lib/gcc -name gcc-plugin.h | grep gcc-plugin.h` ]] ; then
+      echo '(!) gcc-plugin.h was not found. If you want to build the ODB compiler, make sure you have the gcc-plugin development package installed in your system.'
+    else
+      echo '(i) gcc-plugin.h found, the ODB compiler should build successfully.'
+    fi
+    echo -n "> Build the ODB compiler (y/n): "
+    read WITH_ODB_COMPILER
+    if [[ -z "$WITH_ODB_COMPILER" ]] ; then WITH_ODB_COMPILER="y" ; fi
+  fi
 fi
 
 if [[ -z "$WITH_COMET" ]] ; then
@@ -173,6 +187,20 @@ if [[ "$install_confirmed" == "y" ]] ; then
     config.install.sudo=sudo
 fi
 
+if [[ "$WITH_ODB_COMPILER" == "y" ]] ; then
+  cd ..
+  bpkg create -d odb-gcc cc \
+    config.cxx=g++ \
+    config.cc.coptions=-O3 \
+    config.bin.rpath="$INSTALL_ROOT/lib" \
+    config.install.root="$INSTALL_ROOT"  \
+    config.install.sudo=sudo
+  cd odb-gcc
+  bpkg build odb@https://pkg.cppget.org/1/beta --yes --trust "$CPPGET_FINGERPRINT"
+  bpkg install odb
+fi
+
 if [[ "$WITH_COMET" == "y" ]] ; then
+  cd ..
   bash <(curl -s "https://raw.githubusercontent.com/crails-framework/comet.cpp/master/install.sh")
 fi
