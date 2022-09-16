@@ -22,7 +22,7 @@ int MailPlugin::Installer::run()
   main_cpp.load_file();
   main_cpp.set_prefix_pattern("");
   main_cpp.use_symbol("int\\s*main\\s*\\([^)]+\\)\\s*\\{");
-  main_cpp.insert("\n  SingletonInstantiator<MailServers> mail_servers;");
+  main_cpp.insert("  SingletonInstantiator<MailServers> mail_servers;\n");
   main_cpp.add_include("crails/mail_servers.hpp");
   configuration.add_plugin("libcrails-mail");
   cmakefile.load_file();
@@ -54,9 +54,9 @@ string render_mail_config_mailers_cpp(const Crails::Renderer*, Crails::SharedVar
 "    \"example\", MailServer()\n"
 "      .hostname(\"smtp.gmail.com\")\n"
 "      .port(465)\n"
-"      .tls(true)\n"
+"      .use_tls(true)\n"
 "      .use_authentication(true)\n"
-"      .authentication_protcol(Smtp::Server::LOGIN)\n"
+"      .authentication_protocol(Smtp::Server::LOGIN)\n"
 "      .username(\"roger\")\n"
 "      .password(\"secret\")\n"
 "  }\n"

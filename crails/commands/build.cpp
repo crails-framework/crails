@@ -1,6 +1,7 @@
 #include "build.hpp"
 #include <crails/utils/string.hpp>
 #include <crails/cli/process.hpp>
+#include <crails/cli/notifier.hpp>
 #include <crails/read_file.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
@@ -126,6 +127,12 @@ int BuildManager::run()
     result = crails_build2_builder(configuration, verbose, clean) ? 0 : 4;
   else
     cerr << "Build command not supported for " << configuration.toolchain() << endl;
-  if (result == 0) restart_server();
+  if (result == 0)
+  {
+    restart_server();
+    Crails::cli_notification("Crails Framework", "Build succeeded.", "success");
+  }
+  else
+    Crails::cli_notification("Crails Framework", "Build failed", "failure");
   return result;
 }
