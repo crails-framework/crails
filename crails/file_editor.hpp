@@ -15,6 +15,7 @@ public:
   bool use_symbol(const std::string& symbol, bool whole_line = true);
   void insert(const std::string& text);
   void save_file();
+  void set_prefix_pattern(const std::string& prefix) { prefix_pattern = prefix; }
 };
 
 class CppFileEditor : public CrailsFileEditor

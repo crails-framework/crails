@@ -51,6 +51,7 @@ declare_renderer(docker_build_odb_compiler)
 declare_renderer(docker_build_crails)
 declare_renderer(docker_build_comet)
 declare_renderer(docker_build_environment)
+declare_renderer(mail_config_mailers_cpp)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -96,6 +97,8 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
   add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
+
+  add_renderer("config/mailers.cpp", mail_config_mailers_cpp);
 
   add_renderer("docker/Dockerfile",            docker_dockerfile);
   add_renderer("docker/build-build2.sh",       docker_build_build2);

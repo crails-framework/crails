@@ -77,7 +77,7 @@ int OdbModule::OdbInstaller::run()
 
 int OdbModule::OdbDisabler::run()
 {
-  configuration.remove_module("libcrails-odb");
+  configuration.remove_plugin("libcrails-odb");
   configuration.save();
   return 0;
 }
