@@ -26,12 +26,18 @@ ecpp_stream << "#pragma once";
  };
   ecpp_stream << "\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>\n\n#pragma db object\nclass " << ( classname );
   ecpp_stream << " : " << ( superclass );
-  ecpp_stream << "\n{\n  odb_instantiable()\npublic:\n  static const std::string resource_name;\n\n  #pragma db view object(" << ( classname );
+  ecpp_stream << "\n{\n  odb_instantiable()\npublic:";
+ if (!metarecord){
+  ecpp_stream << "\n  static const std::string scope;\n  static const std::string plural_scope;\n  static const std::string view;";
+ };
+  ecpp_stream << "\n\n  #pragma db view object(" << ( classname );
   ecpp_stream << ")\n  struct Count\n  {\n    #pragma db column(\"count(\" + " << ( classname );
   ecpp_stream << "::id + \")\")\n    size_t value;\n  };\n";
  if (!metarecord){
   ecpp_stream << "\n  void " << ( Crails::naming_convention.functions("edit") );
-  ecpp_stream << "(Data);";
+  ecpp_stream << "(Data);\n  void " << ( Crails::naming_convention.functions("merge_data") );
+  ecpp_stream << "(Data) const;\n  std::string " << ( Crails::naming_convention.functions("to_json") );
+  ecpp_stream << "() const;";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){
   ecpp_stream << "";
    if (it->second == "DataTree"){

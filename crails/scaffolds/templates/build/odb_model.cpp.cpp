@@ -29,8 +29,11 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "\n";
  if (!metarecord){
   ecpp_stream << "\nconst std::string " << ( classname );
-  ecpp_stream << "::resource_name = \"" << ( Crails::naming_convention.keys(classname) );
-  ecpp_stream << "\";";
+  ecpp_stream << "::scope = \"" << ( Crails::naming_convention.keys(classname) );
+  ecpp_stream << "\";\nconst std::string " << ( classname );
+  ecpp_stream << "::plural_scope = \"" << ( Crails::pluralize(Crails::naming_convention.keys(classname)) );
+  ecpp_stream << "\";\nconst std::string " << ( classname );
+  ecpp_stream << "::view = \"\";";
  };
   ecpp_stream << "\n\nodb_instantiable_impl(" << ( classname );
   ecpp_stream << ")\n";
@@ -44,7 +47,25 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "(params[\"" << ( it->first );
   ecpp_stream << "\"]);";
  };
-  ecpp_stream << "\n}";
+  ecpp_stream << "\n}\n\nvoid " << ( classname );
+  ecpp_stream << "::" << ( Crails::naming_convention.functions("merge_data") );
+  ecpp_stream << "(Data out) const\n{";
+ for (auto it = properties.begin() ; it != properties.end() ; ++it){
+  ecpp_stream << "";
+   if (it->second == "DataTree"){
+  ecpp_stream << "\n  out[\"" << ( it->first );
+  ecpp_stream << "\"].merge(this->" << ( it->first );
+  ecpp_stream << ");";
+ }else{
+  ecpp_stream << "\n  out[\"" << ( it->first );
+  ecpp_stream << "\"] = this->" << ( it->first );
+  ecpp_stream << ";";
+ };
+  ecpp_stream << "";
+ };
+  ecpp_stream << "\n}\n\nstd::string " << ( classname );
+  ecpp_stream << "::" << ( Crails::naming_convention.functions("to_json") );
+  ecpp_stream << "() const\n{\n  DataTree out;\n\n  merge_data(out);\n  return out.to_json();\n}";
  };
   ecpp_stream << "\n";
     return ecpp_stream.str();

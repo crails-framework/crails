@@ -19,7 +19,11 @@ class <%= classname %> : <%= superclass %>
 {
   odb_instantiable()
 public:
-  static const std::string resource_name;
+<% if (!metarecord) do %>
+  static const std::string scope;
+  static const std::string plural_scope;
+  static const std::string view;
+<% end %>
 
   #pragma db view object(<%= classname %>)
   struct Count
@@ -30,6 +34,8 @@ public:
 
 <% if (!metarecord) do %>
   void <%= Crails::naming_convention.functions("edit") %>(Data);
+  void <%= Crails::naming_convention.functions("merge_data") %>(Data) const;
+  std::string <%= Crails::naming_convention.functions("to_json") %>() const;
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
 <%   if (it->second == "DataTree") do %>
   DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() { return <%= it->first %>; }

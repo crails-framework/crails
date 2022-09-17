@@ -14,7 +14,9 @@ std::map<std::string, std::string>& @properties;
 <% end %>
 
 <% if (!metarecord) do %>
-const std::string <%= classname %>::resource_name = "<%= Crails::naming_convention.keys(classname) %>";
+const std::string <%= classname %>::scope = "<%= Crails::naming_convention.keys(classname) %>";
+const std::string <%= classname %>::plural_scope = "<%= Crails::pluralize(Crails::naming_convention.keys(classname)) %>";
+const std::string <%= classname %>::view = "";
 <% end %>
 
 odb_instantiable_impl(<%= classname %>)
@@ -26,5 +28,24 @@ void <%= classname %>::<%= Crails::naming_convention.functions("edit") %>(Data p
   if (params["<%= it->first %>"].exists())
     <%= Crails::naming_convention.functions("set_" + it->first) %>(params["<%= it->first %>"]);
 <% end %>
+}
+
+void <%= classname %>::<%= Crails::naming_convention.functions("merge_data") %>(Data out) const
+{
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (it->second == "DataTree") do %>
+  out["<%= it->first %>"].merge(this-><%= it->first %>);
+<%   end else do %>
+  out["<%= it->first %>"] = this-><%= it->first %>;
+<%   end %>
+<% end %>
+}
+
+std::string <%= classname %>::<%= Crails::naming_convention.functions("to_json") %>() const
+{
+  DataTree out;
+
+  merge_data(out);
+  return out.to_json();
 }
 <% end %>

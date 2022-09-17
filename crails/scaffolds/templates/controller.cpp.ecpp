@@ -93,7 +93,7 @@ void <%= classname %>::create()
 {
 <% if (model_class.length() > 0) do %>
   <%= model_class %> model;
-  model.edit(params[<%= model_class %>::resource_name]);
+  model.edit(params[<%= model_class %>::scope]);
   database.save(model);
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model.get_id()));
 <% end %>
@@ -109,7 +109,7 @@ void <%= classname %>::edit()
 void <%= classname %>::update()
 {
 <% if (model_class.length() > 0) do %>
-  model->edit(params[<%= model_class %>::resource_name]);
+  model->edit(params[<%= model_class %>::scope]);
   database.save(*model);
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model->get_id()));
 <% end %>
