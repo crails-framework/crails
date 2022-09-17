@@ -12,6 +12,7 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
     "// END LINKING\n"
     "<html>\n"
     "  <head>\n"
+    "    <meta charset=\"utf-8\" />\n"
     "    <%= tag(\"link\", {{\"rel\",\"stylesheet\"},{\"href\", Assets::stylesheets_bootstrap_bootstrap_scss}}) %>\n"
     "  </head>\n"
     "  <body>\n"
