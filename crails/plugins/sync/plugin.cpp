@@ -21,7 +21,7 @@ int SyncPlugin::Installer::run()
   main_cpp.set_prefix_pattern("");
   main_cpp.use_symbol("int\\s*main\\s*\\([^)]+\\)\\s*\\{");
   main_cpp.insert("  SingletonInstantiator<Sync::Channels> sync_channels;\n");
-  main_cpp.add_include("crails/sync/channel.hpp");
+  main_cpp.add_include("crails/sync/channels.hpp");
   configuration.add_plugin("libcrails-sync");
   cmakefile.load_file();
   cmakefile.update_plugins();

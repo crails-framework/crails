@@ -34,7 +34,7 @@ public:
     }
     resource_name = options.count("name") ? options["name"].as<std::string>() : options["model"].as<std::string>();
     resource_name = Crails::naming_convention.keys(resource_name);
-    router_path   = resource_name;
+    router_path   = '/' + resource_name;
     classname     = Crails::naming_convention.classnames(resource_name + "Controller");
     path_name     = Crails::naming_convention.filenames(resource_name);
     if (options.count("target"))
