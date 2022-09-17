@@ -81,6 +81,7 @@ crails_packages=(
   libcrails-http-client
   libcrails-mail
   libcrails-signin
+  libcrails-sync
   libcrails-xmlrpc
   libcrails-proxy
   libcrails-tests
