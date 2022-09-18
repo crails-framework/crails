@@ -5,10 +5,10 @@
 using namespace Crails;
 using namespace std;
 
-class ProjectConfigSaltCpp : public Crails::Template
+class ProjectConfigCookiesCpp : public Crails::Template
 {
 public:
-  ProjectConfigSaltCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
+  ProjectConfigCookiesCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
     Crails::Template(renderer, vars), 
     charset( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
   {}
@@ -25,7 +25,7 @@ private:
   const std::string charset;
 };
 
-std::string render_project_config_salt_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+std::string render_project_config_cookies_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
 {
-  return ProjectConfigSaltCpp(renderer, vars).render();
+  return ProjectConfigCookiesCpp(renderer, vars).render();
 }

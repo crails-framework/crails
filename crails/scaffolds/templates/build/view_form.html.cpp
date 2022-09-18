@@ -52,6 +52,9 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << ") %>";
  };
   ecpp_stream << "";
+ }else if (it->second == "Crails::Password"){
+  ecpp_stream << "\n    <%= form.password_field(\"" << ( it->first );
+  ecpp_stream << "\", string()) %>";
  };
   ecpp_stream << "\n  </div>";
  };

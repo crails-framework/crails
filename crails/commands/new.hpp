@@ -16,6 +16,7 @@ class New : public ::Command
   std::string              project_name;
   std::string              build_system = "cmake";
   std::string              configuration_type = "full";
+  std::string              session_store = "NoSessionStore";
   std::list<std::string>   formats, plugins;
 public:
   New();

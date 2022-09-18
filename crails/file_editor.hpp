@@ -29,6 +29,20 @@ public:
   void add_include(const std::string& path) { contents.insert(0, "#include \"" + path + "\"\n"); }
 };
 
+class MainCppEditor : public CppFileEditor
+{
+public:
+  MainCppEditor(const std::string& path) : CppFileEditor(path, "")
+  {
+  }
+
+  void add_to_main_function(const std::string& value)
+  {
+    use_symbol("int\\s*main\\s*\\([^)]+\\)\\s*\\{");
+    insert("  " + value);
+  }
+};
+
 class ProjectConfiguration;
 class CMakeFileEditor : public CrailsFileEditor
 {

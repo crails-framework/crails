@@ -14,13 +14,11 @@ SyncPlugin::SyncPlugin()
 int SyncPlugin::Installer::run()
 {
   FileRenderer    renderer;
-  CppFileEditor   main_cpp("app/main.cpp");
+  MainCppEditor   main_cpp("app/main.cpp");
   CMakeFileEditor cmakefile(configuration);
 
   main_cpp.load_file();
-  main_cpp.set_prefix_pattern("");
-  main_cpp.use_symbol("int\\s*main\\s*\\([^)]+\\)\\s*\\{");
-  main_cpp.insert("  SingletonInstantiator<Sync::Channels> sync_channels;\n");
+  main_cpp.add_to_main_function("SingletonInstantiator<Sync::Channels> sync_channels;\n");
   main_cpp.add_include("crails/sync/channels.hpp");
   configuration.add_plugin("libcrails-sync");
   cmakefile.load_file();

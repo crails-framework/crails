@@ -65,7 +65,7 @@ bool New::generate_project_structure()
   if (configuration.has_plugin("libcrails-controllers"))
     generate_file("app/controllers/application.hpp");
   if (configuration.has_plugin("libcrails-cookies"))
-    generate_file("config/salt.cpp");
+    generate_file("config/cookies.cpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
   configuration.save();
@@ -99,9 +99,10 @@ int New::run()
     if (options.count("force") != 0)
       renderer.should_overwrite = true;
     if (options.count("session-store"))
-      vars["session_store"] = options["session-store"].as<string>();
+      session_store = options["session-store"].as<string>();
     else if (configuration_type == "full")
-      vars["session_store"] = string("CookieStore");
+      session_store = string("CookieStore");
+    vars["session_store"] = session_store;
     if (validate_options() && move_to_project_directory())
     {
       configuration.version(LIBCRAILS_VERSION_STR);
@@ -191,6 +192,11 @@ void New::prepare_request_pipeline()
   project_handlers.push_back({"file", "FileRequestHandler"});
   project_parsers.push_back({"url_parser", "RequestUrlParser"});
   configuration.add_plugin("libcrails-url-parser");
+  if (session_store == "CookieStore")
+  {
+    configuration.add_plugin("libcrails-encrypt");
+    configuration.add_plugin("libcrails-cookies");
+  }
   if (configuration_type == "full" || configuration_type == "webservice")
   {
     project_handlers.push_back({"action", "ActionRequestHandler"});
@@ -202,7 +208,6 @@ void New::prepare_request_pipeline()
     project_parsers.push_back({"multipart_parser", "RequestMultipartParser"});
     configuration.add_plugin("libcrails-form-parser");
     configuration.add_plugin("libcrails-multipart-parser");
-    configuration.add_plugin("libcrails-cookies");
     configuration.add_plugin("libcrails-controllers");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())

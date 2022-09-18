@@ -51,7 +51,7 @@ public:
     if (options.count("model"))
     {
       std::string model_class = options["model"].as<std::string>();
-      renderer.vars["model_class"] = model_class;
+      renderer.vars["model_class"] = Crails::naming_convention.classnames(model_class);
       renderer.vars["model_header"] = ("app/models/" + path_name + ".hpp");
       renderer.vars["view_path"] = Crails::underscore(model_class);
       renderer.vars["parent_class"] = std::string("Crails::Odb::Controller<ApplicationController>");

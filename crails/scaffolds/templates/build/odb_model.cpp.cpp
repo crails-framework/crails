@@ -56,6 +56,10 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "\n  out[\"" << ( it->first );
   ecpp_stream << "\"].merge(this->" << ( it->first );
   ecpp_stream << ");";
+ }else if (it->second == "Crails::Password"){
+  ecpp_stream << "";
+     continue ;
+  ecpp_stream << "";
  }else{
   ecpp_stream << "\n  out[\"" << ( it->first );
   ecpp_stream << "\"] = this->" << ( it->first );

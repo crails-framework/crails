@@ -3,6 +3,7 @@
 #include "crails/template.hpp"
 #include <algorithm>
 #include <crails/cli/conventions.hpp>
+#include "../../helpers.hpp"
 
 class ScaffoldsOdbModelHpp : public Crails::Template
 {
@@ -24,7 +25,8 @@ ecpp_stream << "#pragma once";
   ecpp_stream << "\n#include \"" << ( include );
   ecpp_stream << "\"";
  };
-  ecpp_stream << "\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>\n\n#pragma db object\nclass " << ( classname );
+  ecpp_stream << "\n#include <crails/odb/model.hpp>\n#include <crails/datatree.hpp>" << ( includes_for_properties(properties) );
+  ecpp_stream << "\n#pragma db object\nclass " << ( classname );
   ecpp_stream << " : " << ( superclass );
   ecpp_stream << "\n{\n  odb_instantiable()\npublic:";
  if (!metarecord){
@@ -49,6 +51,12 @@ ecpp_stream << "#pragma once";
   ecpp_stream << "(Data value) { this->" << ( it->first );
   ecpp_stream << ".clear(); this->" << ( it->first );
   ecpp_stream << ".as_data().merge(value); }";
+ }else if (it->second == "Crails::Password"){
+  ecpp_stream << "\n  void " << ( Crails::naming_convention.functions("set_" + it->first) );
+  ecpp_stream << "(const std::string& value) { " << ( it->first );
+  ecpp_stream << " = Crails::Password(value); }\n  const std::string& " << ( Crails::naming_convention.functions("get_" + it->first) );
+  ecpp_stream << "() const { return " << ( it->first );
+  ecpp_stream << "; }";
  }else if (std::find(scalar_types.begin(), scalar_types.end(), it->second) != scalar_types.end()){
   ecpp_stream << "\n  void " << ( Crails::naming_convention.functions("set_" + it->first) );
   ecpp_stream << "(" << ( it->second );
@@ -70,9 +78,16 @@ ecpp_stream << "#pragma once";
  };
   ecpp_stream << "\n\nprivate:";
  for (auto it = properties.begin() ; it != properties.end() ; ++it){
+  ecpp_stream << "";
+   if (it->second == "Crails::Password"){
+  ecpp_stream << "\n  std::string " << ( it->first );
+  ecpp_stream << ";";
+ }else{
   ecpp_stream << "\n  " << ( it->second );
   ecpp_stream << " " << ( it->first );
   ecpp_stream << ";";
+ };
+  ecpp_stream << "";
  };
   ecpp_stream << "";
  };

@@ -70,6 +70,7 @@ crails_packages=(
   libcrails-controllers
   libcrails-crud
   libcrails-cookies
+  libcrails-encrypt
   libcrails-form-parser
   libcrails-multipart-parser
   libcrails-url-parser
@@ -104,6 +105,7 @@ if [ "$use_system_libraries" = "y" ] ; then
     ?sys:libboost-process
     ?sys:libboost-random
     ?sys:libssl
+    ?sys:libcrypto
   )
   for backend in $sql_backends ; do
     case $backend in
@@ -123,6 +125,17 @@ fi
 
 if [ ! -z "$sql_backends" ] ; then
   crails_packages+=(libcrails-odb)
+fi
+
+##
+## Prepare build2
+##
+if ! which bpkg ; then
+  echo "+ bpkg does not appear to be installed. Installing build2:"
+  BUILD2_VERSION="0.15.0"
+  curl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh
+  chmod +x build2-install-$BUILD2_VERSION.sh
+  sh build2-install-$BUILD2_VERSION.sh
 fi
 
 ##

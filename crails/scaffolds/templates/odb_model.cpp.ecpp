@@ -35,6 +35,8 @@ void <%= classname %>::<%= Crails::naming_convention.functions("merge_data") %>(
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
 <%   if (it->second == "DataTree") do %>
   out["<%= it->first %>"].merge(this-><%= it->first %>);
+<%   end else if (it->second == "Crails::Password") do %>
+<%     continue %>
 <%   end else do %>
   out["<%= it->first %>"] = this-><%= it->first %>;
 <%   end %>

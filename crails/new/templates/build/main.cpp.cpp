@@ -19,7 +19,7 @@ ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
  };
   ecpp_stream << "";
  if (with_cookies){
-  ecpp_stream << "\n#include <crails/cipher.hpp>\n#include <crails/cookie_data.hpp>";
+  ecpp_stream << "\n#include <crails/cipher.hpp>";
  };
   ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{";
  if (with_action){
@@ -27,7 +27,7 @@ ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
  };
   ecpp_stream << "\n  // Initializers\n  Renderer::initialize();";
  if (with_cookies){
-  ecpp_stream << "\n  if (CookieData::use_encryption)\n    Cipher::initialize();";
+  ecpp_stream << "\n  Cipher::initialize();";
  };
   ecpp_stream << "\n  // Application loop\n  Server::launch(argc, argv);\n\n  // Finalizers\n  Renderer::finalize();\n  return (0);\n}\n";
     return ecpp_stream.str();

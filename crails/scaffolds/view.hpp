@@ -1,5 +1,6 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
+#include <crails/cli/conventions.hpp>
 #include "../file_renderer.hpp"
 #include <crails/utils/string.hpp>
 #include <iostream>
@@ -28,7 +29,7 @@ public:
   int create(boost::program_options::variables_map& options) override
   {
     if (options.count("model"))
-      model_classname = options["model"].as<std::string>();
+      model_classname = Crails::naming_convention.classnames(options["model"].as<std::string>());
     else
     {
       std::cerr << "Option --name required" << std::endl;
@@ -39,11 +40,11 @@ public:
     if (options.count("header"))
       model_header = options["header"].as<std::string>();
     else
-      model_header = "app/models/" + Crails::underscore(model_classname) + ".hpp";
+      model_header = "app/models/" + Crails::naming_convention.filenames(model_classname) + ".hpp";
     if (options.count("view-path"))
       view_path = options["view-path"].as<std::string>();
     else
-      view_path = Crails::underscore(model_classname);
+      view_path = Crails::naming_convention.filenames(model_classname);
     if (options.count("target"))
       target_folder = options["target"].as<std::string>() + '/' + view_path;
     else

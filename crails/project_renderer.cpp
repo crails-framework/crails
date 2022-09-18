@@ -17,7 +17,7 @@ declare_renderer(project_config_databases_cpp)
 declare_renderer(project_config_logger_cpp)
 declare_renderer(project_config_renderers_cpp)
 declare_renderer(project_config_request_pipe_cpp)
-declare_renderer(project_config_salt_cpp)
+declare_renderer(project_config_cookies_cpp)
 declare_renderer(project_config_session_store_cpp)
 declare_renderer(project_config_ssl_cpp)
 declare_renderer(project_public_index_html)
@@ -53,6 +53,7 @@ declare_renderer(docker_build_comet)
 declare_renderer(docker_build_environment)
 declare_renderer(mail_config_mailers_cpp)
 declare_renderer(sync_config_sync_cpp)
+declare_renderer(signin_config_signin_cpp)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -67,7 +68,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/logger.cpp",               project_config_logger_cpp);
   add_renderer("config/renderers.cpp",            project_config_renderers_cpp);
   add_renderer("config/request_pipe.cpp",         project_config_request_pipe_cpp);
-  add_renderer("config/salt.cpp",                 project_config_salt_cpp);
+  add_renderer("config/cookies.cpp",              project_config_cookies_cpp);
   add_renderer("config/session_store.cpp",        project_config_session_store_cpp);
   add_renderer("config/ssl.cpp",                  project_config_ssl_cpp);
   add_renderer("public/index.html",               project_public_index_html);
@@ -101,6 +102,7 @@ ProjectRenderer::ProjectRenderer()
 
   add_renderer("config/mailers.cpp", mail_config_mailers_cpp);
   add_renderer("config/sync.cpp", sync_config_sync_cpp);
+  add_renderer("config/signin.cpp", signin_config_signin_cpp);
 
   add_renderer("docker/Dockerfile",            docker_dockerfile);
   add_renderer("docker/build-build2.sh",       docker_build_build2);

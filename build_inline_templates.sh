@@ -52,9 +52,9 @@ $ECPP \
   -i $PROJECT_TPL/config/request_pipe.cpp.ecpp \
   >  $PROJECT_TPL/build/request_pipe.cpp.cpp
 $ECPP \
-  -n ProjectConfigSaltCpp \
-  -i $PROJECT_TPL/config/salt.cpp.ecpp \
-  >  $PROJECT_TPL/build/salt.cpp.cpp
+  -n ProjectConfigCookiesCpp \
+  -i $PROJECT_TPL/config/cookies.cpp.ecpp \
+  >  $PROJECT_TPL/build/cookies.cpp.cpp
 $ECPP \
   -n ProjectConfigSessionStoreCpp \
   -i $PROJECT_TPL/config/session_store.cpp.ecpp \

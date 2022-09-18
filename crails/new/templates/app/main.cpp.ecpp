@@ -9,7 +9,6 @@ bool @with_cookies = false;
 <% if (with_cookies) do %>
 
 #include <crails/cipher.hpp>
-#include <crails/cookie_data.hpp>
 <% end %>
 
 using namespace std;
@@ -25,8 +24,7 @@ int main(int argc, const char **argv)
   // Initializers
   Renderer::initialize();
 <% if (with_cookies) do -%>
-  if (CookieData::use_encryption)
-    Cipher::initialize();
+  Cipher::initialize();
 <% end -%>
 
   // Application loop

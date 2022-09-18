@@ -30,7 +30,9 @@ string action = "/<%= route %>";
 <%    end else do %>
     <%%= form.number_field("<%= it->first %>", &<%= classname %>::get_<%= it->first %>) %>
 <%    end %>
-<%  end %>
+<%  end else if (it->second == "Crails::Password") do %>
+    <%%= form.password_field("<%= it->first %>", string()) %>
+<%    end %>
   </div>
 <%  end %>
   <button type="submit" class="btn btn-primary">Save</button>
