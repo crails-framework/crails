@@ -1,0 +1,17 @@
+#include <crails/sidekix/database.hpp>
+#include <crails/sidekix/file_database.hpp>
+#include <crails/sidekix/test_database.hpp>
+#include <filesystem>
+
+using namespace Sidekix;
+using namespace std;
+
+static const string task_store_directory = ".pending-tasks";
+
+SideTaskDatabase* SideTaskDatabase::initialize()
+{
+  if (Crails::environment == Crails::Test)
+    return new Tests::Database();
+  std::filesystem::create_directories(task_store_directory);
+  return new FileDatabase(task_store_directory);
+}

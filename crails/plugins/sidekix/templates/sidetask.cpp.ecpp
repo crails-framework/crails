@@ -1,0 +1,7 @@
+std::string @function_name;
+// END LINKING
+#include <crails/params.hpp>
+
+void <%= function_name %>(Crails::Params& params)
+{
+}

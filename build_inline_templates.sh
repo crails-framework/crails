@@ -178,3 +178,32 @@ $ECPP \
   -n DockerBuildEnvironment \
   -i $DOCKER_TPL/build-environment.sh.ecpp \
   >  $DOCKER_TPL/build/build-environment.cpp
+
+##
+## Sidekix plugin
+##
+SIDEKIX_TPL=crails/plugins/sidekix/templates
+$ECPP \
+  -n SidekixConfigSidekixCpp \
+  -i $SIDEKIX_TPL/config.cpp.ecpp \
+  >  $SIDEKIX_TPL/build/config.cpp
+$ECPP \
+  -n SidekixMainCpp \
+  -i $SIDEKIX_TPL/main.cpp.ecpp \
+  >  $SIDEKIX_TPL/build/main.cpp
+$ECPP \
+  -n SidekixCtplH \
+  -i $SIDEKIX_TPL/ctpl.h.ecpp \
+  >  $SIDEKIX_TPL/build/ctpl.cpp
+$ECPP \
+  -n SidekixSidetasksCpp \
+  -i $SIDEKIX_TPL/sidetasks.cpp.ecpp \
+  >  $SIDEKIX_TPL/build/sidetasks.cpp
+$ECPP \
+  -n SidekixSidetasksHpp \
+  -i $SIDEKIX_TPL/sidetasks.hpp.ecpp \
+  >  $SIDEKIX_TPL/build/sidetasks.hpp.cpp
+$ECPP \
+  -n SidekixSidetaskCpp \
+  -i $SIDEKIX_TPL/sidetask.cpp.ecpp \
+  >  $SIDEKIX_TPL/build/sidetask.cpp

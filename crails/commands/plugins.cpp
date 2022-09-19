@@ -6,6 +6,7 @@
 #include "../plugins/mail/plugin.hpp"
 #include "../plugins/signin/plugin.hpp"
 #include "../plugins/sync/plugin.hpp"
+#include "../plugins/sidekix/plugin.hpp"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ PluginManager::PluginManager()
   add_command("docker", []() { return make_shared<DockerPlugin>(); });
   add_command("mail", []() { return make_shared<MailPlugin>(); });
   add_command("metarecord", []() { return make_shared<MetarecordPlugin>(); });
+  add_command("sidekix", []() { return make_shared<SidekixPlugin>(); });
   add_command("signin", []() { return make_shared<SigninPlugin>(); });
   add_command("sync", []() { return make_shared<SyncPlugin>(); });
 }

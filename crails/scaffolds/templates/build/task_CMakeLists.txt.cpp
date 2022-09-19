@@ -12,7 +12,7 @@ public:
 
   std::string render()
   {
-ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nfile(GLOB task_files\n     *.cpp *.cxx)\n\nadd_executable(" << ( task_name );
+ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nfile(GLOB_RECURSE task_files\n     *.cpp *.cxx)\n\nadd_executable(" << ( task_name );
   ecpp_stream << " ${task_files})\n\ntarget_link_libraries(" << ( task_name );
   ecpp_stream << " ${dependencies})\n\nset_target_properties(" << ( task_name );
   ecpp_stream << " PROPERTIES OUTPUT_NAME \"task\")\n";

@@ -54,6 +54,12 @@ declare_renderer(docker_build_environment)
 declare_renderer(mail_config_mailers_cpp)
 declare_renderer(sync_config_sync_cpp)
 declare_renderer(signin_config_signin_cpp)
+declare_renderer(sidekix_config_sidekix_cpp)
+declare_renderer(sidekix_main_cpp)
+declare_renderer(sidekix_ctpl_h)
+declare_renderer(sidekix_sidetasks_cpp)
+declare_renderer(sidekix_sidetasks_hpp)
+declare_renderer(sidekix_sidetask_cpp)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -110,4 +116,11 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("docker/build-crails.sh",       docker_build_crails);
   add_renderer("docker/build-comet.sh",        docker_build_comet);
   add_renderer("docker/build-environment.sh",  docker_build_environment);
+
+  add_renderer("config/sidekix.cpp",          sidekix_config_sidekix_cpp);
+  add_renderer("tasks/sidekix/main.cpp",      sidekix_main_cpp);
+  add_renderer("tasks/sidekix/ctpl.h",        sidekix_ctpl_h);
+  add_renderer("tasks/sidekix/sidetasks.hpp", sidekix_sidetasks_hpp);
+  add_renderer("tasks/sidekix/sidetasks.cpp", sidekix_sidetasks_cpp);
+  add_renderer("tasks/sidekix/sidetask.cpp",  sidekix_sidetask_cpp);
 }

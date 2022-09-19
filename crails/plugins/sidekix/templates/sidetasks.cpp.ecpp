@@ -1,0 +1,10 @@
+#include "sidetasks.hpp"
+
+using namespace std;
+using namespace Crails;
+
+// Sidetask declarations
+
+const map<string, function<void(Params&)>> sidetasks = {
+  // Sidetask map
+};

@@ -81,6 +81,7 @@ crails_packages=(
   libcrails-databases
   libcrails-http-client
   libcrails-mail
+  libcrails-sidekix
   libcrails-signin
   libcrails-sync
   libcrails-xmlrpc
