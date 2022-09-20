@@ -24,7 +24,7 @@ private:
   std::string bin_target() const { return install_directory + "/bin/" + configuration.variable("name"); }
   std::string share_target() const { return install_directory + "/share/" + configuration.variable("name"); }
   std::string lib_target() const { return install_directory + "/lib"; }
-  std::string pidfile_target() const { return "/tmp/crails.pid"; }
+  std::string pidfile_target() const { return "/tmp/" + configuration.variable("name") + ".pid"; }
 
   std::string install_directory = "/usr/local";
   std::vector<std::filesystem::path> package_files;

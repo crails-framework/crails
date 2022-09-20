@@ -7,7 +7,10 @@
 #include <crails/logger.hpp>
 #include <crails/sidekix.hpp>
 #include <crails/log_files.hpp>
+#include <crails/server.hpp>
+#include <boost/program_options.hpp>
 #include <fstream>
+#include <thread>
 #include "ctpl.h"
 #include "sidetasks.hpp"
 
@@ -20,7 +23,11 @@ using namespace Crails;
 
 atomic_bool should_continue(true);
 
-static void shutdown(int) { should_continue = false; }
+static void shutdown(int)
+{
+  Server::get_io_context().stop();
+  should_continue = false;
+}
 
 static void run_task(const std::string& type, std::function<void(Params&)> runner, std::shared_ptr<Params> params, int id)
 {
@@ -63,7 +70,19 @@ static void run_tasks(ctpl::thread_pool& pool, vector<string> tasks)
   }
 }
 
-void initialize_pid_file(const std::string& filepath)
+static void tasks_main()
+{
+  ctpl::thread_pool taskpool(THREAD_POOL_SIZE);
+  Sidekix::SideTaskDatabase* database;
+
+  database = Sidekix::SideTaskDatabase::instance();
+  do {
+    run_tasks(taskpool, database->pending_tasks());
+    sleep(5);
+  } while (should_continue == true);
+}
+
+static void initialize_pid_file(const std::string& filepath)
 {
   std::ofstream output(filepath.c_str());
 
@@ -81,8 +100,6 @@ void initialize_pid_file(const std::string& filepath)
 
 int main(int argc, const char** argv)
 {
-  ctpl::thread_pool taskpool(THREAD_POOL_SIZE);
-  Sidekix::SideTaskDatabase* database;
   SingletonInstantiator<LogFiles, int, const char**> log_files(argc, argv);
 
   {
@@ -101,9 +118,9 @@ int main(int argc, const char** argv)
   }
 
   signal(SIGINT, &shutdown);
-  database = Sidekix::SideTaskDatabase::instance();
-  do {
-    run_tasks(taskpool, database->pending_tasks());
-    sleep(5);
-  } while (should_continue == true);
+  signal(SIGTERM, &shutdown);
+  std::thread task_thread(&tasks_main);
+  Server::get_io_context().run();
+  task_thread.join();
+  return 0;
 }
