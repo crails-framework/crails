@@ -2,12 +2,13 @@
 #include <crails/cli/process.hpp>
 #include <crails/utils/split.hpp>
 #include <boost/process.hpp>
-#include <filesystem>
+#include <algorithm>
 #include <iostream>
+#include "../file_renderer.hpp"
 
 using namespace std;
 
-static int build_command(const ProjectConfiguration& configuration, boost::program_options::variables_map& options)
+static bool build_command(const ProjectConfiguration& configuration, boost::program_options::variables_map& options)
 {
   stringstream command;
 
@@ -43,16 +44,21 @@ static vector<filesystem::path> find_imported_libraries(const filesystem::path& 
   return results;
 }
 
-static vector<filesystem::path> find_exported_libraries(const filesystem::path& binary)
+static bool should_export_library(const filesystem::path& path)
+{
+  static const string export_root_path = "/usr/local/";
+  return path.string().substr(0, export_root_path.length()) == export_root_path;
+}
+
+static void find_exported_libraries(const filesystem::path& binary, vector<filesystem::path>& result)
 {
   vector<filesystem::path> list = find_imported_libraries(binary);
-  const string export_root_path = "/usr/local/";
 
-  std::remove_if(list.begin(), list.end(), [&export_root_path](const filesystem::path& path)
+  std::for_each(list.begin(), list.end(), [&result](const filesystem::path file)
   {
-    return path.string().substr(0, export_root_path.length()) != export_root_path;
+    if (should_export_library(file) && std::find(result.begin(), result.end(), file) == result.end())
+      result.push_back(file);
   });
-  return list;
 }
 
 static vector<filesystem::path> find_application_binaries(const filesystem::path& directory)
@@ -62,43 +68,106 @@ static vector<filesystem::path> find_application_binaries(const filesystem::path
 
   for (auto& entry : dir)
   {
-    auto permissions = filesystem::status(entry.path()).permissions();
+    if (filesystem::is_regular_file(entry.path()))
+    {
+      auto permissions = filesystem::status(entry.path()).permissions();
 
-    if ((permissions & filesystem::perms::owner_exec) != filesystem::perms::none)
-      results.push_back(entry.path());
+      if ((permissions & filesystem::perms::owner_exec) != filesystem::perms::none)
+        results.push_back(entry.path());
+    }
   }
   return results;
 }
 
+bool Package::generate_scripts()
+{
+  FileRenderer renderer;
+  vector<std::string> scripts{"start.sh", "stop.sh"};
+
+  renderer.vars["application_name"] = configuration.variable("name");
+  renderer.vars["bin_directory"]    = bin_target();
+  renderer.vars["share_directory"]  = share_target();
+  renderer.vars["lib_directory"]    = lib_target();
+  renderer.vars["pidfile"]          = pidfile_target();
+  if (options.count("install-user"))
+    renderer.vars["application_user"] = options["install-user"].as<string>();
+  if (options.count("install-group"))
+    renderer.vars["application_group"] = options["install-group"].as<string>();
+  renderer.generate_file("package/start.sh",        ".tmp/start.sh");
+  renderer.generate_file("package/stop.sh",         ".tmp/stop.sh");
+  renderer.generate_file("package/systemd.service", ".tmp/systemd.service");
+  for (const string& script : scripts)
+  {
+    Crails::run_command("chmod +x .tmp/" + script);
+    package_files.push_back(".tmp/" + script);
+  }
+  package_files.push_back(".tmp/systemd.service");
+  return true;
+}
+
+static std::string relative_path(const std::string& path)
+{
+  string result;
+  string::const_iterator it = ++path.begin();
+
+  copy(it, path.end(), back_inserter(result));
+  return result;
+}
+
+bool Package::generate_tarball()
+{
+  string output = options.count("output") ? options["output"].as<string>() : string("package.tar.gz");
+  string tar_command = Crails::which("tar");
+  stringstream command;
+  string bin_path, lib_path, share_path;
+
+  bin_path = relative_path(bin_target());
+  lib_path = relative_path(lib_target());
+  share_path = relative_path(share_target());
+  if (tar_command.length() > 0)
+  {
+    command << tar_command << " czf \"" << output << '"'
+      << " --transform \"s|usr/local/lib|" << lib_path << "|\""
+      << " --transform \"s|build|" << bin_path << "|\""
+      << " --transform \"s|.tmp/systemd.service|etc/systemd/system/" << configuration.variable("name") << ".service|\""
+      << " --transform \"s|.tmp|" << bin_path << "|\""
+      << " --transform \"s|public|" << share_path << "/public|\"";
+    for (const auto& file : package_files)
+      command << ' ' << file;
+    command << " public";
+    if (options.count("verbose"))
+      cout << "+ " << command.str() << endl;
+    return Crails::run_command(command.str()) ? 0 : 1;
+  }
+  else
+    cerr << "Could not find `tar`. Perhaps it is not installed ?" << endl;
+  return false;
+}
+
 int Package::run()
 {
-  int result = build_command(configuration, options);
+  int result = build_command(configuration, options) ? 0 : -10;
 
+  if (options.count("install-root"))
+    install_directory = options["install-root"].as<string>();
   if (result == 0)
   {
-    auto exported_libraries = find_exported_libraries("build/server");
-    auto application_binaries = find_application_binaries("build/");
+    vector<filesystem::path> application_binaries;
+    vector<filesystem::path> exported_libraries;
     string output = options.count("output") ? options["output"].as<string>() : string("package.tar.gz");
     string tar_command = Crails::which("tar");
     stringstream command;
 
-    if (tar_command.length() > 0)
+    application_binaries = find_application_binaries("build/");
+    for (const auto& binary : application_binaries)
+      find_exported_libraries(binary, exported_libraries);
+    copy(application_binaries.begin(),  application_binaries.end(), back_inserter(package_files));
+    copy(exported_libraries.begin(),    exported_libraries.end(),   back_inserter(package_files));
+    if (generate_scripts() && generate_tarball())
     {
-      command << tar_command << " czf \"" << output << '"'
-        << " --transform=s/usr\\\\/local\\\\///"
-        << " --transform=s/build/bin/";
-      for (const auto& binary : application_binaries)
-        command << ' ' << binary;
-      for (const auto& library : exported_libraries)
-        command << ' ' << library;
-      command << " public";
-      if (options.count("verbose"))
-        cout << "+ " << command.str() << endl;
-      return Crails::run_command(command.str()) ? 0 : 1;
+      filesystem::remove_all(".tmp");
+      return true;
     }
-    else
-      cerr << "Could not find `tar`. Perhaps it is not installed ?" << endl;
-    return 0;
   }
   return result;
 }

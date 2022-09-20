@@ -207,3 +207,20 @@ $ECPP \
   -n SidekixSidetaskCpp \
   -i $SIDEKIX_TPL/sidetask.cpp.ecpp \
   >  $SIDEKIX_TPL/build/sidetask.cpp
+
+##
+## Package
+##
+PACKAGE_TPL=crails/package/templates
+$ECPP \
+  -n PackageStartSh \
+  -i $PACKAGE_TPL/start.sh \
+  >  $PACKAGE_TPL/build/start.sh.cpp
+$ECPP \
+  -n PackageStopSh \
+  -i $PACKAGE_TPL/stop.sh \
+  >  $PACKAGE_TPL/build/stop.sh.cpp
+$ECPP \
+  -n PackageSystemdService \
+  -i $PACKAGE_TPL/systemd.service \
+  >  $PACKAGE_TPL/build/systemd.service.cpp

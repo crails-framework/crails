@@ -60,6 +60,9 @@ declare_renderer(sidekix_ctpl_h)
 declare_renderer(sidekix_sidetasks_cpp)
 declare_renderer(sidekix_sidetasks_hpp)
 declare_renderer(sidekix_sidetask_cpp)
+declare_renderer(package_start_sh)
+declare_renderer(package_stop_sh)
+declare_renderer(package_systemd_service)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -101,6 +104,10 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/modules/CMakeLists.txt", scaffolds_module_cmakelists_txt);
   add_renderer("scaffolds/modules/module.hpp", scaffolds_module_module_hpp);
   add_renderer("scaffolds/modules/routes.cpp", scaffolds_module_routes_cpp);
+
+  add_renderer("package/start.sh",        package_start_sh);
+  add_renderer("package/stop.sh",         package_stop_sh);
+  add_renderer("package/systemd.service", package_systemd_service);
 
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
