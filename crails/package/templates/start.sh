@@ -1,3 +1,4 @@
+std::string @application_name;
 std::string @bin_directory;
 std::string @lib_directory;
 std::string @share_directory;
@@ -19,4 +20,5 @@ if [ -z "$PORT" ]     ; then export PORT="3001" ; fi
 exec "$current_dir/server" \
   --hostname "$HOSTNAME" \
   --port     "$PORT" \
-  --pidfile  "<%= pidfile %>"
+  --pidfile  "<%= pidfile %>" \
+  --log      "/var/log/<%= application_name %>/`date +%y-%m-%d_%Hh%Mm%S``_crails.log"

@@ -6,7 +6,7 @@
 #include <crails/utils/timer.hpp>
 #include <crails/logger.hpp>
 #include <crails/sidekix.hpp>
-#include <boost/program_options.hpp>
+#include <crails/log_files.hpp>
 #include <fstream>
 #include "ctpl.h"
 #include "sidetasks.hpp"
@@ -79,10 +79,11 @@ void initialize_pid_file(const std::string& filepath)
     logger << "!! Failed to open PID file " << filepath << Logger::endl;
 }
 
-int main(int argc, char** argv)
+int main(int argc, const char** argv)
 {
   ctpl::thread_pool taskpool(THREAD_POOL_SIZE);
   Sidekix::SideTaskDatabase* database;
+  SingletonInstantiator<LogFiles, int, const char**> log_files(argc, argv);
 
   {
     using namespace boost;
@@ -90,6 +91,8 @@ int main(int argc, char** argv)
     program_options::options_description desc("Options");
 
     desc.add_options()
+      ("log,l", program_options::value<std::string>(), "log output file")
+      ("error,e", program_options::value<std::string>(), "error log output file")
       ("pidfile", program_options::value<std::string>(), "pid file");
     program_options::store(program_options::parse_command_line(argc, argv, desc), vm);
     program_options::notify(vm);
