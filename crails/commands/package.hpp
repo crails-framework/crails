@@ -11,12 +11,12 @@ public:
   {
     desc.add_options()
       ("verbose,v", "enable verbose mode")
-      ("mode,m",        boost::program_options::value<string>(),  "Debug or Release: defaults to the build-type value set in the .crails file")
-      ("output,o",      boost::program_options::value<string>(), "output file (defaults to application.tar.gz)")
-      ("install-root",  boost::program_options::value<string>(), "expected remote install directory")
-      ("install-user",  boost::program_options::value<string>(), "user which should run the application in the runtime environment")
-      ("install-group", boost::program_options::value<string>(), "user group which should run the application in the runtime environment")
-      ("install-runtime-path", boost::program_options::value<string>(), "path of the folder in which the application will run");
+      ("mode,m",        boost::program_options::value<std::string>(),  "Debug or Release: defaults to the build-type value set in the .crails file")
+      ("output,o",      boost::program_options::value<std::string>(), "output file (defaults to application.tar.gz)")
+      ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
+      ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
+      ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")
+      ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run");
   }
 private:
   bool generate_scripts();
