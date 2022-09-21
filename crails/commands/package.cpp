@@ -89,6 +89,8 @@ bool Package::generate_scripts()
   renderer.vars["share_directory"]  = share_target();
   renderer.vars["lib_directory"]    = lib_target();
   renderer.vars["pidfile"]          = pidfile_target();
+  if (options.count("install-runtime-path"))
+    renderer.vars["runtime_path"] = options["install-runtime-path"].as<string>();
   if (options.count("install-user"))
     renderer.vars["application_user"] = options["install-user"].as<string>();
   if (options.count("install-group"))

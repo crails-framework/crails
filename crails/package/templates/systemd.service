@@ -3,13 +3,14 @@ std::string @application_user = "";
 std::string @application_group = "";
 std::string @bin_directory;
 std::string @share_directory;
+std::string @runtime_path = "/var/" + application_name;
 // END LINKING
 [Unit]
 Description=<%= application_name %> Web Application
 After=network.target
 
 [Service]
-WorkingDirectory=<%= share_directory %>
+WorkingDirectory=<%= runtime_path %>
 <% if (application_user.length() > 0) do %>
 User=<%= application_user %>
 <% end %>
