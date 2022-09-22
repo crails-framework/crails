@@ -188,12 +188,15 @@ if [ -z ${sql_backends} ] ; then
 else
   echo "+ building libcrails-odb"
   config_file="libcrails-odb-2.0.0/build/config.build"
+  build_file="libcrails-odb-2.0.0/libcrails-odb/buildfile"
   bpkg build libodb
   bpkg build libcrails-odb --yes --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
     echo ${sql_backends} | grep $backend \
       && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
       || echo "config.libcrails_odb.with_$backend = false" >> $config_file
+    awk '!'"/with_$backend" "$build_file" > .tmpfile
+    mv .tmpfile "$build_file"
   done
   for backend in ${sql_backends} ; do
     bpkg build libodb-$backend ${system_packages[@]}
