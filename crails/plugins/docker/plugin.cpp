@@ -12,6 +12,8 @@ DockerPlugin::DockerPlugin()
   add_command("build",   []() { return make_shared<DockerBuild>(); });
   add_command("run",     []() { return make_shared<DockerRun>(); });
   add_command("package", []() { return make_shared<DockerPackage>(); });
+  add_command("new",     []() { return make_shared<DockerNew>(); });
+  add_command("refresh", []() { return make_shared<DockerRefreshEnvironment>(); });
 }
 
 void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration)
@@ -57,3 +59,25 @@ int DockerPlugin::DockerInstaller::run()
   DockerPlugin::refresh_environment(configuration);
   return 0;
 }
+
+int DockerPlugin::DockerNew::run()
+{
+  FileRenderer renderer;
+  string name;
+
+  if (!options.count("name"))
+  {
+    cerr << "missing required --name parameter" << endl;
+    return -1;
+  }
+  name = options["name"].as<string>();
+  if (options.count("image"))
+    renderer.vars["image"] = options["image"].as<string>();
+  renderer.vars["script_path"] = "../base";
+  renderer.vars["with_odb"] = configuration.has_plugin("libcrails-odb");
+  renderer.vars["with_comet"] = configuration.has_plugin("comet");
+  renderer.vars["with_metarecord"] = configuration.has_plugin("metarecord");
+  renderer.generate_file("docker/Dockerfile", "docker/" + name + "/Dockerfile");
+  return 0;
+}
+

@@ -14,15 +14,18 @@ public:
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_metarecord(Crails::cast<bool>(vars, "with_metarecord",  false)), 
     sass_backend( with_metarecord ? "ruby" : "nodejs"), 
-    cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main"))
+    cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
+    script_path(Crails::cast<string>(vars, "script_path",  ""))
   {}
 
   std::string render()
   {
 ecpp_stream << "FROM " << ( image );
-  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nRUN apt-get -y install \\\n  libboost1.74-dev \\\n  libboost-filesystem1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-program-options1.74-dev \\\n  libboost-thread1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-system1.74-dev\n\nCOPY build-build2.sh build-build2.sh\nRUN bash build-build2.sh\n";
+  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nRUN apt-get -y install \\\n  libboost1.74-dev \\\n  libboost-filesystem1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-program-options1.74-dev \\\n  libboost-thread1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-system1.74-dev\n\nCOPY " << ( script_path );
+  ecpp_stream << "build-build2.sh build-build2.sh\nRUN bash build-build2.sh\n";
  if (with_odb){
-  ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY build-odb-compiler.sh build-odb-compiler.sh\nRUN bash build-odb-compiler.sh";
+  ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY " << ( script_path );
+  ecpp_stream << "build-odb-compiler.sh build-odb-compiler.sh\nRUN bash build-odb-compiler.sh";
  };
   ecpp_stream << "\n";
  if (with_comet){
@@ -43,9 +46,12 @@ ecpp_stream << "FROM " << ( image );
  };
   ecpp_stream << "";
  };
-  ecpp_stream << "\n\nCOPY build-environment.sh build-environment.sh\nCOPY build-crails.sh build-crails.sh\nRUN bash build-crails.sh";
+  ecpp_stream << "\n\nCOPY " << ( script_path );
+  ecpp_stream << "build-environment.sh build-environment.sh\nCOPY " << ( script_path );
+  ecpp_stream << "build-crails.sh build-crails.sh\nRUN bash build-crails.sh";
  if (with_comet){
-  ecpp_stream << "\nCOPY build-comet.sh build-comet.sh\nRUN bash build-comet.sh";
+  ecpp_stream << "\nCOPY " << ( script_path );
+  ecpp_stream << "build-comet.sh build-comet.sh\nRUN bash build-comet.sh";
  };
   ecpp_stream << "\n\nRUN mkdir -p /opt/application\nWORKDIR /opt/application\n";
     return ecpp_stream.str();
@@ -59,6 +65,7 @@ private:
   bool with_metarecord;
   string sass_backend;
   string cheerp_repository;
+  string script_path;
 };
 
 std::string render_docker_dockerfile(const Crails::Renderer* renderer, Crails::SharedVars& vars)

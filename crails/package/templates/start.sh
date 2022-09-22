@@ -23,4 +23,4 @@ exec "<%= bin_directory %>/server" \
   --hostname "$HOSTNAME" \
   --port     "$PORT" \
   --pidfile  "<%= pidfile %>" \
-  --log      "/var/log/<%= application_name %>/`date +%y-%m-%d_%Hh%Mm%S``_crails.log"
+  --log      "/var/log/<%= application_name %>/`date +%y-%m-%d_%Hh%Mm%S`_crails.log"

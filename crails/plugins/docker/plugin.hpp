@@ -21,6 +21,24 @@ public:
     }
   };
 
+  struct DockerNew : public ::Command
+  {
+    int run() override;
+    void options_description(boost::program_options::options_description& desc) const override
+    {
+      desc.add_options()
+        ("image", boost::program_options::value<std::string>(), "docker image to use (defaults to debian:sid)")
+        ("name",  boost::program_options::value<std::string>(), "name for the new docker image");
+    }
+    virtual std::string_view description() const override { return "creates a new docker machine"; }
+  };
+
+  struct DockerRefreshEnvironment : public ::Command
+  {
+    int run() override { DockerPlugin::refresh_environment(configuration); return 0; }
+    virtual std::string_view description() const override { return "update crails dependencies in the crails machines"; }
+  };
+
   struct DockerShell : public ::Command
   {
     std::string_view description() const override { return "opens an interactive shell into a docker machine"; }

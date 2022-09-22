@@ -7,6 +7,7 @@ bool   @with_odb = false;
 bool   @with_metarecord = false;
 string sass_backend = with_metarecord ? "ruby" : "nodejs";
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
+string @script_path = "";
 // END LINKING
 FROM <%= image %>
 
@@ -32,12 +33,12 @@ RUN apt-get -y install \
   libboost-random1.74-dev \
   libboost-system1.74-dev
 
-COPY build-build2.sh build-build2.sh
+COPY <%= script_path %>build-build2.sh build-build2.sh
 RUN bash build-build2.sh
 
 <% if (with_odb) do %>
 RUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev
-COPY build-odb-compiler.sh build-odb-compiler.sh
+COPY <%= script_path %>build-odb-compiler.sh build-odb-compiler.sh
 RUN bash build-odb-compiler.sh
 <% end %>
 
@@ -62,11 +63,11 @@ RUN gem install sass
 <%   end %>
 <% end %>
 
-COPY build-environment.sh build-environment.sh
-COPY build-crails.sh build-crails.sh
+COPY <%= script_path %>build-environment.sh build-environment.sh
+COPY <%= script_path %>build-crails.sh build-crails.sh
 RUN bash build-crails.sh
 <% if (with_comet) do %>
-COPY build-comet.sh build-comet.sh
+COPY <%= script_path %>build-comet.sh build-comet.sh
 RUN bash build-comet.sh
 <% end %>
 

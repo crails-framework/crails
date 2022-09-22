@@ -84,6 +84,7 @@ bool Package::generate_scripts()
   FileRenderer renderer;
   vector<std::string> scripts{"start.sh", "stop.sh"};
 
+  renderer.should_overwrite = true;
   renderer.vars["application_name"] = configuration.variable("name");
   renderer.vars["bin_directory"]    = bin_target();
   renderer.vars["share_directory"]  = share_target();
@@ -167,8 +168,7 @@ int Package::run()
     copy(exported_libraries.begin(),    exported_libraries.end(),   back_inserter(package_files));
     if (generate_scripts() && generate_tarball())
     {
-      for (auto& path: filesystem::directory_iterator(".tmp/"))
-        filesystem::remove_all(path);
+      Crails::run_command("rm -rf .tmp");
       return true;
     }
   }

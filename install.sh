@@ -65,6 +65,7 @@ COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk '{print $3}' | cut -d. -
 BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
 
 crails_packages=(
+  libcrails-redis
   libcrails-templates
   libcrails-action
   libcrails-controllers
@@ -97,6 +98,7 @@ if [ "$use_system_libraries" = "y" ] ; then
     ?sys:libboost-asio
     ?sys:libboost-beast
     ?sys:libboost-config
+    ?sys:libboost-date-time
     ?sys:libboost-filesystem
     ?sys:libboost-fusion
     ?sys:libboost-json
@@ -126,6 +128,12 @@ fi
 
 if [ ! -z "$sql_backends" ] ; then
   crails_packages+=(libcrails-odb)
+fi
+
+if [ -f /usr/include/libssh/libssh.h ] ; then
+  echo "+ Detected libssh: adding libcrails-ssh and crails-deploy"
+  crails_packages+=(libcrails-ssh)
+  export WITH_CRAILS_DEPLOY="y"
 fi
 
 ##
@@ -158,7 +166,7 @@ cd "$BUILD_DIR"
 
 echo "+ fetching dependencies"
 bpkg add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
-for package in crails comet.cpp libcrails ${crails_packages[@]} ; do
+for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; do
   bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
@@ -166,6 +174,10 @@ bpkg fetch --trust "$CPPGET_FINGERPRINT"
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
 bpkg build libcrails --yes ${system_packages[@]}
+
+if [ "$WITH_CRAILS_DEPLOY" = "y" ] ; then
+  bpkg build crails-deploy --yes ${system_packages[@]}
+fi
 
 if [ "$WITH_COMET" = "y" ] ; then
   bpkg build comet   --yes ${system_packages[@]}

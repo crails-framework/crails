@@ -27,7 +27,7 @@ ecpp_stream << "#!/bin/sh -ex\n\nif [ -f \"" << ( environment_file );
   ecpp_stream << "/public\"\nif [ -z \"$HOSTNAME\" ] ; then export HOSTNAME=\"0.0.0.0\" ; fi\nif [ -z \"$PORT\" ]     ; then export PORT=\"3001\" ; fi\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$HOSTNAME\" \\\n  --port     \"$PORT\" \\\n  --pidfile  \"" << ( pidfile );
   ecpp_stream << "\" \\\n  --log      \"/var/log/" << ( application_name );
-  ecpp_stream << "/`date +%y-%m-%d_%Hh%Mm%S``_crails.log\"\n";
+  ecpp_stream << "/`date +%y-%m-%d_%Hh%Mm%S`_crails.log\"\n";
     return ecpp_stream.str();
   }
 private:
