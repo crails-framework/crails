@@ -22,6 +22,7 @@ ecpp_stream << "#!/bin/sh -ex\n\nif [ -f \"" << ( environment_file );
   ecpp_stream << "\" ] ; then\n  . \"" << ( environment_file );
   ecpp_stream << "\"\nfi\n\ncd \"" << ( runtime_path );
   ecpp_stream << "\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
+  ecpp_stream << ":" << ( bin_directory );
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
   ecpp_stream << "/public\"\nif [ -z \"$HOSTNAME\" ] ; then export HOSTNAME=\"0.0.0.0\" ; fi\nif [ -z \"$PORT\" ]     ; then export PORT=\"3001\" ; fi\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$HOSTNAME\" \\\n  --port     \"$PORT\" \\\n  --pidfile  \"" << ( pidfile );

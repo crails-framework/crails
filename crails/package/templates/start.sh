@@ -14,7 +14,7 @@ fi
 
 cd "<%= runtime_path %>"
 
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:<%= lib_directory %>"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:<%= lib_directory %>:<%= bin_directory %>"
 export PUBLIC_PATH="<%= share_directory %>/public"
 if [ -z "$HOSTNAME" ] ; then export HOSTNAME="0.0.0.0" ; fi
 if [ -z "$PORT" ]     ; then export PORT="3001" ; fi
