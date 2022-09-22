@@ -99,6 +99,7 @@ bool Package::generate_scripts()
   renderer.generate_file("package/start.sh",        ".tmp/start.sh");
   renderer.generate_file("package/stop.sh",         ".tmp/stop.sh");
   renderer.generate_file("package/systemd.service", ".tmp/systemd.service");
+  renderer.generate_file("package/service.rc",      ".tmp/service.rc");
   for (const string& script : scripts)
   {
     Crails::run_command("chmod +x .tmp/" + script);
@@ -122,17 +123,19 @@ bool Package::generate_tarball()
   string output = options.count("output") ? options["output"].as<string>() : string("package.tar.gz");
   string tar_command = Crails::which("tar");
   stringstream command;
-  string bin_path, lib_path, share_path;
+  string bin_path, lib_path, share_path, etc_path;
 
   bin_path = relative_path(bin_target());
   lib_path = relative_path(lib_target());
   share_path = relative_path(share_target());
+  etc_path = relative_path(etc_target());
   if (tar_command.length() > 0)
   {
     command << tar_command << " czf \"" << output << '"'
       << " --transform \"s|usr/local/lib|" << lib_path << "|\""
       << " --transform \"s|build|" << bin_path << "|\""
       << " --transform \"s|.tmp/systemd.service|etc/systemd/system/" << configuration.variable("name") << ".service|\""
+      << " --transform \"s|.tmp/service.rc|" << etc_path << "/rc.d/" << configuration.variable("name") << ".rc\""
       << " --transform \"s|.tmp|" << bin_path << "|\""
       << " --transform \"s|public|" << share_path << "/public|\"";
     for (const auto& file : package_files)

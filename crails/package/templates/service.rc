@@ -1,0 +1,36 @@
+#include <crails/utils/semantics.hpp>
+using namespace Crails;
+std::string @application_name;
+std::string @application_user = "";
+std::string @bin_directory;
+std::string @share_directory;
+std::string @runtime_path = "/var/" + application_name;
+std::string @pidfile;
+std::string environment_file = share_directory + "/environment";
+// END LINKING
+#!/bin/sh
+#
+
+# PROVIDE: <%= underscore(application_name) %>
+# REQUIRE: bar_service_required_to_precede_foo
+
+. /etc/rc.subr
+
+name="<%= underscore(application_name) %>"
+rcvar=<%= underscore(application_name) %>_enable
+command="<%= underscore(application_name) %>_start"
+stop_cmd="<%= underscore(application_name) %>_stop"
+
+<%= underscore(application_name) %>_start()
+{
+  cd "<%= runtime_path %>"
+  su -c "<%= bin_directory %>/start.sh" - <%= application_user %>
+}
+
+<%= underscore(application_name) %>_stop()
+{
+  <%= bin_directory %>/stop.sh
+}
+
+load_rc_config $name
+run_rc_command "$1"

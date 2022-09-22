@@ -195,7 +195,7 @@ else
     echo ${sql_backends} | grep $backend \
       && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
       || echo "config.libcrails_odb.with_$backend = false" >> $config_file
-    awk '!'"/with_$backend" "$build_file" > .tmpfile
+    awk '!'"/with_$backend/" "$build_file" > .tmpfile
     mv .tmpfile "$build_file"
   done
   for backend in ${sql_backends} ; do

@@ -25,6 +25,7 @@ private:
   std::string bin_target() const { return install_directory + "/bin/" + configuration.variable("name"); }
   std::string share_target() const { return install_directory + "/share/" + configuration.variable("name"); }
   std::string lib_target() const { return install_directory + "/lib"; }
+  std::string etc_target() const { return install_directory + "/etc"; }
   std::string pidfile_target() const { return "/tmp/" + configuration.variable("name") + ".pid"; }
 
   std::string install_directory = "/usr/local";
