@@ -10,6 +10,7 @@
 #include "commands/build.hpp"
 #include "commands/plugins.hpp"
 #include "commands/package.hpp"
+#include "commands/deploy.hpp"
 #include "templates/index.hpp"
 
 using namespace Crails;
@@ -28,6 +29,8 @@ public:
     add_command("package",   []() { return make_shared<Package>(); });
     add_command("plugins",   []() { return make_shared<PluginManager>(); });
     add_command("new",       []() { return make_shared<New>(); });
+    if (Deploy::is_available())
+      add_command("deploy",  []() { return make_shared<Deploy>(); });
   }
 };
 

@@ -167,7 +167,8 @@ int Package::run()
     copy(exported_libraries.begin(),    exported_libraries.end(),   back_inserter(package_files));
     if (generate_scripts() && generate_tarball())
     {
-      filesystem::remove_all(".tmp");
+      for (auto& path: filesystem::directory_iterator(".tmp/"))
+        filesystem::remove_all(path);
       return true;
     }
   }

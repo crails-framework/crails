@@ -11,7 +11,7 @@ ProjectConfiguration::ProjectConfiguration() : Crails::ProjectVariables(".crails
 {
 }
 
-string ProjectConfiguration::crails_bin_path() const
+string ProjectConfiguration::crails_bin_path()
 {
   const static boost::filesystem::path path = boost::filesystem::canonical("/proc/self/exe");
 

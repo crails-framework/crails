@@ -109,6 +109,7 @@ int New::run()
       configuration.toolchain(build_system);
       configuration.asset_roots({"app/assets"});
       configuration.add_plugin("libcrails");
+      configuration.add_plugin("libcrails-logger");
       configuration.variable("std", "c++17");
       configuration.variable("name", project_name);
       vars["project_name"] = project_name;
