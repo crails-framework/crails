@@ -16,7 +16,7 @@ class Scaffold : public Crails::Scaffold
 public:
   Scaffold()
   {
-    configuration.initialize();
+    try { configuration.initialize(); } catch (...) {}
   }
 
   Scaffolds available_scaffolds() const override
