@@ -10,14 +10,14 @@ bool has_router = configuration_type == "webservice" || configuration_type == "f
 void Crails::Tests::Runner::setup()
 {
 <% if (has_router) do -%>
-  Router::singleton::Initialize();
-  Router::singleton::Get()->initialize();
+  Router::singleton::initialize();
+  Router::singleton::get()->initialize();
 <% end %>
 }
 
 void Crails::Tests::Runner::shutdown()
 {
 <% if (has_router) do -%>
-  Router::singleton::Finalize();
+  Router::singleton::finalize();
 <% end %>
 }

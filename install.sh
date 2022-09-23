@@ -191,23 +191,26 @@ if [ ! "$use_system_libraries" = "y" ] ; then
 
   # Patch broken buildfile for boost libraries
   for library in ${boost_packages[@]} ; do
-    boost_libs="atomic|chrono|container|filesystem|program-options|random|serialization|thread|wserialization"
-    if echo $library | grep libboost ; then
-      library=`echo $library | cut -d: -f2`
-      monkeypatch_target="$library-$version/src/buildfile"
-      bpkg build $library --configure-only --yes
-      if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library-$version/include/buildfile" ; fi
-      if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library-$version/include/boost/buildfile" ; fi
-      awk '{ if ($0 !~ /'$boost_libs'/) { gsub("intf_libs", "libs"); print $0 } else { print $0 } }' \
-        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
-      awk '{ if ($0 !~ /'$boost_libs'/) { gsub("impl_libs", "libs"); print $0 } else { print $0 } }' \
-        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
-      awk '{ gsub("libs  =", "libs +="); print $0 }' \
-        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+    library=`echo $library | cut -d: -f2`
+    bpkg build $library --configure-only --yes
+  done
+  for library in `ls -d libboost-*` ; do
+    if [ -d "$library" ] ; then
+      boost_libs="atomic|chrono|container|filesystem|program-options|random|serialization|thread|wserialization"
+      if echo $library | grep libboost ; then
+        monkeypatch_target="$library-$version/src/buildfile"
+        if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library/include/buildfile" ; fi
+        if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library/include/boost/buildfile" ; fi
+        awk '{ if ($0 !~ /'$boost_libs'/) { gsub("intf_libs", "libs"); print $0 } else { print $0 } }' \
+          "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+        awk '{ if ($0 !~ /'$boost_libs'/) { gsub("impl_libs", "libs"); print $0 } else { print $0 } }' \
+          "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+        awk '{ gsub("libs  =", "libs +="); print $0 }' \
+          "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+      fi
     fi
   done
 fi
-
 
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}

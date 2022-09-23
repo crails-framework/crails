@@ -19,11 +19,11 @@ ecpp_stream << "#include <crails/tests/runner.hpp>";
  };
   ecpp_stream << "\n\nvoid Crails::Tests::Runner::setup()\n{";
  if (has_router){
-  ecpp_stream << "\n  Router::singleton::Initialize();\n  Router::singleton::Get()->initialize();";
+  ecpp_stream << "\n  Router::singleton::initialize();\n  Router::singleton::get()->initialize();";
  };
   ecpp_stream << "\n}\n\nvoid Crails::Tests::Runner::shutdown()\n{";
  if (has_router){
-  ecpp_stream << "\n  Router::singleton::Finalize();";
+  ecpp_stream << "\n  Router::singleton::finalize();";
  };
   ecpp_stream << "\n}\n";
     return ecpp_stream.str();

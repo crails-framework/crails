@@ -15,13 +15,17 @@ ProjectConfiguration::ProjectConfiguration() : Crails::ProjectVariables(".crails
 
 static std::string get_current_process_file()
 {
-  std::string process_link;
+  string process_link;
+  string uname;
 
-  if (Crails::run_command("uname -a | grep Linux"))
-    process_link = "/proc/self/exe";
-  else if (Crails::run_command("uname -a | grep FreeBSD"))
-    process_link = Crails::which("crails");
-  else
+  if (Crails::run_command("uname -a", uname))
+  {
+    if (uname.find("Linux") != string::npos)
+      process_link = "/proc/self/exe";
+    else if (uname.find("FreeBSD") != string::npos)
+      process_link = Crails::which("crails");
+  }
+  if (!process_link.length())
     return filesystem::path();
   return filesystem::canonical(process_link);
 }
