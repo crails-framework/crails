@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env -S bash -e
 
 DEFAULT_CRAILS_VERSION=master
 DEFAULT_COMPILER=clang++
@@ -61,9 +61,9 @@ echo -n "> Install path (default: $DEFAULT_INSTALL_ROOT): "
 read INSTALL_ROOT
 if [ -z "$INSTALL_ROOT" ] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
 
-touch "$INSTALL_ROOT/toto" && rm "$INSTALL_ROOT/toto" && export USE_SUDO=n || export USE_SUDO=y
+touch "$INSTALL_ROOT/toto" && rm "$INSTALL_ROOT/toto" && USE_SUDO=n || USE_SUDO=y
 if [ "$USE_SUDO" = "y" ] ; then
-  $SUDO_OPTION="config.install.sudo=sudo"
+  SUDO_OPTION="config.install.sudo=sudo"
 fi
 
 COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk 'match($0, /[0-9]+.[0-9]+.[0-9]+/) { print substr($0, RSTART, RLENGTH) }' | cut -d. -f1`
@@ -96,22 +96,25 @@ crails_packages=(
 )
 
 system_packages=()
+boost_packages=(
+  ?sys:libboost-any
+  ?sys:libboost-asio
+  ?sys:libboost-beast
+  ?sys:libboost-config
+  ?sys:libboost-date-time
+  ?sys:libboost-filesystem
+  ?sys:libboost-fusion
+  ?sys:libboost-json
+  ?sys:libboost-lexical-cast
+  ?sys:libboost-program-options
+  ?sys:libboost-property-tree
+  ?sys:libboost-process
+  ?sys:libboost-random
+)
 
 if [ "$use_system_libraries" = "y" ] ; then
   system_packages+=(
-    ?sys:libboost-any
-    ?sys:libboost-asio
-    ?sys:libboost-beast
-    ?sys:libboost-config
-    ?sys:libboost-date-time
-    ?sys:libboost-filesystem
-    ?sys:libboost-fusion
-    ?sys:libboost-json
-    ?sys:libboost-lexical-cast
-    ?sys:libboost-program-options
-    ?sys:libboost-property-tree
-    ?sys:libboost-process
-    ?sys:libboost-random
+    ${boost_packages[@]}
     ?sys:libssl
     ?sys:libcrypto
   )
@@ -176,17 +179,35 @@ for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; 
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
 
-# Patch compiling issue with boost 1.78 and 1.79, see https://github.com/boostorg/process/issues/235
 if [ ! "$use_system_libraries" = "y" ] ; then
-  bpkg build libboost-process --yes || echo "failed with success"
-  for version in 1.78.0 1.79.0 ; do
-    if [ -d libboost-process-$version ] ; then
-      monkeypatch_target="libboost-process-$version/include/boost/process/detail/posix/executor.hpp"
-      sed '156s/len + 1/static_cast<int>(len + 1)/' "$monkeypatch_target" > monkeypatch
-      mv monkeypatch "$monkeypatch_target"
+  # Patch compiling issue with boost 1.78 and 1.79, see https://github.com/boostorg/process/issues/235
+  bpkg build libboost-process --configure-only --yes || echo "failed with success"
+  version=`ls -d libboost-* | sed -n 1p | awk 'match($0, /[0-9]+.[0-9]+.[0-9]+/) { print substr($0, RSTART, RLENGTH) }'`
+  if [ $version = "1.78.0" ] || [ $version = "1.79.0" ] ; then
+    monkeypatch_target="libboost-process-$version/include/boost/process/detail/posix/executor.hpp"
+    sed '156s/len + 1/static_cast<int>(len + 1)/' "$monkeypatch_target" > monkeypatch
+    mv monkeypatch "$monkeypatch_target"
+  fi
+
+  # Patch broken buildfile for boost libraries
+  for library in ${boost_packages[@]} ; do
+    boost_libs="atomic|chrono|container|filesystem|program-options|random|serialization|thread|wserialization"
+    if echo $library | grep libboost ; then
+      library=`echo $library | cut -d: -f2`
+      monkeypatch_target="$library-$version/src/buildfile"
+      bpkg build $library --configure-only --yes
+      if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library-$version/include/buildfile" ; fi
+      if [ ! -f "$monkeypatch_target" ] ; then monkeypatch_target="$library-$version/include/boost/buildfile" ; fi
+      awk '{ if ($0 !~ /'$boost_libs'/) { gsub("intf_libs", "libs"); print $0 } else { print $0 } }' \
+        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+      awk '{ if ($0 !~ /'$boost_libs'/) { gsub("impl_libs", "libs"); print $0 } else { print $0 } }' \
+        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
+      awk '{ gsub("libs  =", "libs +="); print $0 }' \
+        "$monkeypatch_target" > monkeypatch && mv monkeypatch "$monkeypatch_target"
     fi
   done
 fi
+
 
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
@@ -236,7 +257,7 @@ fi
 if [ "$install_confirmed" = "y" ] ; then
   bpkg install --all --recursive \
     config.install.root="$INSTALL_ROOT" \
-    "$SUDO_OPTION"
+    $SUDO_OPTION
 fi
 
 ##
@@ -249,7 +270,7 @@ if [ "$WITH_ODB_COMPILER" = "y" ] ; then
     config.cc.coptions=-O3 \
     config.bin.rpath="$INSTALL_ROOT/lib" \
     config.install.root="$INSTALL_ROOT"  \
-    "$SUDO_OPTION"
+    $SUDO_OPTION
   cd odb-gcc
   bpkg build odb@https://pkg.cppget.org/1/beta --yes --trust "$CPPGET_FINGERPRINT"
   bpkg install odb

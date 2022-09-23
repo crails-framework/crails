@@ -4,6 +4,7 @@
 #include <crails/cli/process.hpp>
 #include <crails/utils/string.hpp>
 #include <filesystem>
+#include <algorithm>
 #include "version.hpp"
 
 using namespace std;
@@ -19,7 +20,7 @@ static std::string get_current_process_file()
   if (Crails::run_command("uname -a | grep Linux"))
     process_link = "/proc/self/exe";
   else if (Crails::run_command("uname -a | grep FreeBSD"))
-    process_link = "/proc/curproc/file";
+    process_link = Crails::which("crails");
   else
     return filesystem::path();
   return filesystem::canonical(process_link);
