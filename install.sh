@@ -135,7 +135,7 @@ if [ ! -z "$sql_backends" ] ; then
   crails_packages+=(libcrails-odb)
 fi
 
-if [ -f /usr/include/libssh/libssh.h ] ; then
+if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.h ] ; then
   echo "+ Detected libssh: adding libcrails-ssh and crails-deploy"
   crails_packages+=(libcrails-ssh)
   export WITH_CRAILS_DEPLOY="y"

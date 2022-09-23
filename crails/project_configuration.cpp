@@ -1,8 +1,9 @@
 #include "project_configuration.hpp"
 #include <crails/render_file.hpp>
 #include <crails/read_file.hpp>
+#include <crails/cli/process.hpp>
 #include <crails/utils/string.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include "version.hpp"
 
 using namespace std;
@@ -11,9 +12,22 @@ ProjectConfiguration::ProjectConfiguration() : Crails::ProjectVariables(".crails
 {
 }
 
+static std::string get_current_process_file()
+{
+  std::string process_link;
+
+  if (Crails::run_command("uname -a | grep Linux"))
+    process_link = "/proc/self/exe";
+  else if (Crails::run_command("uname -a | grep FreeBSD"))
+    process_link = "/proc/curproc/file";
+  else
+    return filesystem::path();
+  return filesystem::canonical(process_link);
+}
+
 string ProjectConfiguration::crails_bin_path()
 {
-  const static boost::filesystem::path path = boost::filesystem::canonical("/proc/self/exe");
+  const static filesystem::path path = get_current_process_file();
 
   return path.parent_path().string();
 }
@@ -148,5 +162,5 @@ string ProjectConfiguration::project_directory()
 
 void ProjectConfiguration::move_to_project_directory()
 {
-  boost::filesystem::current_path(project_directory());
+  filesystem::current_path(project_directory());
 }
