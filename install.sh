@@ -61,7 +61,12 @@ echo -n "> Install path (default: $DEFAULT_INSTALL_ROOT): "
 read INSTALL_ROOT
 if [ -z "$INSTALL_ROOT" ] ; then INSTALL_ROOT="$DEFAULT_INSTALL_ROOT" ; fi
 
-COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk '{print $3}' | cut -d. -f1`
+touch "$INSTALL_ROOT/toto" && rm "$INSTALL_ROOT/toto" && export USE_SUDO=n || export USE_SUDO=y
+if [ "$USE_SUDO" = "y" ] ; then
+  $SUDO_OPTION="config.install.sudo=sudo"
+fi
+
+COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk 'match($0, /[0-9]+.[0-9]+.[0-9]+/) { print substr($0, RSTART, RLENGTH) }' | cut -d. -f1`
 BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
 
 crails_packages=(
@@ -171,6 +176,18 @@ for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; 
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
 
+# Patch compiling issue with boost 1.78 and 1.79, see https://github.com/boostorg/process/issues/235
+if [ ! "$use_system_libraries" = "y" ] ; then
+  bpkg build libboost-process --yes || echo "failed with success"
+  for version in 1.78.0 1.79.0 ; do
+    if [ -d libboost-process-$version ] ; then
+      monkeypatch_target="libboost-process-$version/include/boost/process/detail/posix/executor.hpp"
+      sed '156s/len + 1/static_cast<int>(len + 1)/' "$monkeypatch_target" > monkeypatch
+      mv monkeypatch "$monkeypatch_target"
+    fi
+  done
+fi
+
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
 bpkg build libcrails --yes ${system_packages[@]}
@@ -189,19 +206,21 @@ else
   echo "+ building libcrails-odb"
   config_file="libcrails-odb-2.0.0/build/config.build"
   build_file="libcrails-odb-2.0.0/libcrails-odb/buildfile"
-  bpkg build libodb
+  bpkg build libodb --yes
   bpkg build libcrails-odb --yes --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
-    echo ${sql_backends} | grep $backend \
-      && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
-      || echo "config.libcrails_odb.with_$backend = false" >> $config_file
-    awk '!'"/with_$backend/" "$build_file" > .tmpfile
-    mv .tmpfile "$build_file"
+    if echo ${sql_backends} | grep $backend ; then
+      echo "config.libcrails_odb.with_$backend = true"  >> $config_file
+      awk '!'"/with_$backend/" "$build_file" > .tmpfile
+      mv .tmpfile "$build_file"
+    else
+      echo "config.libcrails_odb.with_$backend = false" >> $config_file
+    fi
   done
   for backend in ${sql_backends} ; do
-    bpkg build libodb-$backend ${system_packages[@]}
+    bpkg build libodb-$backend --yes ${system_packages[@]}
   done
-  bpkg build libcrails-odb ${system_packages[@]}
+  bpkg build libcrails-odb --yes ${system_packages[@]}
 fi
 
 for package in ${crails_packages[@]} ; do
@@ -217,7 +236,7 @@ fi
 if [ "$install_confirmed" = "y" ] ; then
   bpkg install --all --recursive \
     config.install.root="$INSTALL_ROOT" \
-    config.install.sudo=sudo
+    "$SUDO_OPTION"
 fi
 
 ##
@@ -230,7 +249,7 @@ if [ "$WITH_ODB_COMPILER" = "y" ] ; then
     config.cc.coptions=-O3 \
     config.bin.rpath="$INSTALL_ROOT/lib" \
     config.install.root="$INSTALL_ROOT"  \
-    config.install.sudo=sudo
+    "$SUDO_OPTION"
   cd odb-gcc
   bpkg build odb@https://pkg.cppget.org/1/beta --yes --trust "$CPPGET_FINGERPRINT"
   bpkg install odb
