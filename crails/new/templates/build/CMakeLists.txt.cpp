@@ -21,7 +21,7 @@ public:
   {
 ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nproject(" << ( project_name );
   ecpp_stream << ")\n\nset(CMAKE_CXX_FLAGS \"-std=" << ( cpp_version );
-  ecpp_stream << " -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic\")\n\nfind_package(PkgConfig)\nfind_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)\npkg_check_modules(CRAILS REQUIRED";
+  ecpp_stream << " -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic\")\n\nfind_package(PkgConfig)\nfind_package(Boost COMPONENTS thread filesystem program_options random REQUIRED)\npkg_check_modules(CRAILS REQUIRED";
  for (auto plugin : plugins){
   ecpp_stream << " " << ( plugin );
   ecpp_stream << ">=" << ( crails_version );

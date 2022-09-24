@@ -16,7 +16,7 @@ project(<%= project_name %>)
 set(CMAKE_CXX_FLAGS "-std=<%= cpp_version %> -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
 
 find_package(PkgConfig)
-find_package(Boost COMPONENTS thread filesystem program_options system random REQUIRED)
+find_package(Boost COMPONENTS thread filesystem program_options random REQUIRED)
 pkg_check_modules(CRAILS REQUIRED<% for (auto plugin : plugins) do %> <%= plugin %>>=<%= crails_version %><% end %>)
 pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests)
 

@@ -202,6 +202,7 @@ void New::prepare_request_pipeline()
   {
     project_handlers.push_back({"action", "ActionRequestHandler"});
     configuration.add_plugin("libcrails-action");
+    configuration.add_plugin("libcrails-controllers");
   }
   if (configuration_type == "full")
   {
@@ -209,7 +210,6 @@ void New::prepare_request_pipeline()
     project_parsers.push_back({"multipart_parser", "RequestMultipartParser"});
     configuration.add_plugin("libcrails-form-parser");
     configuration.add_plugin("libcrails-multipart-parser");
-    configuration.add_plugin("libcrails-controllers");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
