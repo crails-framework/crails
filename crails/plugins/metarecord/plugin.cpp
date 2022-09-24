@@ -74,6 +74,9 @@ int MetarecordPlugin::MetarecordInstaller::run()
   configuration.add_plugin("metarecord");
   configuration.variable(generator_key, Crails::join(options["generator"].as<vector<string>>(), ','));
   configuration.save();
+  if (Crails::which("ruby").length() == 0)
+    cout << "(i) Ruby was not found on your system. It is required to run metarecord generators." << endl;
+  cout << "(i) Run `gem install metarecord` to install the metarecord generators on your system." << endl;
   return 0;
 }
 
