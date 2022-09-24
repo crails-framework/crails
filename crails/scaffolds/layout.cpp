@@ -32,6 +32,7 @@ std::string render_scaffolds_layout_bare_html(const Crails::Renderer*, Crails::S
     "// END LINKING\n"
     "<html>\n"
     "  <head>\n"
+    "    <meta charset=\"utf-8\" />\n"
     "  </head>\n"
     "  <body>\n"
     "    <% if (yield != nullptr) do %>\n"

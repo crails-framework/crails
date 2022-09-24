@@ -18,6 +18,7 @@ using namespace std;
 void TemplateBuilder::options_description(boost::program_options::options_description& desc) const
 {
   desc.add_options()
+    ("verbose,v", "enable verbose mode")
     ("template-type,t",   boost::program_options::value<string>(), "name of the template class (defaults to Crails::Template)")
     ("template-header,z", boost::program_options::value<string>(), "path to the header defining the template class")
     ("render-mode,m",     boost::program_options::value<string>(), "use raw or markup mode")
@@ -90,6 +91,8 @@ string TemplateBuilder::command_for_target(const pair<string, Target>& target) c
     command << " -t " << options["template-type"].as<string>();
   if (options.count("template-header"))
     command << " -z " << options["template-header"].as<string>();
+  if (options.count("verbose"))
+    cout << "[TEMPLATE] " << command.str() << endl;
   return command.str();
 }
 
@@ -119,7 +122,8 @@ void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, boost::fil
 
   if (boost::filesystem::last_write_time(existing_template_path) < boost::filesystem::last_write_time(template_path))
   {
-    cout << "[TEMPLATE] " << it->second.alias << " already up to date." << endl;
+    if (options.count("verbose"))
+      cout << "[TEMPLATE] " << it->second.alias << " already up to date." << endl;
     targets.erase(it);
   }
 }

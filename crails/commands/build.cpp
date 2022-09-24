@@ -28,7 +28,10 @@ bool BuildManager::prebuild_renderers()
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
     if (options.count("verbose"))
+    {
+      command << " -v";
       cout << "+ " << command.str() << endl;
+    }
     if (!Crails::run_command(command.str()))
       return false;
   }
