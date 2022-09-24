@@ -8,11 +8,13 @@
 #include "../plugins/sync/plugin.hpp"
 #include "../plugins/sidekix/plugin.hpp"
 #include "../plugins/redis/plugin.hpp"
+#include "../plugins/others.hpp"
 
 using namespace std;
 
 PluginManager::PluginManager()
 {
+  add_command("extra", []() { return make_shared<OtherPlugins>(); });
   add_command("odb", []() { return make_shared<OdbModule>(); });
   add_command("comet", []() { return make_shared<CometPlugin>(); });
   add_command("docker", []() { return make_shared<DockerPlugin>(); });
