@@ -50,7 +50,15 @@ boost_list="any \
      tokenizer_types \
      endian \
      intrusivei \
-     logic"
+     logic \
+     intrusive_types \
+     intrusive \
+     container_hashi \
+     ratio \
+     rational \
+     tokenizer \
+     container_hash_typesi \
+     chrononal"
 
 for item in $boost_list ; do
   list="$list boost_$item"

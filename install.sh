@@ -242,7 +242,7 @@ if [ "$install_confirmed" = "y" ] ; then
 
   # patch broken pkgconfig files for boost packages
   if [ ! "$use_system_libraries" = "y" ] ; then
-    sh < (curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-pc.sh")
+    sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-pc.sh")
   fi
 fi
 
