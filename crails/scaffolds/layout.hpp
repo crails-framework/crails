@@ -27,17 +27,17 @@ public:
       target_folder = options["target"].as<std::string>();
     if (options.count("name"))
       name = options["name"].as<std::string>();
-    if (toolkit == "bootstrap")
-      return create_bootstrap_layout();
-    else if (toolkit == "none")
-      return create_bare_layout();
-    std::cerr << "Unknown toolkit " << toolkit << std::endl;
-    return -1;
+    return create_layout_from_toolkit();
   }
+  typedef int (LayoutScaffold::*initializer)();
 private:
+  static const std::map<std::string, initializer> initializers;
+
+  int create_layout_from_toolkit();
   int create_bootstrap_layout();
   int create_bare_layout();
-  int download_bootstrap(const boost::filesystem::path& output_dir);
+  int create_materialize_layout();
+  int download_bootstrap();
 };
 
 

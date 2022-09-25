@@ -39,6 +39,7 @@ declare_renderer(scaffolds_task_cmakelists_txt)
 declare_renderer(scaffolds_task_main_cpp)
 declare_renderer(scaffolds_layout_bare_html)
 declare_renderer(scaffolds_layout_bootstrap_html)
+declare_renderer(scaffolds_layout_materialize_html)
 declare_renderer(scaffolds_module_cmakelists_txt)
 declare_renderer(scaffolds_module_module_hpp)
 declare_renderer(scaffolds_module_routes_cpp)
@@ -102,6 +103,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/task/main.cpp", scaffolds_task_main_cpp);
   add_renderer("scaffolds/layouts/bare.html", scaffolds_layout_bare_html);
   add_renderer("scaffolds/layouts/bootstrap.html", scaffolds_layout_bootstrap_html);
+  add_renderer("scaffolds/layouts/materialize.html", scaffolds_layout_materialize_html);
   add_renderer("scaffolds/modules/CMakeLists.txt", scaffolds_module_cmakelists_txt);
   add_renderer("scaffolds/modules/module.hpp", scaffolds_module_module_hpp);
   add_renderer("scaffolds/modules/routes.cpp", scaffolds_module_routes_cpp);
