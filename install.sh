@@ -70,9 +70,8 @@ COMPILER_VERSION=`$COMPILER --version | sed -n 1p | awk 'match($0, /[0-9]+.[0-9]
 BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
 
 crails_packages=(
-  libcrails-redis
-  libcrails-templates
   libcrails-action
+  libcrails-archive
   libcrails-controllers
   libcrails-crud
   libcrails-cookies
@@ -87,12 +86,15 @@ crails_packages=(
   libcrails-databases
   libcrails-http-client
   libcrails-mail
+  libcrails-oauth
   libcrails-sidekix
   libcrails-signin
   libcrails-sync
   libcrails-xmlrpc
   libcrails-proxy
+  libcrails-redis
   libcrails-tests
+  libcrails-templates
 )
 
 system_packages=()
@@ -124,7 +126,7 @@ if [ "$use_system_libraries" = "y" ] ; then
         system_packages+=(?sys:libsqlite3)
         ;;
       pgsql)
-        system_packages+=(?sys:libpq)
+        #system_packages+=(?sys:libpq)
         ;;
       mysql)
         system_packages+=(?sys:libmysqlclient)
@@ -142,6 +144,14 @@ if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.
   echo "+ Detected libssh: adding libcrails-ssh and crails-deploy"
   crails_packages+=(libcrails-ssh)
   export WITH_CRAILS_DEPLOY="y"
+fi
+
+if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/v_noabi ] ; then
+  echo "+ Detected mongocxx"
+  if [ -d /usr/include/bsoncxx/v_noabi ] || [ -d /usr/local/bsoncxx/v_noabi ] ; then
+    echo "+ Detected bsoncxx: adding libcrails-mongodb"
+    crails_packages+=(libcrails-mongodb)
+  fi
 fi
 
 ##

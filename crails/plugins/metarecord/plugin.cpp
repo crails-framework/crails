@@ -138,7 +138,10 @@ bool MetarecordPlugin::build(const ProjectConfiguration& configuration, bool ver
       << " -g " << Crails::join(get_generators(configuration), ',')
       << " -z .tmp";
     if (verbose)
+    {
+      command << " -v";
       cout << "+ " << command.str() << endl;
+    }
     return Crails::run_command(command.str());
   }
   else

@@ -12,7 +12,7 @@ std::string render_scaffolds_module_routes_cpp(const Crails::Renderer*, Crails::
     "\n"
     "void Module::initialize_router(Crails::Router& router)\n"
     "{\n"
-    "  // Append routes here (do not remove this line)"
+    "  // Append routes here (do not remove this line)\n"
     "}";
 }
 
@@ -28,8 +28,8 @@ std::string render_scaffolds_module_module_hpp(const Crails::Renderer*, Crails::
     "{\n"
     "  struct Module\n"
     "  {\n"
-    "    static void initialize_router(Crails::Router&);"
-    "  ;}\n"
+    "    static void initialize_router(Crails::Router&);\n"
+    "  };\n"
     "}\n"
     "#endif";
 }
@@ -38,7 +38,7 @@ std::string render_scaffolds_module_cmakelists_txt(const Crails::Renderer*, Crai
 {
   return
     "file(GLOB_RECURSE module_files *.cpp *.cxx)\n"
-    "set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -D" + Crails::cast<std::string>(vars, "define") + " PARENT_SCOPE)\n"
+    "set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -D" + Crails::cast<std::string>(vars, "define") + "\" PARENT_SCOPE)\n"
     "set(crails_app ${crails_app} ${module_files} PARENT_SCOPE)";
 }
 
@@ -54,7 +54,7 @@ int ModuleScaffold::create(boost::program_options::variables_map& options)
   configuration.initialize();
   name           = options["name"].as<std::string>();
   define.reserve(name.length());
-  std::transform(name.begin(), name.end(), define.begin(), [](unsigned char c) { return std::toupper(c); });
+  std::transform(name.begin(), name.end(), std::back_inserter(define), [](unsigned char c) { return std::toupper(c); });
   define         = "WITH_MODULE_" + define;
   namespace_name = Crails::camelize(name);
   path           = std::filesystem::path("modules/" + name);
@@ -81,7 +81,7 @@ void ModuleScaffold::update_router()
     router.insert(
       "  #ifdef " + define + "\n"
       "  " + namespace_name + "::Module::initialize_router(*this);\n"
-      "  #endif"
+      "  #endif\n"
     );
     router.add_include(path.string() + "/module.hpp");
     router.save_file();

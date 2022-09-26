@@ -34,7 +34,6 @@ public:
     {
       editor.save_file();
       configuration.save();
-      return 0;
     }
     if (options.count("list"))
     {
