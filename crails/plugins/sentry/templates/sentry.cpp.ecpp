@@ -1,0 +1,12 @@
+#include <crails/sentry.hpp>
+#include <crails/getenv.hpp>
+
+using namespace std;
+using namespace Crails;
+
+const string Sentry::project_id      = Crails::get_env("SENTRY_PROJECT_ID");
+const string Sentry::sentry_key      = Crails::get_env("SENTRY_KEY");
+const string Sentry::sentry_secret   = Crails::get_env("SENTRY_SECRET");
+const string Sentry::sentry_version  = Crails::get_env("SENTRY_VERSION",  "7");
+const string Sentry::server_protocol = Crails::get_env("SENTRY_PROTOCOL", "https");
+const string Sentry::server_url      = Crails::get_env("SENTRY_URL",      "sentry.io");

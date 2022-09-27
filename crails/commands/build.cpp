@@ -49,7 +49,7 @@ bool BuildManager::generate_assets()
       << " -o public"
       << " -i " << Crails::join(configuration.asset_roots(), ',');
     for (const string& module_ : configuration.modules())
-      command << " -i " << module_ << ':' << "modules/" << module_ << "assets";
+      command << " -i " << module_ << ':' << "modules/" << module_ << "/assets";
     if (configuration.has_plugin("comet"))
       command << " --ifndef " << CometPlugin::asset_exclusion_pattern(configuration);
     if (options.count("verbose"))

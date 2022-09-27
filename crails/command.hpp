@@ -10,7 +10,10 @@ public:
     bool result = Crails::Command::initialize(argc, argv);
 
     if (result && with_configuration)
+    {
       configuration.initialize();
+      configuration.move_to_project_directory();
+    }
     return result;
   }
 

@@ -87,6 +87,7 @@ crails_packages=(
   libcrails-http-client
   libcrails-mail
   libcrails-oauth
+  libcrails-sentry
   libcrails-sidekix
   libcrails-signin
   libcrails-sync

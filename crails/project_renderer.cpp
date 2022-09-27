@@ -61,6 +61,7 @@ declare_renderer(sidekix_ctpl_h)
 declare_renderer(sidekix_sidetasks_cpp)
 declare_renderer(sidekix_sidetasks_hpp)
 declare_renderer(sidekix_sidetask_cpp)
+declare_renderer(sentry_config_sentry_cpp)
 declare_renderer(package_start_sh)
 declare_renderer(package_stop_sh)
 declare_renderer(package_systemd_service)
@@ -120,6 +121,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/mailers.cpp", mail_config_mailers_cpp);
   add_renderer("config/sync.cpp", sync_config_sync_cpp);
   add_renderer("config/signin.cpp", signin_config_signin_cpp);
+  add_renderer("config/sentry.cpp", sentry_config_sentry_cpp);
 
   add_renderer("docker/Dockerfile",            docker_dockerfile);
   add_renderer("docker/build-build2.sh",       docker_build_build2);

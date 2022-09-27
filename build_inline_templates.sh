@@ -151,6 +151,14 @@ $ECPP \
   >  $PROJECT_TPL/build/odb_migrate.cpp.cpp
 
 ##
+## Sentry plugin
+##
+$ECPP \
+  -n SentryConfigSentryCpp \
+  -i crails/plugins/sentry/templates/sentry.cpp.ecpp \
+  >  crails/plugins/sentry/templates/build/sentry.cpp.cpp
+
+##
 ## Docker plugin
 ##
 DOCKER_TPL=crails/plugins/docker/templates

@@ -32,13 +32,27 @@ public:
 class MainCppEditor : public CppFileEditor
 {
 public:
-  MainCppEditor(const std::string& path) : CppFileEditor(path, "")
+  MainCppEditor(const std::string& path = "main.cpp") : CppFileEditor(path, "")
   {
   }
 
   void add_to_main_function(const std::string& value)
   {
-    use_symbol("int\\s*main\\s*\\([^)]+\\)\\s*\\{");
+    use_symbol("int\\s+main\\s*\\([^)]+\\)\\s*\\{");
+    insert("  " + value);
+  }
+};
+
+class RequestPipeCppEditor : public CppFileEditor
+{
+public:
+  RequestPipeCppEditor() : CppFileEditor("config/request_pipe.cpp", "")
+  {
+  }
+
+  void add_to_request_pipe(const std::string& value)
+  {
+    use_symbol("void\\s+(Crails::)?\\s*Server\\s*::\\s*initialize_request_pipe\\s*\\(\\s*(void)?\\s*\\)\\s*\\{");
     insert("  " + value);
   }
 };
