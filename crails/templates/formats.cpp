@@ -1,7 +1,6 @@
 #include "formats.hpp"
 #include <crails/utils/string.hpp>
 #include <iostream>
-#include "../cmake_module_updater.hpp"
 #include "../file_editor.hpp"
 #include <crails/utils/semantics.hpp>
 
@@ -68,11 +67,11 @@ int TemplateFormatsManager::run()
     }
     if (configuration.toolchain() == "cmake")
     {
-      if (!CrailsPackageListEditor().update_plugins_list(configuration.plugins(), configuration.version()))
-      {
-        cerr << "Failed to update CMakeLists.txt" << endl;
-        return -1;
-      }
+      CMakeFileEditor cmakefile(configuration);
+
+      cmakefile.load_file();
+      cmakefile.update_plugins();
+      cmakefile.save_file();
     }
   }
   if (options.count("remove"))

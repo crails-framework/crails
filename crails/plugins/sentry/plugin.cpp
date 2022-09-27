@@ -24,16 +24,20 @@ int SentryPlugin::Installer::run()
   cmakefile.save_file();
   request_pipe_cpp.load_file();
   request_pipe_cpp.add_include("crails/sentry.hpp");
+  request_pipe_cpp.add_include("crails/environment.hpp");
   request_pipe_cpp.add_to_request_pipe(
-    "exception_catcher.add_exception_catcher<std::exception&>(\n"
-    "    [this](Crails::Context& context, const std::exception& error)\n"
-    "    {\n"
-    "      std::stringstream stream;\n"
-    "      Sentry::capture_exception(context.params.as_data(), error);\n"
-    "      stream << boost_ext::trace(error)\n"
-    "      exception_catcher.default_exception_handler(context, typeid(error).name(), e.what(), stream.str());\n"
-    "    }\n"
-    "  );\n\n"
+    "if (Crails::environment == Crails::Production)\n"
+    "  {\n"
+    "    exception_catcher.add_exception_catcher<std::exception&>(\n"
+    "      [this](Crails::Context& context, const std::exception& error)\n"
+    "      {\n"
+    "        std::stringstream stream;\n"
+    "        Sentry::capture_exception(context.params.as_data(), error);\n"
+    "        stream << boost_ext::trace(error);\n"
+    "        exception_catcher.default_exception_handler(context, typeid(error).name(), error.what(), stream.str());\n"
+    "      }\n"
+    "    );\n"
+    "  }\n"
   );
   request_pipe_cpp.save_file();
   renderer.generate_file("config/sentry.cpp");

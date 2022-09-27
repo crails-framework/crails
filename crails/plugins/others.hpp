@@ -1,6 +1,6 @@
 #pragma once
 #include "../command.hpp"
-#include "../cmake_module_updater.hpp"
+#include "../file_editor.hpp"
 #include <iostream>
 
 class OtherPlugins : public ::Command
@@ -18,21 +18,26 @@ public:
 
   int run() override
   {
-    CrailsPackageListEditor editor;
+    CMakeFileEditor cmakefile(configuration);
+    bool with_changes = false;
 
     if (options.count("add"))
     {
+      with_changes = true;
       for (const std::string& plugin : options["add"].as<std::vector<std::string>>())
         configuration.add_plugin(plugin);
     }
     if (options.count("remove"))
     {
+      with_changes = true;
       for (const std::string& plugin : options["remove"].as<std::vector<std::string>>())
         configuration.remove_plugin(plugin);
     }
-    if (editor.update_plugins_list(configuration.plugins(), configuration.version()))
+    if (with_changes)
     {
-      editor.save_file();
+      cmakefile.load_file();
+      cmakefile.update_plugins();
+      cmakefile.save_file();
       configuration.save();
     }
     if (options.count("list"))
