@@ -53,7 +53,7 @@ bool BuildManager::generate_assets()
     if (configuration.has_plugin("comet"))
       command << " --ifndef " << CometPlugin::asset_exclusion_pattern(configuration);
     if (options.count("verbose"))
-      cout << "+ " << command.str();
+      cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str());
   }
   return true;

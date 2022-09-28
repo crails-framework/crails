@@ -17,7 +17,10 @@ string CMakeFileEditor::plugins_config_line() const
 
   stream << "pkg_check_modules(CRAILS REQUIRED";
   for (const string& plugin : plugins)
-    stream << ' ' << plugin  << ">=" << version;
+  {
+    if (plugin.substr(0, 3) == "lib")
+      stream << ' ' << plugin  << ">=" << version;
+  }
   stream << ')' << endl;
   return stream.str();
 }
