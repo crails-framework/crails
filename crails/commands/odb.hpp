@@ -27,6 +27,7 @@ private:
   std::string odb_command(const std::string& output_dir = "");
   std::string hxx_prologue();
   void        apply_new_version();
+  void        clear_empty_changesets();
 
   bool at_once_fix_include_paths(const FileList& files) const;
 

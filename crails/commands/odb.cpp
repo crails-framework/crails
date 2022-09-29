@@ -32,18 +32,61 @@ static bool create_directory(boost::filesystem::path path)
   return true;
 }
 
+std::string application_xml_path()
+{
+  return "application.xml";
+}
+
+void BuildOdb::clear_empty_changesets()
+{
+  string application_xml;
+  Crails::RenderFile application_xml_output;
+
+  if (Crails::read_file(application_xml_path(), application_xml))
+  {
+    regex  empty_changeset_pattern("^\\s*<changeset\\s+version=\"[0-9]+\"\\s*/>\\s*$",  regex_constants::multiline);
+    auto   match = sregex_iterator(application_xml.begin(), application_xml.end(), empty_changeset_pattern);
+    int    last_it = 0;
+    string output;
+
+    while (match != sregex_iterator())
+    {
+      output += application_xml.substr(last_it, match->position() - last_it);
+      last_it = match->position() + match->length();
+      match++;
+    }
+    if (last_it > 0)
+    {
+      output += application_xml.substr(last_it);
+      if (application_xml_output.open(application_xml_path()))
+        application_xml_output.set_body(output.c_str(), output.length());
+      else
+        cerr << "[crails-odb] /!\\ WARNING: canont open " << application_xml_path() << " for writing." << endl;
+    }
+  }
+  else
+    cerr << "[crails-odb] /!\\ WARNING: cannot open " << application_xml_path() << endl;
+}
+
 bool BuildOdb::increment_schema_version()
 {
   string odb_hpp;
+  string application_xml;
   Crails::RenderFile odb_hpp_output;
 
+  Crails::read_file(application_xml_path(), application_xml);
   if (Crails::read_file("config/odb.hpp", odb_hpp))
   {
     regex version_pattern("^#pragma db model version\\([0-9]+,([0-9]+)\\)$", std::regex_constants::multiline);
     auto match = sregex_iterator(odb_hpp.begin(), odb_hpp.end(), version_pattern);
+
     if (match != sregex_iterator() && match->size() > 1)
     {
       unsigned int current_version = boost::lexical_cast<unsigned int>(odb_hpp.substr(match->position(1), match->length(1)));
+      auto         has_changeset   = application_xml.find("<changeset version=\"" + std::to_string(current_version) + "\">");
+
+      if (has_changeset == std::string::npos)
+        return true;
       odb_hpp.erase(match->position(1), match->length(1));
       odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1));
       if (odb_hpp_output.open("config/odb.hpp"))
@@ -89,6 +132,7 @@ int BuildOdb::run()
      && create_directory(temporary_dir)
      && compile_models(files))
     {
+      clear_empty_changesets();
       apply_new_version();
       return 0;
     }
