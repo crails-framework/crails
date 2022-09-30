@@ -50,8 +50,6 @@ bool BuildManager::generate_assets()
       << " -i " << Crails::join(configuration.asset_roots(), ',');
     for (const string& module_ : configuration.modules())
       command << " -i " << module_ << ':' << "modules/" << module_ << "/assets";
-    if (configuration.has_plugin("comet"))
-      command << " --ifndef " << CometPlugin::asset_exclusion_pattern(configuration);
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str());
@@ -123,7 +121,7 @@ int BuildManager::run()
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
   if (!generate_assets()) return 3;
-  if (configuration.has_plugin("comet") && !(CometPlugin::build(configuration, verbose, clean) && generate_assets())) return 10;
+  if (configuration.has_plugin("comet") && !(CometPlugin::build(configuration, verbose, clean))) return 10;
   if (configuration.toolchain() == "cmake")
     result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 4;
   else if (configuration.toolchain() == "build2")

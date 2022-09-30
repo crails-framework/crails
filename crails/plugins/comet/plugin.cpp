@@ -67,36 +67,46 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
     string define = "__CHEERP_CLIENT__";
 
     return define
-      + ':' + boost::filesystem::path(asset_root + "/application.js").string()
-      + ':' + boost::filesystem::path(asset_root + "/application.js.map").string();
+      + ':' + boost::filesystem::path("build/client/application.js").string()
+      + ':' + boost::filesystem::path("build/client/application.js.map").string();
   }
   return "err:missing-asset-roots";
 }
 
-static bool copy_build_to_assets(const ProjectConfiguration& configuration)
+string CometPlugin::assets_command_options(const ProjectConfiguration& configuration)
 {
-  if (configuration.asset_roots().size() > 0)
-  {
-    string javascript_output = configuration.application_build_path() + "/client/application.js";
-    string wasm_output       = configuration.application_build_path() + "/client/application.wasm";
-    string sourcemaps_output = javascript_output + ".map";
-    string asset_root = *configuration.asset_roots().begin();
-    boost::system::error_code ec;
+  stringstream stream;
+  string application_js     = "build/client/application.js";
+  string application_wasm   = "build/client/application.wasm";
+  string application_js_map = "build/client/application.js.map";
 
-    boost::filesystem::create_directories(asset_root, ec);
-    if (ec)
-    {
-      cerr << "cannot create asset directory: " << ec.message() << endl;
-      return false;
-    }
-    if (boost::filesystem::exists(javascript_output)) boost::filesystem::copy(javascript_output, asset_root + "/application.js",     boost::filesystem::copy_options::overwrite_existing);
-    if (boost::filesystem::exists(wasm_output))       boost::filesystem::copy(wasm_output,       asset_root + "/application.wasm",   boost::filesystem::copy_options::overwrite_existing);
-    if (boost::filesystem::exists(sourcemaps_output)) boost::filesystem::copy(sourcemaps_output, asset_root + "/application.js.map", boost::filesystem::copy_options::overwrite_existing);
-    return true;
+  if (boost::filesystem::exists(application_js))
+    stream << " -i \"" << application_js << '"';
+  if (boost::filesystem::exists(application_wasm))
+    stream << " -i \"" << application_wasm << '"';
+  if (configuration.variable_or("build-type", "Release") == "Debug"
+   && boost::filesystem::exists(application_js_map))
+    stream << " -i \"" << application_js_map << '"';
+  stream << " --ifndef " << asset_exclusion_pattern(configuration);
+  return stream.str();
+}
+
+bool CometPlugin::update_assets(const ProjectConfiguration& configuration, bool verbose)
+{
+  if (boost::filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
+  {
+    std::stringstream command;
+
+    cout << "[comet] update assets..." << endl;
+    command << configuration.crails_bin_path() + "/crails-assets"
+      << " -o public"
+      << " -u"
+      << CometPlugin::assets_command_options(configuration);
+    if (verbose)
+      cout << "+ " << command.str() << endl;
+    return Crails::run_command(command.str());
   }
-  else
-    cerr << "no asset-roots found in ./.crails" << endl;
-  return false;
+  return true;
 }
 
 bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose, bool clean)
@@ -121,5 +131,5 @@ bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose,
     if (!Crails::run_command(command))
       return false;
   }
-  return copy_build_to_assets(configuration);
+  return update_assets(configuration, verbose);
 }

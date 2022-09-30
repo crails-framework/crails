@@ -23,5 +23,7 @@ public:
 
   static std::string find_comet_command(const ProjectConfiguration&);
   static std::string asset_exclusion_pattern(const ProjectConfiguration&);
+  static std::string assets_command_options(const ProjectConfiguration&);
+  static bool update_assets(const ProjectConfiguration&, bool verbose);
   static bool build(const ProjectConfiguration&, bool verbose, bool clean);
 };
