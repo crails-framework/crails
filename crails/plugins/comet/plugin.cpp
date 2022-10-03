@@ -34,11 +34,12 @@ int CometPlugin::CometInstaller::run()
       << " -o " << output_path
       << " -t " << configuration.toolchain()
       << " -b \"" << configuration.application_build_path() + "/client" << '"'
-      << " --html-config config/comet.json"
-      << " --html-output lib-client"
+      << " --html-config ../config/comet.json"
+      << " --html-output ../lib-client"
       << " --include-src \"" << asset_cpp_path << "\"";
     if (options.count("cheerp-path"))
       command << " --cheerp-path " << options["cheerp-path"].as<string>();
+    cout << "+ " << command.str() << endl;
     if (Crails::run_command(command.str()))
     {
       configuration.add_plugin("comet");
@@ -67,8 +68,8 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
     string define = "__CHEERP_CLIENT__";
 
     return define
-      + ':' + boost::filesystem::path("build/client/application.js").string()
-      + ':' + boost::filesystem::path("build/client/application.js.map").string();
+      + ':' + boost::filesystem::path(configuration.application_build_path() + "/client/application.js").string()
+      + ':' + boost::filesystem::path(configuration.application_build_path() + "/client/application.js.map").string();
   }
   return "err:missing-asset-roots";
 }
@@ -76,9 +77,9 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
 string CometPlugin::assets_command_options(const ProjectConfiguration& configuration)
 {
   stringstream stream;
-  string application_js     = "build/client/application.js";
-  string application_wasm   = "build/client/application.wasm";
-  string application_js_map = "build/client/application.js.map";
+  string application_js     = configuration.application_build_path() + "/client/application.js";
+  string application_wasm   = configuration.application_build_path() + "/client/application.wasm";
+  string application_js_map = configuration.application_build_path() + "/client/application.js.map";
 
   if (boost::filesystem::exists(application_js))
     stream << " -i \"" << application_js << '"';

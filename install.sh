@@ -278,5 +278,6 @@ fi
 ##
 if [ "$WITH_COMET" = "y" ] ; then
   cd ..
+  export INSTALL_CLI="n"
   bash <(curl -s "https://raw.githubusercontent.com/crails-framework/comet.cpp/master/install.sh")
 fi
