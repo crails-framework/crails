@@ -1,7 +1,7 @@
 #!/bin/sh
 
 INSTALL_ROOT="/usr/local"
-list="icuuci icuuc icui18n"
+list="icuuci icuuc icui18n crails-router"
 boost_list="any \
      function \
      bind \

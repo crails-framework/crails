@@ -1,7 +1,7 @@
 #!/usr/bin/env -S bash -e
 
 DEFAULT_CRAILS_VERSION=master
-DEFAULT_COMPILER=clang++
+DEFAULT_COMPILER=none
 DEFAULT_INSTALL_ROOT=/usr/local
 CPPGET_FINGERPRINT="70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43"
 
@@ -21,9 +21,16 @@ if [ -z "$CRAILS_VERSION" ] ; then
 fi
 
 if [ -z "$COMPILER" ] ; then
+  if   which clang++ > /dev/null 2>&1 ; then export DEFAULT_COMPILER=clang++
+  elif which g++     > /dev/null 2>&1 ; then export DEFAULT_COMPILER=g++
+  fi
   echo -n "> Which compiler do you wish to use (default: $DEFAULT_COMPILER): "
   read COMPILER
   if [ -z "$COMPILER" ] ; then COMPILER="$DEFAULT_COMPILER" ; fi
+  if [ "$COMPILER" = "none" ] ; then
+    echo "(!) C++ compiler not found."
+    exit -1
+  fi
 fi
 
 if [ -z "$sql_backends" ] ; then
@@ -141,6 +148,9 @@ if [ ! -z "$sql_backends" ] ; then
   crails_packages+=(libcrails-odb)
 fi
 
+##
+## Lookup optional dependencies which are not available in cppget repositories
+##
 if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.h ] ; then
   echo "+ Detected libssh: adding libcrails-ssh and crails-deploy"
   crails_packages+=(libcrails-ssh)
@@ -251,10 +261,8 @@ if [ "$install_confirmed" = "y" ] ; then
     config.install.root="$INSTALL_ROOT" \
     $SUDO_OPTION
 
-  # patch broken pkgconfig files for boost packages
-  if [ ! "$use_system_libraries" = "y" ] ; then
-    sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-pc.sh")
-  fi
+  # patch pkgconfig files containing invalid linking options
+  sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-pc.sh")
 fi
 
 ##
