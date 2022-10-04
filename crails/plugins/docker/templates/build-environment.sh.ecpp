@@ -25,22 +25,12 @@ sql_backends=(
 comet_packages=(
   libcrails-semantics
   libcrails-router
+  libtext-archive
   libcomet
 )
 <% end %>
 
 system_packages=(
-  ?sys:libboost-any
-  ?sys:libboost-beast
-  ?sys:libboost-config
-  ?sys:libboost-filesystem
-  ?sys:libboost-fusion
-  ?sys:libboost-json
-  ?sys:libboost-lexical-cast
-  ?sys:libboost-program-options
-  ?sys:libboost-property-tree
-  ?sys:libboost-process
-  ?sys:libboost-random
   ?sys:libssl
 <% if (with_odb) do %>
   ?sys:libsqlite3

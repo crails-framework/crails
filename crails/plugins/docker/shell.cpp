@@ -39,14 +39,15 @@ static vector<string> make_shell_command(const string& machine_name, const boost
 static string make_build_command(const string& machine_name, const boost::program_options::variables_map& options)
 {
   stringstream command;
-  string dockerfile_path = "docker/base";
+  string workdir = "docker";
+  string dockerfile_path = workdir + "/base";
 
   if (options.count("dockerfile"))
     dockerfile_path  = options["dockerfile"].as<string>();
   command << Crails::which("docker") << " build";
   if (!options.count("verbose"))
     command << " -q";
-  command << " -t \"" << machine_name << "\" \"" << dockerfile_path << '\"';
+  command << " -t \"" << machine_name << "\" -f \"" << dockerfile_path << "/Dockerfile\"" << " \"" << workdir << '"';
   if (options.count("verbose"))
     cout << "+ " << command.str() << endl;
   return command.str();

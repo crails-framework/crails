@@ -21,7 +21,7 @@ public:
   std::string render()
   {
 ecpp_stream << "FROM " << ( image );
-  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nRUN apt-get -y install \\\n  libboost1.74-dev \\\n  libboost-filesystem1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-program-options1.74-dev \\\n  libboost-thread1.74-dev \\\n  libboost-random1.74-dev \\\n  libboost-system1.74-dev\n\nCOPY " << ( script_path );
+  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\nENV DEBIAN_FRONTEND \"noninteractive\"\nENV TZ \"Europe/London\"\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nCOPY " << ( script_path );
   ecpp_stream << "build-build2.sh build-build2.sh\nRUN bash build-build2.sh\n";
  if (with_odb){
   ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY " << ( script_path );
@@ -34,7 +34,7 @@ ecpp_stream << "FROM " << ( image );
  };
   ecpp_stream << "\n";
  if (with_metarecord){
-  ecpp_stream << "\nRUN apt-get install -y ruby\nRUN gem install meta-record";
+  ecpp_stream << "\nRUN apt-get install -y ruby ruby-dev\nRUN gem install meta-record";
  };
   ecpp_stream << "\n";
  if (include_assets){

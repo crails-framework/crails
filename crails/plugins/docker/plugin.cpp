@@ -73,7 +73,7 @@ int DockerPlugin::DockerNew::run()
   name = options["name"].as<string>();
   if (options.count("image"))
     renderer.vars["image"] = options["image"].as<string>();
-  renderer.vars["script_path"] = "../base";
+  renderer.vars["script_path"] = string("base/");
   renderer.vars["with_odb"] = configuration.has_plugin("libcrails-odb");
   renderer.vars["with_comet"] = configuration.has_plugin("comet");
   renderer.vars["with_metarecord"] = configuration.has_plugin("metarecord");

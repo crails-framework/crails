@@ -11,7 +11,7 @@ source ./build-environment.sh
 echo "+ creating package at $BUILD_DIR"
 bpkg create -d "$BUILD_DIR" cc \
   config.cxx="$CHEERP_PATH/bin/clang++" \
-  config.cxx.poptions="-target cheerp-genericjs -D__CHEERP_CLIENT__ -I/usr/local/include" \
+  config.cxx.poptions="-target cheerp-genericjs -fexceptions -D__CHEERP_CLIENT__ -I/usr/local/include" \
   config.cxx.loptions="-target cheerp-genericjs" \
   config.c{,xx}.version=$COMPILER_VERSION \
   config.install.root=$INSTALL_ROOT \

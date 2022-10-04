@@ -13,6 +13,8 @@ FROM <%= image %>
 
 WORKDIR /tmp
 ENV LD_LIBRARY_PATH /usr/local/lib
+ENV DEBIAN_FRONTEND "noninteractive"
+ENV TZ "Europe/London"
 
 RUN apt-get -y --allow-unauthenticated update && \
     apt-get -y --allow-unauthenticated upgrade && \
@@ -23,15 +25,6 @@ RUN apt-get -y --allow-unauthenticated update && \
   libbz2-dev \
   libssl-dev \
   git
-
-RUN apt-get -y install \
-  libboost1.74-dev \
-  libboost-filesystem1.74-dev \
-  libboost-random1.74-dev \
-  libboost-program-options1.74-dev \
-  libboost-thread1.74-dev \
-  libboost-random1.74-dev \
-  libboost-system1.74-dev
 
 COPY <%= script_path %>build-build2.sh build-build2.sh
 RUN bash build-build2.sh
@@ -50,7 +43,7 @@ RUN apt-get -y install cheerp-core
 <% end %>
 
 <% if (with_metarecord) do %>
-RUN apt-get install -y ruby
+RUN apt-get install -y ruby ruby-dev
 RUN gem install meta-record
 <% end %>
 

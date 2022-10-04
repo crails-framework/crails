@@ -52,11 +52,21 @@ int DockerPlugin::DockerPackage::run()
   string output = "package.tar.gz";
   int result;
 
-  crails_command << "crails package";
+  crails_command << configuration.crails_bin_path() << "/crails package";
   if (options.count("verbose"))
     crails_command << " -v";
   if (options.count("mode"))
     crails_command << " -m " << options["mode"].as<string>();
+  else
+    crails_command << " -m Release";
+  if (options.count("install-root"))
+    crails_command << " --install-root \"" << options["install-root"].as<string>() << '"';
+  if (options.count("install-user"))
+    crails_command << " --install-user \"" << options["install-user"].as<string>() << '"';
+  if (options.count("install-group"))
+    crails_command << " --install-group \"" << options["install-group"].as<string>() << '"';
+  if (options.count("install-runtime-path"))
+    crails_command << " --install-runtime-path \"" << options["install-runtime-path"].as<string>() << '"';
   crails_command << " -o " << temporary_file;
   if (options.count("output"))
     output = options["output"].as<string>();
