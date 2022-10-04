@@ -135,7 +135,7 @@ bool Package::generate_tarball()
       << " --transform \"s|usr/local/lib|" << lib_path << "|\""
       << " --transform \"s|build|" << bin_path << "|\""
       << " --transform \"s|.tmp/systemd.service|etc/systemd/system/" << configuration.variable("name") << ".service|\""
-      << " --transform \"s|.tmp/service.rc|" << etc_path << "/rc.d/" << configuration.variable("name") << ".rc\""
+      << " --transform \"s|.tmp/service.rc|" << etc_path << "/rc.d/" << configuration.variable("name") << ".rc\"|"
       << " --transform \"s|.tmp|" << bin_path << "|\""
       << " --transform \"s|public|" << share_path << "/public|\"";
     for (const auto& file : package_files)

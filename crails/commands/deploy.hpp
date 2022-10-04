@@ -37,7 +37,8 @@ public:
       ("group,g",       boost::program_options::value<string>(), "user group which will run the application")
       ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
       ("pubkey", "ssh authentication using rsa public key")
-      ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)");
+      ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)")
+      ("jail-path",     boost::program_options::value<string>(), "freebsd jail path")
   }
 
   int run() override
@@ -104,6 +105,8 @@ private:
       command << " --pubkey";
     if (options.count("password"))
       command << " --password \"" << options["password"].as<std::string>() << '"';
+    if (options.count("jail-path"))
+      command << " --jail-path \"" << options["jail-path"].as<std::string>() << '"';
     if (options.count("verbose"))
       std::cout << "+ " << command.str() << std::endl;
     return Crails::run_command(command.str());
