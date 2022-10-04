@@ -1,6 +1,9 @@
 #!/bin/sh
 
-INSTALL_ROOT="/usr/local"
+if [ -z "$INSTALL_ROOT" ] ; then
+  export INSTALL_ROOT="/usr/local"
+fi
+
 list="icuuci icuuc icui18n crails-router"
 boost_list="any \
      function \

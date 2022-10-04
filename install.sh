@@ -262,7 +262,15 @@ if [ "$install_confirmed" = "y" ] ; then
     $SUDO_OPTION
 
   # patch pkgconfig files containing invalid linking options
-  sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-pc.sh")
+  patch_pc_script="fix-boost-pc.sh"
+  if [ -z "$SUDO_OPTION" ] ; then
+    sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/$patch_pc_script")
+  else
+    curl -sSO "https://raw.githubusercontent.com/crails-framework/crails/master/$patch_pc_script"
+    chmod +x "$patch_pc_script"
+    sudo "./$patch_pc_script"
+    rm "$patch_pc_script"
+  fi
 fi
 
 ##

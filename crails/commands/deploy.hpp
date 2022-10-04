@@ -38,7 +38,7 @@ public:
       ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
       ("pubkey", "ssh authentication using rsa public key")
       ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)")
-      ("jail-path",     boost::program_options::value<string>(), "freebsd jail path")
+      ("jail-path",     boost::program_options::value<string>(), "freebsd jail path");
   }
 
   int run() override
