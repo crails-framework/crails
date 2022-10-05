@@ -189,9 +189,16 @@ fi
 bpkg create -d "$BUILD_DIR" cc \
   config.cxx=$COMPILER \
   config.cc.coptions=-O3 \
-  config.bin.rpath="$INSTALL_ROOT/lib"
+  config.bin.rpath="$INSTALL_ROOT/lib" \
+  config.install.root="$INSTALL_ROOT"  \
+  $SUDO_OPTION
 
 cd "$BUILD_DIR"
+
+if [ ! "$use_system_libraries" = "y" ] ; then
+  echo "+ applying patches"
+  sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-property-tree.sh")
+fi
 
 echo "+ fetching dependencies"
 bpkg add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
@@ -257,9 +264,7 @@ if [ -z "$install_confirmed" ] ; then
 fi
   
 if [ "$install_confirmed" = "y" ] ; then
-  bpkg install --all --recursive \
-    config.install.root="$INSTALL_ROOT" \
-    $SUDO_OPTION
+  bpkg install --all --recursive
 
   # patch pkgconfig files containing invalid linking options
   patch_pc_script="fix-boost-pc.sh"
