@@ -35,7 +35,7 @@ ecpp_stream << "crails_packages=(";
  if (with_comet){
   ecpp_stream << "\n\ncomet_packages=(\n  libcrails-semantics\n  libcrails-router\n  libtext-archive\n  libcomet\n)";
  };
-  ecpp_stream << "\n\nsystem_packages=(\n  ?sys:libssl";
+  ecpp_stream << "\n\nsystem_packages=(\n  ?sys:libcrypto\n  ?sys:libssl";
  if (with_odb){
   ecpp_stream << "\n  ?sys:libsqlite3\n  ?sys:libpq\n  ?sys:libmysqlclient";
  };

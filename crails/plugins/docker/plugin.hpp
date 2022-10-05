@@ -101,6 +101,7 @@ public:
       ShellCommand::options_description(desc);
       desc.add_options()
         ("output,o", boost::program_options::value<std::string>(), "output path for the package")
+        ("mode,m",   boost::program_options::value<std::string>(), "build mode (Release or Debug)")
         ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
         ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
         ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")

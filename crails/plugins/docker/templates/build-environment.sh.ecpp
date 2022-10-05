@@ -31,6 +31,7 @@ comet_packages=(
 <% end %>
 
 system_packages=(
+  ?sys:libcrypto
   ?sys:libssl
 <% if (with_odb) do %>
   ?sys:libsqlite3

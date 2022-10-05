@@ -37,6 +37,7 @@ void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration
 int DockerPlugin::DockerInstaller::run()
 {
   FileRenderer renderer;
+  bool with_ssh        = configuration.has_plugin("libcrails-ssh");
   bool with_odb        = configuration.has_plugin("libcrails-odb");
   bool with_comet      = configuration.has_plugin("comet");
   bool with_metarecord = configuration.has_plugin("metarecord");
@@ -48,6 +49,7 @@ int DockerPlugin::DockerInstaller::run()
   renderer.vars["with_odb"] = with_odb;
   renderer.vars["with_comet"] = with_comet;
   renderer.vars["with_metarecord"] = with_metarecord;
+  renderer.vars["with_ssh"] = with_ssh;
   renderer.vars["build2_fingerprint"] = build2_fingerprint;
   renderer.generate_file("docker/Dockerfile", "docker/base/Dockerfile");
   renderer.generate_file("docker/build-build2.sh", "docker/base/build-build2.sh");

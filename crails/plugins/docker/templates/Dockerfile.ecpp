@@ -5,6 +5,7 @@ bool   @include_assets = true;
 bool   @with_comet = false;
 bool   @with_odb = false;
 bool   @with_metarecord = false;
+bool   @with_ssh = false;
 string sass_backend = with_metarecord ? "ruby" : "nodejs";
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
 string @script_path = "";
@@ -40,6 +41,10 @@ RUN echo "deb http://ppa.launchpad.net/leaningtech-dev/<%= cheerp_repository %>"
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 84540D4B9BF457D5
 RUN apt-get -y --allow-unauthenticated update
 RUN apt-get -y install cheerp-core
+<% end %>
+
+<% if (with_ssh) do %>
+RUN apt-get -y install libssh-dev
 <% end %>
 
 <% if (with_metarecord) do %>

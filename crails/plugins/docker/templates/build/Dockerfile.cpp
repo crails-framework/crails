@@ -13,6 +13,7 @@ public:
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_metarecord(Crails::cast<bool>(vars, "with_metarecord",  false)), 
+    with_ssh(Crails::cast<bool>(vars, "with_ssh",  false)), 
     sass_backend( with_metarecord ? "ruby" : "nodejs"), 
     cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
     script_path(Crails::cast<string>(vars, "script_path",  ""))
@@ -31,6 +32,10 @@ ecpp_stream << "FROM " << ( image );
  if (with_comet){
   ecpp_stream << "\nRUN echo \"deb http://ppa.launchpad.net/leaningtech-dev/" << ( cheerp_repository );
   ecpp_stream << "\" >> /etc/apt/sources.list\nRUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 84540D4B9BF457D5\nRUN apt-get -y --allow-unauthenticated update\nRUN apt-get -y install cheerp-core";
+ };
+  ecpp_stream << "\n";
+ if (with_ssh){
+  ecpp_stream << "\nRUN apt-get -y install libssh-dev";
  };
   ecpp_stream << "\n";
  if (with_metarecord){
@@ -63,6 +68,7 @@ private:
   bool with_comet;
   bool with_odb;
   bool with_metarecord;
+  bool with_ssh;
   string sass_backend;
   string cheerp_repository;
   string script_path;
