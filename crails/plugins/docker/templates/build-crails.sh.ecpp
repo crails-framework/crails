@@ -2,6 +2,8 @@ std::string @crails_version = "master";
 std::string @build2_fingerprint;
 bool @with_odb = false;
 bool @with_comet = false;
+std::vector<std::string> prebuild_patches  = {"fix-boost-property-tree", "fix-broken-build2-packages"};
+std::vector<std::string> postbuild_patches = {"fix-boost-pc"};
 // END LINKING
 #!/bin/bash -e
 
@@ -19,6 +21,7 @@ source ./build-environment.sh
 echo "+ creating package at $BUILD_DIR"
 bpkg create -d "$BUILD_DIR" cc \
   config.cxx=g++ \
+  config.cc.poptions=-I/usr/local/include \
   config.cc.coptions=-O3 \
   config.bin.rpath="$INSTALL_ROOT/lib" \
   config.install.root="$INSTALL_ROOT"
@@ -31,6 +34,13 @@ for package in crails comet.cpp libcrails ${crails_packages[@]} ; do
   bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
+
+<% if (prebuild_patches.size() > 0) do %>
+echo "+ applying patches"
+<%   for (const std::string& patch : prebuild_patches) do %>
+sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/<%= patch %>.sh")
+<%   end %>
+<% end %>
 
 echo "+ building core components"
 bpkg build crails    --yes ${system_packages[@]}
@@ -68,3 +78,10 @@ done
 
 echo "+ installing at $INSTALL_ROOT"
 bpkg install --all --recursive
+
+<% if (postbuild_patches.size() > 0) do %>
+echo "+ applying patches"
+<%   for (const std::string& patch : postbuild_patches) do %>
+sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/<%= patch %>.sh")
+<%   end %>
+<% end %>

@@ -198,6 +198,7 @@ cd "$BUILD_DIR"
 if [ ! "$use_system_libraries" = "y" ] ; then
   echo "+ applying patches"
   sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-property-tree.sh")
+  sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-broken-build2-packages.sh")
 fi
 
 echo "+ fetching dependencies"

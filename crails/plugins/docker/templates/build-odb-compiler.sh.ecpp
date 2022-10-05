@@ -3,7 +3,9 @@ std::string @build2_fingerprint = "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:
 #!/bin/sh -ex
 
 SYSTEM_GCC=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`
-ODB_COMPILER_GCC=10
+if [ -z "$ODB_COMPILER_GCC" ] ; then
+  ODB_COMPILER_GCC=10
+fi
 FINGERPRINT="<%= build2_fingerprint %>"
 
 apt-get -y install \

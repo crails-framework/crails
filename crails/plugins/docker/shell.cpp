@@ -8,13 +8,15 @@
 
 using namespace std;
 
+static const string workdir = "docker";
+
 static vector<string> make_shell_command(const string& machine_name, const boost::program_options::variables_map& options)
 {
   vector<string> shell_command;
   string application_path = options.count("application-path")
     ? options["application-path"].as<string>()
     : filesystem::current_path().string();
-  string build_path = application_path + "/docker/build-" + machine_name;
+  string build_path = application_path + "/docker/build/" + machine_name;
   string command = options.count("command")
     ? options["command"].as<string>()
     : "bash";
@@ -36,14 +38,20 @@ static vector<string> make_shell_command(const string& machine_name, const boost
   return shell_command;
 }
 
-static string make_build_command(const string& machine_name, const boost::program_options::variables_map& options)
+static string make_dockerfile_path(const boost::program_options::variables_map& options)
 {
-  stringstream command;
-  string workdir = "docker";
   string dockerfile_path = workdir + "/base";
 
   if (options.count("dockerfile"))
-    dockerfile_path  = options["dockerfile"].as<string>();
+    dockerfile_path  = workdir + '/' + options["dockerfile"].as<string>();
+  return dockerfile_path;
+}
+
+static string make_build_command(const string& machine_name, const boost::program_options::variables_map& options)
+{
+  stringstream command;
+  string dockerfile_path = make_dockerfile_path(options);
+
   command << Crails::which("docker") << " build";
   if (!options.count("verbose"))
     command << " -q";
@@ -53,9 +61,18 @@ static string make_build_command(const string& machine_name, const boost::progra
   return command.str();
 }
 
+static string make_machine_name(const boost::program_options::variables_map& options)
+{
+  string machine_name;
+
+  if (options.count("name"))
+    return options["name"].as<string>();
+  return filesystem::path(make_dockerfile_path(options)).filename().string();
+}
+
 int DockerPlugin::DockerShell::run()
 {
-  string machine_name = options.count("name") ? options["name"].as<string>() : string("crails_docker");
+  string machine_name = make_machine_name(options);
   string docker_path  = Crails::which("docker");
 
   DockerPlugin::refresh_environment(configuration);
