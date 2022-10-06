@@ -68,7 +68,6 @@ int DockerPlugin::DockerPackage::run()
   if (options.count("install-runtime-path"))
     crails_command << " --install-runtime-path \"" << options["install-runtime-path"].as<string>() << '"';
   crails_command << " -o " << temporary_file;
-  crails_command << " ##";
   if (options.count("output"))
     output = options["output"].as<string>();
   result = call_docker_shell_with(crails_command.str());
