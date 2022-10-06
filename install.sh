@@ -116,6 +116,7 @@ boost_packages=(
   ?sys:libboost-fusion
   ?sys:libboost-json
   ?sys:libboost-lexical-cast
+  ?sys:libboost-lockfree
   ?sys:libboost-program-options
   ?sys:libboost-property-tree
   ?sys:libboost-process
