@@ -1,3 +1,5 @@
+unsigned short @application_port = 3001;
+std::string @application_host = "0.0.0.0";
 std::string @application_name;
 std::string @bin_directory;
 std::string @lib_directory;
@@ -16,11 +18,11 @@ cd "<%= runtime_path %>"
 
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:<%= lib_directory %>:<%= bin_directory %>"
 export PUBLIC_PATH="<%= share_directory %>/public"
-if [ -z "$HOSTNAME" ] ; then export HOSTNAME="0.0.0.0" ; fi
-if [ -z "$PORT" ]     ; then export PORT="3001" ; fi
+if [ -z "$APPLICATION_HOSTNAME" ] ; then export APPLICATION_HOSTNAME="<%= application_host %>" ; fi
+if [ -z "$APPLICATION_PORT" ]     ; then export APPLICATION_PORT="<%= application_port %>" ; fi
 
 exec "<%= bin_directory %>/server" \
-  --hostname "$HOSTNAME" \
-  --port     "$PORT" \
+  --hostname "$APPLICATION_HOSTNAME" \
+  --port     "$APPLICATION_PORT" \
   --pidfile  "<%= pidfile %>" \
   --log      "/var/log/<%= application_name %>/`date +%y-%m-%d_%Hh%Mm%S`_crails.log"

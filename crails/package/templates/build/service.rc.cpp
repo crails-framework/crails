@@ -21,14 +21,21 @@ public:
   std::string render()
   {
 ecpp_stream << "#!/bin/sh\n#\n\n# PROVIDE: " << ( underscore(application_name) );
-  ecpp_stream << "\n# REQUIRE: bar_service_required_to_precede_foo\n\n. /etc/rc.subr\n\nname=\"" << ( underscore(application_name) );
+  ecpp_stream << "\n\n. /etc/rc.subr\n\nname=\"" << ( underscore(application_name) );
   ecpp_stream << "\"\nrcvar=" << ( underscore(application_name) );
   ecpp_stream << "_enable\ncommand=\"" << ( underscore(application_name) );
   ecpp_stream << "_start\"\nstop_cmd=\"" << ( underscore(application_name) );
   ecpp_stream << "_stop\"\n" << ( underscore(application_name) );
   ecpp_stream << "_start()\n{\n  cd \"" << ( runtime_path );
-  ecpp_stream << "\"\n  su -c \"" << ( bin_directory );
+  ecpp_stream << "\"";
+ if (application_user.length() > 0){
+  ecpp_stream << "\n  su -c \"" << ( bin_directory );
   ecpp_stream << "/start.sh\" - " << ( application_user );
+  ecpp_stream << "";
+ }else{
+  ecpp_stream << "\n  sh " << ( bin_directory );
+  ecpp_stream << "/start.sh";
+ };
   ecpp_stream << "\n}\n" << ( underscore(application_name) );
   ecpp_stream << "_stop()\n{\n  " << ( bin_directory );
   ecpp_stream << "/stop.sh\n}\n\nload_rc_config $name\nrun_rc_command \"$1\"\n";

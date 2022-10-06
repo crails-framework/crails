@@ -12,7 +12,6 @@ std::string environment_file = share_directory + "/environment";
 #
 
 # PROVIDE: <%= underscore(application_name) %>
-# REQUIRE: bar_service_required_to_precede_foo
 
 . /etc/rc.subr
 
@@ -24,7 +23,11 @@ stop_cmd="<%= underscore(application_name) %>_stop"
 <%= underscore(application_name) %>_start()
 {
   cd "<%= runtime_path %>"
+<% if (application_user.length() > 0) do %>
   su -c "<%= bin_directory %>/start.sh" - <%= application_user %>
+<% end else do %>
+  sh <%= bin_directory %>/start.sh
+<% end %>
 }
 
 <%= underscore(application_name) %>_stop()

@@ -85,7 +85,8 @@ bool Package::generate_scripts()
   vector<std::string> scripts{"start.sh", "stop.sh"};
 
   renderer.should_overwrite = true;
-  renderer.vars["application_name"] = configuration.variable("name");
+  renderer.vars["application_name"] = options.count("name") ? options["name"].as<string>() : configuration.variable("name");
+  renderer.vars["application_port"] = options.count("port") ? options["port"].as<unsigned short>() : static_cast<unsigned short>(80);
   renderer.vars["bin_directory"]    = bin_target();
   renderer.vars["share_directory"]  = share_target();
   renderer.vars["lib_directory"]    = lib_target();
@@ -106,6 +107,7 @@ bool Package::generate_scripts()
     package_files.push_back(".tmp/" + script);
   }
   package_files.push_back(".tmp/systemd.service");
+  package_files.push_back(".tmp/service.rc");
   return true;
 }
 
