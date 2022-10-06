@@ -132,6 +132,7 @@ bool Package::generate_tarball()
   if (tar_command.length() > 0)
   {
     command << tar_command << " czf \"" << output << '"'
+      << " --dereference"
       << " --transform \"s|usr/local/lib|" << lib_path << "|\""
       << " --transform \"s|build|" << bin_path << "|\""
       << " --transform \"s|.tmp/systemd.service|etc/systemd/system/" << configuration.variable("name") << ".service|\""
