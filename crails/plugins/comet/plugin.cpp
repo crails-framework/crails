@@ -1,7 +1,7 @@
 #include "plugin.hpp"
 #include "../../file_renderer.hpp"
 #include <boost/process.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <crails/cli/process.hpp>
 #include <crails/cli/with_path.hpp>
 
@@ -68,8 +68,8 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
     string define = "__CHEERP_CLIENT__";
 
     return define
-      + ':' + boost::filesystem::path(configuration.application_build_path() + "/client/application.js").string()
-      + ':' + boost::filesystem::path(configuration.application_build_path() + "/client/application.js.map").string();
+      + ':' + std::filesystem::path(configuration.application_build_path() + "/client/application.js").string()
+      + ':' + std::filesystem::path(configuration.application_build_path() + "/client/application.js.map").string();
   }
   return "err:missing-asset-roots";
 }
@@ -81,12 +81,12 @@ string CometPlugin::assets_command_options(const ProjectConfiguration& configura
   string application_wasm   = configuration.application_build_path() + "/client/application.wasm";
   string application_js_map = configuration.application_build_path() + "/client/application.js.map";
 
-  if (boost::filesystem::exists(application_js))
+  if (std::filesystem::exists(application_js))
     stream << " -i \"" << application_js << '"';
-  if (boost::filesystem::exists(application_wasm))
+  if (std::filesystem::exists(application_wasm))
     stream << " -i \"" << application_wasm << '"';
   if (configuration.variable_or("build-type", "Release") == "Debug"
-   && boost::filesystem::exists(application_js_map))
+   && std::filesystem::exists(application_js_map))
     stream << " -i \"" << application_js_map << '"';
   stream << " --ifndef " << asset_exclusion_pattern(configuration);
   return stream.str();
