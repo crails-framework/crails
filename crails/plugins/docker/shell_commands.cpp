@@ -59,6 +59,10 @@ int DockerPlugin::DockerPackage::run()
     crails_command << " -m " << options["mode"].as<string>();
   else
     crails_command << " -m Release";
+  if (options.count("port"))
+    crails_command << " --port " << options["port"].as<unsigned short>();
+  if (options.count("name"))
+    crails_command << " --name " << options["name"].as<string>();
   if (options.count("install-root"))
     crails_command << " --install-root \"" << options["install-root"].as<string>() << '"';
   if (options.count("install-user"))

@@ -100,8 +100,10 @@ public:
     {
       ShellCommand::options_description(desc);
       desc.add_options()
-        ("output,o", boost::program_options::value<std::string>(), "output path for the package")
-        ("mode,m",   boost::program_options::value<std::string>(), "build mode (Release or Debug)")
+        ("mode,m",        boost::program_options::value<std::string>(), "build mode (Release or Debug)")
+        ("output,o",      boost::program_options::value<std::string>(), "output path for the package")
+        ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
+        ("name,n",        boost::program_options::value<std::string>(), "alternative application name to use for the deployed application")
         ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
         ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
         ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")
