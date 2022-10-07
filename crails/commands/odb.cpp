@@ -87,6 +87,11 @@ bool BuildOdb::increment_schema_version()
 
       if (has_changeset == std::string::npos)
         return true;
+      else
+      {
+        cout << "[crails-odb] Pattern not found in " << application_xml_path() << ": " << "<changeset version=\"" << std::to_string(current_version) << "\">" << endl;
+        cout << "[crails-odb] Incrementing schema version" << endl;
+      }
       odb_hpp.erase(match->position(1), match->length(1));
       odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1));
       if (odb_hpp_output.open("config/odb.hpp"))
