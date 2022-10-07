@@ -31,7 +31,7 @@ ecpp_stream << "#!/bin/sh -ex\n\nif [ -f \"" << ( environment_file );
   ecpp_stream << "\" ; fi\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"" << ( pidfile );
   ecpp_stream << "\" \\\n  --log      \"/var/log/" << ( application_name );
-  ecpp_stream << "/`date +%y-%m-%d_%Hh%Mm%S`_crails.log\"\n";
+  ecpp_stream << "/event.log\"\n";
     return ecpp_stream.str();
   }
 private:

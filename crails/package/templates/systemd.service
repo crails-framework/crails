@@ -21,3 +21,6 @@ ExecStart=<%= bin_directory %>/start.sh
 ExecStop=<%= bin_directory %>/stop.sh
 PIDFile=/tmp/crails.pid
 Restart=always
+
+[Install]
+WantedBy=multi-user.target
