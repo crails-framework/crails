@@ -23,6 +23,22 @@ int DockerPlugin::ShellCommand::call_docker_shell_with(const string& command)
   return Crails::run_command(shell_command.str()) ? 0 : -1;
 }
 
+void DockerPlugin::ShellCommand::add_docker_defines(stringstream& crails_command)
+{
+  crails_command << " --defines CRAILS_DOCKER_BUILD";
+  if (options.count("dockerfile"))
+  {
+    string dockerfile_define = options["dockerfile"].as<string>();
+    transform(dockerfile_define.begin(), dockerfile_define.end(), dockerfile_define.begin(), [](char c) { return toupper(c); });
+    crails_command << ' ' << dockerfile_define << "_DOCKER_BUILD";
+  }
+  if (options.count("defines"))
+  {
+    for (const string& define : options["defines"].as<vector<string>>())
+      crails_command << ' ' << define;
+  }
+}
+
 int DockerPlugin::DockerBuild::run()
 {
   stringstream crails_command;
@@ -32,6 +48,7 @@ int DockerPlugin::DockerBuild::run()
     crails_command << " -v";
   if (options.count("mode"))
     crails_command << " -m " << options["mode"].as<string>();
+  add_docker_defines(crails_command);
   return call_docker_shell_with(crails_command.str());
 }
 
@@ -52,13 +69,14 @@ int DockerPlugin::DockerPackage::run()
   string output = "package.tar.gz";
   int result;
 
-  crails_command << configuration.crails_bin_path() << "/crails package";
+  crails_command << "crails package";
   if (options.count("verbose"))
     crails_command << " -v";
   if (options.count("mode"))
     crails_command << " -m " << options["mode"].as<string>();
   else
     crails_command << " -m Release";
+  add_docker_defines(crails_command);
   if (options.count("port"))
     crails_command << " --port " << options["port"].as<unsigned short>();
   if (options.count("name"))
@@ -76,6 +94,6 @@ int DockerPlugin::DockerPackage::run()
     output = options["output"].as<string>();
   result = call_docker_shell_with(crails_command.str());
   if (result == 0)
-    filesystem::copy(temporary_file, output);
+    filesystem::copy(temporary_file, output, filesystem::copy_options::overwrite_existing);
   return result;
 }

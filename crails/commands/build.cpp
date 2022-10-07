@@ -12,7 +12,7 @@
 
 using namespace std;
 
-bool crails_cmake_builder(const ProjectConfiguration& configuration, bool verbose, bool clean);
+bool crails_cmake_builder(const ProjectConfiguration& configuration, const string& mode, const string& cxx_flags, bool verbose, bool clean);
 bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbose, bool clean);
 
 bool BuildManager::prebuild_renderers()
@@ -114,16 +114,23 @@ int BuildManager::run()
   bool verbose = options.count("verbose");
   bool clean = options.count("clean");
   int result = -1;
+  string mode = configuration.variable("build-type");
+  string cxx_flags;
 
+  if (options.count("defines"))
+  {
+    for (const string& flag : options["defines"].as<vector<string>>())
+      cxx_flags += "-D" + flag + ' ';
+  }
   if (options.count("mode"))
-    configuration.variable("build-type", options["mode"].as<string>());
+    mode = options["mode"].as<string>();
   if (configuration.has_plugin("metarecord") && !MetarecordPlugin::build(configuration, verbose)) return 11;
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
   if (!generate_assets()) return 3;
   if (configuration.has_plugin("comet") && !(CometPlugin::build(configuration, verbose, clean))) return 10;
   if (configuration.toolchain() == "cmake")
-    result = crails_cmake_builder(configuration, verbose, clean) ? 0 : 4;
+    result = crails_cmake_builder(configuration, mode, cxx_flags, verbose, clean) ? 0 : 4;
   else if (configuration.toolchain() == "build2")
     result = crails_build2_builder(configuration, verbose, clean) ? 0 : 4;
   else

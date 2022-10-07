@@ -1,6 +1,7 @@
 #pragma once
 #include "../../command_index.hpp"
 #include "../../command.hpp"
+#include <sstream>
 
 class DockerPlugin : public CommandIndex
 {
@@ -46,8 +47,7 @@ public:
     void options_description(boost::program_options::options_description& desc) const override
     {
       desc.add_options()
-        ("name,n",             boost::program_options::value<std::string>(), "machine name")
-        ("dockerfile,i",       boost::program_options::value<std::string>(), "Dockerfile path (defaults to docker/base)")
+        ("dockerfile,i",       boost::program_options::value<std::string>(), "Dockerfile path (defaults to base)")
         ("verbose,v",          "verbose docker build (quiet by default)")
         ("noninteractive,a",   "disable interactive mode (must be used when the command is launched from a non-interactive shell)")
         ("application-path,p", boost::program_options::value<std::string>(), "application path (defaults to the current path)")
@@ -60,12 +60,12 @@ public:
     void options_description(boost::program_options::options_description& desc) const override
     {
       desc.add_options()
-        ("name,n", boost::program_options::value<std::string>(), "machine name")
         ("dockerfile,i", boost::program_options::value<std::string>(), "Dockerfile path (defaults to docker/base)")
         ("verbose,v", "verbose mode (quiet by default)");
     }
   protected:
     int call_docker_shell_with(const std::string& command);
+    void add_docker_defines(std::stringstream&);
   };
 
   struct DockerBuild : public ShellCommand
@@ -76,7 +76,8 @@ public:
     {
       ShellCommand::options_description(desc);
       desc.add_options()
-        ("mode,m", boost::program_options::value<std::string>(), "Release or Debug, defaults to build-type value in .crails file");
+        ("mode,m", boost::program_options::value<std::string>(), "Release or Debug, defaults to build-type value in .crails file")
+        ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preprocessor defines (such as --defines MY_DEFINE ...)");
     }
   };
 
@@ -101,6 +102,7 @@ public:
       ShellCommand::options_description(desc);
       desc.add_options()
         ("mode,m",        boost::program_options::value<std::string>(), "build mode (Release or Debug)")
+        ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preprocessor defines (such as --defines MY_DEFINE ...)")
         ("output,o",      boost::program_options::value<std::string>(), "output path for the package")
         ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
         ("name,n",        boost::program_options::value<std::string>(), "alternative application name to use for the deployed application")

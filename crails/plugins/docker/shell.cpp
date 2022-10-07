@@ -65,8 +65,6 @@ static string make_machine_name(const boost::program_options::variables_map& opt
 {
   string machine_name;
 
-  if (options.count("name"))
-    return options["name"].as<string>();
   return filesystem::path(make_dockerfile_path(options)).filename().string();
 }
 

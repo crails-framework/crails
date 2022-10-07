@@ -11,6 +11,7 @@ public:
     desc.add_options()
       ("verbose,v", "enable verbose mode")
       ("mode,m", boost::program_options::value<std::string>(), "Debug or Release: defaults to the build-type value set in the .crails file")
+      ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "appends custom preprocessor flags (such as --cxx-flags MY_DEFINE)")
       ("clean,c",   "cleanup before building");
   }
 

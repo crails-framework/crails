@@ -17,6 +17,12 @@ static bool build_command(const ProjectConfiguration& configuration, boost::prog
     command << " -v";
   if (options.count("mode"))
     command << " -m " << options["mode"].as<string>();
+  if (options.count("defines"))
+  {
+    command << " --defines";
+    for (const string& define : options["defines"].as<std::vector<std::string>>())
+      command << ' ' << define;
+  }
   if (options.count("verbose"))
     cout << "+ " << command.str() << endl;
   return Crails::run_command(command.str());

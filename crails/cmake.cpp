@@ -8,7 +8,12 @@
 
 using namespace std;
 
-bool crails_cmake_builder(const ProjectConfiguration& configuration, bool verbose, bool clean)
+static map<string, string> mode_map{
+  {"release", "Release"},
+  {"debug", "Debug"}
+};
+
+bool crails_cmake_builder(const ProjectConfiguration& configuration, const string& mode, const string& cxx_flags, bool verbose, bool clean)
 {
   if (CMakeBuilder::installed())
   {
@@ -18,12 +23,16 @@ bool crails_cmake_builder(const ProjectConfiguration& configuration, bool verbos
       options += BuildVerbose;
     if (clean)
       options += BuildClean;
-    return CMakeBuilder(
+    CMakeBuilder builder(
       configuration.project_directory(),
       configuration.application_build_path(),
       options
-    ).option("CMAKE_BUILD_TYPE", configuration.build_type())
-    .build();
+    );
+
+    builder.option("CMAKE_BUILD_TYPE", mode_map.find(mode) != mode_map.end() ? mode_map.at(mode) : mode);
+    if (cxx_flags.length() > 0)
+      builder.option("CMAKE_CXX_FLAGS:", cxx_flags);
+    return builder.build();
   }
   else
     cerr << "cmake does not appear to be installed." << endl;
