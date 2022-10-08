@@ -1,0 +1,14 @@
+std::string @classname;
+// END LINKING
+#pragma once
+#include <crails/tests/helper.hpp>
+
+class <%= classname %> : public Crails::Tests::Helper
+{
+public:
+  <%= classname %>();
+
+private:
+  void before_all();
+  void after_all();
+};

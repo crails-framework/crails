@@ -43,6 +43,8 @@ declare_renderer(scaffolds_layout_materialize_html)
 declare_renderer(scaffolds_module_cmakelists_txt)
 declare_renderer(scaffolds_module_module_hpp)
 declare_renderer(scaffolds_module_routes_cpp)
+declare_renderer(scaffolds_spec_test_hpp)
+declare_renderer(scaffolds_spec_test_cpp)
 declare_renderer(odb_hpp)
 declare_renderer(odb_cpp)
 declare_renderer(odb_migrate_cpp)
@@ -108,6 +110,8 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/modules/CMakeLists.txt", scaffolds_module_cmakelists_txt);
   add_renderer("scaffolds/modules/module.hpp", scaffolds_module_module_hpp);
   add_renderer("scaffolds/modules/routes.cpp", scaffolds_module_routes_cpp);
+  add_renderer("scaffolds/spec/test.hpp", scaffolds_spec_test_hpp);
+  add_renderer("scaffolds/spec/test.cpp", scaffolds_spec_test_cpp);
 
   add_renderer("package/start.sh",        package_start_sh);
   add_renderer("package/stop.sh",         package_stop_sh);

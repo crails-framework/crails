@@ -9,6 +9,7 @@
 #include "../scaffolds/resource.hpp"
 #include "../scaffolds/layout.hpp"
 #include "../scaffolds/module.hpp"
+#include "../scaffolds/test.hpp"
 
 class Scaffold : public Crails::Scaffold
 {
@@ -27,7 +28,8 @@ public:
       {"task",       []() { return new TaskScaffold; }},
       {"resource",   []() { return new ResourceScaffold; }},
       {"layout",     []() { return new LayoutScaffold; }},
-      {"module",     []() { return new ModuleScaffold; }}
+      {"module",     []() { return new ModuleScaffold; }},
+      {"test",       []() { return new TestScaffold; }}
     };
 
     if (configuration.has_plugin("metarecord"))

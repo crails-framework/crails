@@ -1,0 +1,25 @@
+std::string @header;
+std::string @classname;
+// END LINKING
+
+<%= classname %>::<%= classname %>()
+{
+  before(std::bind(&<%= classname %>::before_all, this));
+  after(std::bind(&<%= classname %>::after_all, this));
+
+  describe("name of a method", [this]()
+  {
+    it("fails", [this]()
+    {
+      EXPECT(1, ==, 2);
+    });
+  });
+}
+
+void <%= classname %>::before_all()
+{
+}
+
+void <%= classname %>::after_all()
+{
+}

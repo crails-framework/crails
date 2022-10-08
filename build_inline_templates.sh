@@ -141,6 +141,14 @@ $ECPP \
   -n ScaffoldsTaskMainCpp \
   -i $SCAFFOLDS_TPL/task_main.cpp.ecpp \
   >  $SCAFFOLDS_TPL/build/task_main.cpp.cpp
+$ECPP \
+  -n ScaffoldsSpecTestHpp \
+  -i $SCAFFOLDS_TPL/test.hpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/test.hpp.cpp
+$ECPP \
+  -n ScaffoldsSpecTestCpp \
+  -i $SCAFFOLDS_TPL/test.cpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/test.cpp.cpp
 
 ##
 ## Odb Module
