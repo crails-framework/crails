@@ -84,6 +84,7 @@ crails_packages=(
   libcrails-cookies
   libcrails-encrypt
   libcrails-form-parser
+  libcrails-i18n
   libcrails-multipart-parser
   libcrails-url-parser
   libcrails-xml-parser
