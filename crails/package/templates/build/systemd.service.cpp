@@ -31,7 +31,8 @@ ecpp_stream << "[Unit]\nDescription=" << ( application_name );
  };
   ecpp_stream << "\nExecStart=" << ( bin_directory );
   ecpp_stream << "/start.sh\nExecStop=" << ( bin_directory );
-  ecpp_stream << "/stop.sh\nPIDFile=/tmp/crails.pid\nRestart=always\n\n[Install]\nWantedBy=multi-user.target\n";
+  ecpp_stream << "/stop.sh\nPIDFile=/tmp/" << ( application_name );
+  ecpp_stream << ".pid\nRestart=always\n\n[Install]\nWantedBy=multi-user.target\n";
     return ecpp_stream.str();
   }
 private:

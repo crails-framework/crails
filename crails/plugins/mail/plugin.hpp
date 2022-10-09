@@ -6,10 +6,6 @@
 class MailPlugin : public CommandIndex
 {
 public:
-  static const std::vector<std::string> supported_backends;
-
-  static bool check_backends_validity(const std::list<std::string>& backends);
-
   struct Installer : public ::Command
   {
     int  run() override;

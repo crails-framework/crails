@@ -19,7 +19,7 @@ Group=<%= application_group %>
 <% end %>
 ExecStart=<%= bin_directory %>/start.sh
 ExecStop=<%= bin_directory %>/stop.sh
-PIDFile=/tmp/crails.pid
+PIDFile=/tmp/<%= application_name %>.pid
 Restart=always
 
 [Install]
