@@ -8,6 +8,7 @@
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
 #include "../plugins/metarecord/plugin.hpp"
+#include "../plugins/i18n/plugin.hpp"
 #include <iostream>
 
 using namespace std;
@@ -124,6 +125,7 @@ int BuildManager::run()
   }
   if (options.count("mode"))
     mode = options["mode"].as<string>();
+  if (configuration.has_plugin("libcrails-i18n") && !I18nPlugin::build(configuration)) return 12;
   if (configuration.has_plugin("metarecord") && !MetarecordPlugin::build(configuration, verbose)) return 11;
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;

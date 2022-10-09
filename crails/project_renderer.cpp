@@ -20,6 +20,7 @@ declare_renderer(project_config_request_pipe_cpp)
 declare_renderer(project_config_cookies_cpp)
 declare_renderer(project_config_session_store_cpp)
 declare_renderer(project_config_ssl_cpp)
+declare_renderer(project_config_i18n_cpp)
 declare_renderer(project_public_index_html)
 declare_renderer(project_spec_main_cpp)
 declare_renderer(renderer_cpp)
@@ -85,6 +86,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/cookies.cpp",              project_config_cookies_cpp);
   add_renderer("config/session_store.cpp",        project_config_session_store_cpp);
   add_renderer("config/ssl.cpp",                  project_config_ssl_cpp);
+  add_renderer("config/i18n.cpp",                 project_config_i18n_cpp);
   add_renderer("public/index.html",               project_public_index_html);
   add_renderer("spec/main.cpp",                   project_spec_main_cpp);
 

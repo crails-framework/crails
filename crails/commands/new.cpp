@@ -107,7 +107,7 @@ int New::run()
     {
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
-      configuration.asset_roots({"app/assets"});
+      configuration.asset_roots({"app/assets", "lib/assets"});
       configuration.add_plugin("libcrails");
       configuration.add_plugin("libcrails-logger");
       configuration.variable("std", "c++17");

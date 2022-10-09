@@ -1,0 +1,9 @@
+#include <crails/i18n.hpp>
+
+using namespace std;
+using namespace i18n;
+
+const string         Settings::default_locale = "en";
+const vector<string> Settings::locales = {"en", "fr", "ru"};
+thread_local string  Settings::current_locale;
+const I18nData       Settings::t;
