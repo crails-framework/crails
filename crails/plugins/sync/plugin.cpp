@@ -43,9 +43,10 @@ int SyncPlugin::Disabler::run()
 string render_sync_config_sync_cpp(const Crails::Renderer*, Crails::SharedVars&)
 {
   return
-"#include <crails/sync/task.hpp>\n\n"
+"#include <crails/sync/task.hpp>\n"
+"#include <crails/getenv.hpp>\n\n"
 "using namespace Crails;\n\n"
-"const std::string    Sync::Task::Settings::hostname = \"0.0.0.0\";\n"
-"const unsigned short Sync::Task::Settings::port = 3000;\n"
+"const std::string    Sync::Task::Settings::hostname = Crails::getenv(\"APPLICATION_HOSTNAME\", \"0.0.0.0\");\n"
+"const unsigned short Sync::Task::Settings::port = Crails::getenv_as<unsigned short>(\"APPLICATION_PORT\", 3000);\n"
 "const bool           Sync::Task::Settings::ssl = false;\n";
 }
