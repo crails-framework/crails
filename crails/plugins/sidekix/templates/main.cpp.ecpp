@@ -26,7 +26,8 @@
 using namespace std;
 using namespace Crails;
 
-atomic_bool should_continue(true);
+static unsigned int update_interval = 1000000;
+static atomic_bool should_continue(true);
 
 static void shutdown(int)
 {
@@ -61,7 +62,7 @@ static void run_tasks(ctpl::thread_pool& pool, vector<string> tasks)
 
   while (database->pop(*data))
   {
-    string task_type = (*data)["sidekix"]["type"];
+    string task_type = (*data)[Sidekix::task_type_param];
     auto runner = sidetasks.find(task_type);
 
     if (runner == sidetasks.end())
@@ -80,7 +81,7 @@ static void tasks_main()
   database = Sidekix::SideTaskDatabase::instance();
   do {
     run_tasks(taskpool, database->pending_tasks());
-    sleep(5);
+    usleep(update_interval);
   } while (should_continue == true);
 }
 
@@ -112,11 +113,14 @@ int main(int argc, const char** argv)
     desc.add_options()
       ("log,l", program_options::value<std::string>(), "log output file")
       ("error,e", program_options::value<std::string>(), "error log output file")
-      ("pidfile", program_options::value<std::string>(), "pid file");
+      ("pidfile", program_options::value<std::string>(), "pid file")
+      ("interval", program_options::value<unsigned short>(), "task pulling interval in microseconds");
     program_options::store(program_options::parse_command_line(argc, argv, desc), vm);
     program_options::notify(vm);
     if (vm.count("pidfile"))
       initialize_pid_file(vm["pidfile"].as<std::string>());
+    if (vm.count("interval"))
+      update_interval = vm["interval"].as<unsigned int>();
   }
 
   signal(SIGINT, &shutdown);
