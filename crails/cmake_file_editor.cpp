@@ -34,11 +34,11 @@ void CMakeFileEditor::update_plugins()
   contents.insert(position, plugins_config_line());
 }
 
-void CMakeFileEditor::add_dependency(const std::string& name)
+void CMakeFileEditor::add_dependency(const std::string& name, const std::string& category)
 {
   stringstream stream;
 
-  stream << "set(dependencies ${dependencies} " << name << ')' << endl;
+  stream << "set(" << category << " ${" << category << "} " << name << ')' << endl;
   use_symbol("Custom dependencies \\(do not modify this line\\)");
   insert(stream.str());
 }
