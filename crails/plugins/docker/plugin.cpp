@@ -12,6 +12,7 @@ DockerPlugin::DockerPlugin()
   add_command("build",   []() { return make_shared<DockerBuild>(); });
   add_command("run",     []() { return make_shared<DockerRun>(); });
   add_command("package", []() { return make_shared<DockerPackage>(); });
+  add_command("deploy",  []() { return make_shared<DockerDeploy>(); });
   add_command("new",     []() { return make_shared<DockerNew>(); });
   add_command("refresh", []() { return make_shared<DockerRefreshEnvironment>(); });
 }

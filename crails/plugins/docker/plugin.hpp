@@ -109,7 +109,31 @@ public:
         ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
         ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
         ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")
-        ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run");
+        ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run")
+        ("skip-tests", "does not condition the building of a package on the success of the test suite");
+    }
+  };
+
+  struct DockerDeploy : public ShellCommand
+  {
+    std::string_view description() const override { return "deploys your application to a remote unix-like server"; }
+    int run() override;
+    void options_description(boost::program_options::options_description& desc) const override
+    {
+      using namespace std;
+      ShellCommand::options_description(desc);
+      desc.add_options()
+        ("sudo",          "administrative task will require root permissions")
+        ("hostname,o",    boost::program_options::value<string>(), "deployment target")
+        ("deploy-user,d", boost::program_options::value<string>(), "user performing the deployment")
+        ("root,r",        boost::program_options::value<string>(), "remote install directory")
+        ("user,u",        boost::program_options::value<string>(), "user which will run the application")
+        ("group,g",       boost::program_options::value<string>(), "user group which will run the application")
+        ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
+        ("pubkey", "ssh authentication using rsa public key")
+        ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)")
+        ("jail-path",     boost::program_options::value<string>(), "freebsd jail path")
+        ("skip-tests", "does not condition the building of a package on the success of the test suite");
     }
   };
 };

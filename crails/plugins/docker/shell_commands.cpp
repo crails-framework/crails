@@ -13,8 +13,6 @@ int DockerPlugin::ShellCommand::call_docker_shell_with(const string& command)
   shell_command << configuration.crails_bin_path() << "/crails p docker shell";
   if (options.count("verbose"))
     shell_command << " -v";
-  if (options.count("name"))
-    shell_command << " -n " << options["name"].as<string>();
   if (options.count("dockerfile"))
     shell_command << " --dockerfile \"" << options["dockerfile"].as<string>() << '"';
   shell_command << " -c \"" << command << '"';
@@ -36,6 +34,28 @@ void DockerPlugin::ShellCommand::add_docker_defines(stringstream& crails_command
   {
     for (const string& define : options["defines"].as<vector<string>>())
       crails_command << ' ' << define;
+  }
+}
+
+static void forward_command(stringstream& stream, boost::program_options::variables_map& options, const vector<string>& blacklist)
+{
+  for (auto it = options.begin() ; it != options.end() ; ++it)
+  {
+    if (find(blacklist.begin(), blacklist.end(), it->first) == blacklist.end())
+    {
+      boost::any value = it->second.value();
+
+      stream << " --" << it->first;
+      if (value.type() == typeid(std::string))
+        stream << ' ' << '"' << it->second.as<std::string>() << '"';
+      else if (value.type() == typeid(unsigned short))
+        stream << ' ' << it->second.as<unsigned short>();
+      else if (value.type() == typeid(std::vector<std::string>))
+      {
+        for (const std::string& item : it->second.as<std::vector<std::string>>())
+          stream << ' ' << '"' << item << '"';
+      }
+    }
   }
 }
 
@@ -96,4 +116,13 @@ int DockerPlugin::DockerPackage::run()
   if (result == 0)
     filesystem::copy(temporary_file, output, filesystem::copy_options::overwrite_existing);
   return result;
+}
+
+int DockerPlugin::DockerDeploy::run()
+{
+  stringstream crails_command;
+
+  crails_command << "crails deploy";
+  forward_command(crails_command, options, {"dockerfile"});
+  return call_docker_shell_with(crails_command.str());
 }

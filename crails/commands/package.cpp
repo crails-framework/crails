@@ -35,6 +35,7 @@ static bool run_tests(const ProjectConfiguration& configuration, boost::program_
     stringstream command;
 
     command << configuration.application_build_path() << "/tests";
+    cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str());
   }
   return true;
