@@ -13,12 +13,13 @@ cmake_minimum_required(VERSION 3.0)
 
 project(<%= project_name %>)
 
-set(CMAKE_CXX_FLAGS "-std=<%= cpp_version %> -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=<%= cpp_version %> -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic")
 
 find_package(PkgConfig)
 find_package(Boost COMPONENTS thread program_options random REQUIRED)
 pkg_check_modules(CRAILS REQUIRED<% for (auto plugin : plugins) do %> <%= plugin %>>=<%= crails_version %><% end %>)
-pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests>=<%= crails_version%> libcrails-selenium>=<%= crails_version %>)
+pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests>=<%= crails_version%>)
+pkg_check_modules(CRAILS_TESTS_SELENIUM QUIET libcrails-selenium>=<%= crails_version %>)
 
 include_directories(/usr/local/include ${Boost_INCLUDE_DIRS} ${CRAILS_INCLUDE_DIRS} .)
 
@@ -47,5 +48,8 @@ target_link_libraries(server ${dependencies})
 if (CRAILS_TESTS_FOUND)
   file(GLOB_RECURSE tests_files  spec/*.cpp)
   add_executable(tests ${tests_files})
-  target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${dependencies} ${tests_dependencies})
+  if (CRAILS_TESTS_SELENIUM_FOUND)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTS_WITH_SELENIUM")
+  endif()
+  target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${CRAILS_TESTS_SELENIUM_LIBRARIES} ${dependencies} ${tests_dependencies})
 endif()

@@ -27,6 +27,7 @@ public:
 
   void options_description(boost::program_options::options_description& desc) const override
   {
+    using namespace std;
     desc.add_options()
       ("verbose,v",     "enable verbose mode")
       ("sudo",          "administrative task will require root permissions")
@@ -36,9 +37,13 @@ public:
       ("user,u",        boost::program_options::value<string>(), "user which will run the application")
       ("group,g",       boost::program_options::value<string>(), "user group which will run the application")
       ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
+      ("env,e",         boost::program_options::value<string>(), "environment file to be used by the deployed application")
       ("pubkey", "ssh authentication using rsa public key")
       ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)")
       ("jail-path",     boost::program_options::value<string>(), "freebsd jail path")
+      ("mode",          boost::program_options::value<string>(), "build mode (defaults to Release)")
+      ("defines",       boost::program_options::value<string>(), "custom preproessor defines (such as --defines MY_DEFINE ...)")
+      ("port",          boost::program_options::value<unsigned short>(), "network port the application service will bind to")
       ("skip-tests", "does not condition the building of a package on the success of the test suite");
   }
 
@@ -80,8 +85,20 @@ private:
     command << " --install-user " << app_user;
     command << " --install-group " << app_group;
     command << " --install-runtime-path \"" << runtime_path << '"';
+    if (options.count("port"))
+      command << " --port " << options["port"].as<unsigned short>();
+    if (options.count("mode"))
+      command << " --mode " << options["mode"].as<std::string>();
     if (options.count("skip-tests"))
       command << " --skip-tests";
+    if (options.count("defines"))
+    {
+      command << " --defines";
+      for (const std::string& def : options["defines"].as<std::vector<std::string>>())
+        command << ' ' << def;
+    }
+    if (options.count("env"))
+      command << " --env \"" << options["env"].as<std::string>() << '"';
     if (options.count("verbose"))
       std::cout << "+ " << command.str() << std::endl;
     return Crails::run_command(command.str());

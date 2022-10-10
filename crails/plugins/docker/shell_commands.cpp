@@ -6,6 +6,8 @@
 
 using namespace std;
 
+static const string temporary_package_file(".docker-package.tar.gz");
+
 int DockerPlugin::ShellCommand::call_docker_shell_with(const string& command)
 {
   stringstream shell_command;
@@ -46,7 +48,7 @@ static void forward_command(stringstream& stream, boost::program_options::variab
       boost::any value = it->second.value();
 
       stream << " --" << it->first;
-      if (value.type() == typeid(std::string))
+      if (value.type() == typeid(std::string) && it->second.as<std::string>().length() > 0)
         stream << ' ' << '"' << it->second.as<std::string>() << '"';
       else if (value.type() == typeid(unsigned short))
         stream << ' ' << it->second.as<unsigned short>();
@@ -85,44 +87,45 @@ int DockerPlugin::DockerRun::run()
 int DockerPlugin::DockerPackage::run()
 {
   stringstream crails_command;
-  string temporary_file = ".docker-package.tar.gz";
   string output = "package.tar.gz";
   int result;
 
   crails_command << "crails package";
-  if (options.count("verbose"))
-    crails_command << " -v";
-  if (options.count("mode"))
-    crails_command << " -m " << options["mode"].as<string>();
-  else
+  if (!options.count("mode"))
     crails_command << " -m Release";
   add_docker_defines(crails_command);
-  if (options.count("port"))
-    crails_command << " --port " << options["port"].as<unsigned short>();
-  if (options.count("name"))
-    crails_command << " --name " << options["name"].as<string>();
-  if (options.count("install-root"))
-    crails_command << " --install-root \"" << options["install-root"].as<string>() << '"';
-  if (options.count("install-user"))
-    crails_command << " --install-user " << options["install-user"].as<string>();
-  if (options.count("install-group"))
-    crails_command << " --install-group " << options["install-group"].as<string>();
-  if (options.count("install-runtime-path"))
-    crails_command << " --install-runtime-path \"" << options["install-runtime-path"].as<string>() << '"';
-  crails_command << " -o " << temporary_file;
+  forward_command(crails_command, options, {"dockerfile","defines","output"});
+  crails_command << " -o " << temporary_package_file;
   if (options.count("output"))
     output = options["output"].as<string>();
   result = call_docker_shell_with(crails_command.str());
-  if (result == 0)
-    filesystem::copy(temporary_file, output, filesystem::copy_options::overwrite_existing);
+  if (result == 0 && output != temporary_package_file)
+    filesystem::copy(temporary_package_file, output, filesystem::copy_options::overwrite_existing);
   return result;
 }
 
 int DockerPlugin::DockerDeploy::run()
 {
-  stringstream crails_command;
+  stringstream crails_command, deploy_command;
 
-  crails_command << "crails deploy";
-  forward_command(crails_command, options, {"dockerfile"});
-  return call_docker_shell_with(crails_command.str());
+  crails_command << configuration.crails_bin_path() << "/crails plugins docker package ";
+  deploy_command << configuration.crails_bin_path() << "/crails-deploy ";
+  if (options.count("user"))
+    crails_command << " --install-user " << options["user"].as<string>();
+  if (options.count("group"))
+    crails_command << " --install-group " << options["group"].as<string>();
+  forward_command(crails_command, options, {"sudo","hostname","deploy-user","root","user","group","runtime-path","pubkey","password","jail-path"});
+  forward_command(deploy_command, options, {"dockerfile","mode","port","env","skip-tests"});
+  crails_command << " --output " << temporary_package_file;
+  deploy_command << " --package " << temporary_package_file;
+  if (options.count("verbose"))
+    cout << "+ " << crails_command.str() << endl;
+  if (Crails::run_command(crails_command.str()))
+  {
+    if (options.count("verbose"))
+      cout << "+ " << deploy_command.str() << endl;
+    if (Crails::run_command(deploy_command.str()))
+      return 0;
+  }
+  return -1;
 }

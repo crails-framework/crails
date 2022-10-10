@@ -10,8 +10,11 @@ std::string environment_file = share_directory + "/environment";
 // END LINKING
 #!/bin/sh -ex
 
-if [ -f "<%= environment_file %>" ] ; then
-  . "<%= environment_file %>"
+export APPLICATION_BIN="$(cd "$( dirname "$0" )" && pwd)"
+export APPLICATION_ENV="<%= environment_file %>"
+
+if [ -f "$APPLICATION_ENV" ] ; then
+  . "$APPLICATION_ENV"
 fi
 
 cd "<%= runtime_path %>"

@@ -160,6 +160,12 @@ bool Package::generate_tarball()
       << " --transform \"s|.tmp/service.rc|" << etc_path << "/rc.d/" << configuration.variable("name") << ".rc|\""
       << " --transform \"s|.tmp|" << bin_path << "|\""
       << " --transform \"s|public|" << share_path << "/public|\"";
+    if (options.count("env"))
+    {
+      command
+      << " --transform \"s|" << options["env"].as<string>() << '|' << "usr/local/share/" << configuration.variable("name") << "/environment|\"";
+      package_files.push_back(options["env"].as<string>());
+    }
     for (const auto& file : package_files)
       command << ' ' << file;
     command << " public";

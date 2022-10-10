@@ -20,9 +20,8 @@ public:
 
   std::string render()
   {
-ecpp_stream << "#!/bin/sh -ex\n\nif [ -f \"" << ( environment_file );
-  ecpp_stream << "\" ] ; then\n  . \"" << ( environment_file );
-  ecpp_stream << "\"\nfi\n\ncd \"" << ( runtime_path );
+ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\nexport APPLICATION_ENV=\"" << ( environment_file );
+  ecpp_stream << "\"\n\nif [ -f \"$APPLICATION_ENV\" ] ; then\n  . \"$APPLICATION_ENV\"\nfi\n\ncd \"" << ( runtime_path );
   ecpp_stream << "\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
   ecpp_stream << ":" << ( bin_directory );
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
