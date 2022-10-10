@@ -28,6 +28,18 @@ static bool build_command(const ProjectConfiguration& configuration, boost::prog
   return Crails::run_command(command.str());
 }
 
+static bool run_tests(const ProjectConfiguration& configuration, boost::program_options::variables_map& options)
+{
+  if (!options.count("skip-tests"))
+  {
+    stringstream command;
+
+    command << configuration.application_build_path() << "/tests";
+    return Crails::run_command(command.str());
+  }
+  return true;
+}
+
 static vector<filesystem::path> find_imported_libraries(const filesystem::path& binary)
 {
   boost::process::ipstream stream;
@@ -163,6 +175,8 @@ int Package::run()
 {
   int result = build_command(configuration, options) ? 0 : -10;
 
+  if (!run_tests(configuration, options))
+    return -11;
   if (options.count("install-root"))
     install_directory = options["install-root"].as<string>();
   if (result == 0)

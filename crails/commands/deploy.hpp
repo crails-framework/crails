@@ -38,7 +38,8 @@ public:
       ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
       ("pubkey", "ssh authentication using rsa public key")
       ("password",      boost::program_options::value<string>(), "password used for ssh authentication (using the SSH_PASSWORD environment variable will be more secure than this CLI option)")
-      ("jail-path",     boost::program_options::value<string>(), "freebsd jail path");
+      ("jail-path",     boost::program_options::value<string>(), "freebsd jail path")
+      ("skip-tests", "does not condition the building of a package on the success of the test suite");
   }
 
   int run() override
@@ -79,6 +80,8 @@ private:
     command << " --install-user " << app_user;
     command << " --install-group " << app_group;
     command << " --install-runtime-path \"" << runtime_path << '"';
+    if (options.count("skip-tests"))
+      command << " --skip-tests";
     if (options.count("verbose"))
       std::cout << "+ " << command.str() << std::endl;
     return Crails::run_command(command.str());

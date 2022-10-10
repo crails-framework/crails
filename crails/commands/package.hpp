@@ -19,7 +19,8 @@ public:
       ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
       ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
       ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")
-      ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run");
+      ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run")
+      ("skip-tests", "does not condition the building of a package on the success of the test suite");
   }
 private:
   bool generate_scripts();
