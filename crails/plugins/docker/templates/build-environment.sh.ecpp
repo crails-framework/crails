@@ -11,6 +11,7 @@ crails_packages=(
 <% for (const auto& package : packages) do %>
   <%= package %>
 <% end -%>
+  libcrails-tests
 )
 <% if (with_odb) do %>
 
