@@ -98,6 +98,17 @@ static vector<filesystem::path> find_application_binaries(const filesystem::path
   return results;
 }
 
+static string remove_quotes(const string& source)
+{
+  if (source[0] == '"' && source[source.length() - 1] == '"')
+  {
+    string result;
+    result = source.substr(1, source.length() - 2);
+    return result;
+  }
+  return source;
+}
+
 bool Package::generate_scripts()
 {
   FileRenderer renderer;
@@ -113,9 +124,9 @@ bool Package::generate_scripts()
   if (options.count("install-runtime-path"))
     renderer.vars["runtime_path"] = options["install-runtime-path"].as<string>();
   if (options.count("install-user"))
-    renderer.vars["application_user"] = options["install-user"].as<string>();
+    renderer.vars["application_user"] = remove_quotes(options["install-user"].as<string>());
   if (options.count("install-group"))
-    renderer.vars["application_group"] = options["install-group"].as<string>();
+    renderer.vars["application_group"] = remove_quotes(options["install-group"].as<string>());
   renderer.generate_file("package/start.sh",        ".tmp/start.sh");
   renderer.generate_file("package/stop.sh",         ".tmp/stop.sh");
   renderer.generate_file("package/systemd.service", ".tmp/systemd.service");
