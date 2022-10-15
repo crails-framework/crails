@@ -8,6 +8,14 @@
 
 using namespace std;
 
+struct CleanupFunctor
+{
+  CleanupFunctor(std::function<void()> callback) : callback(callback) {}
+  ~CleanupFunctor() { callback(); }
+private:
+  std::function<void>() callback;
+};
+
 static bool build_command(const ProjectConfiguration& configuration, boost::program_options::variables_map& options)
 {
   stringstream command;
@@ -189,6 +197,13 @@ bool Package::generate_tarball()
   return false;
 }
 
+void Package::cleanup_tmp()
+{
+  if (options.count("verbose"))
+    cout << "+ rm -rf .tmp" << endl;
+  Crails::run_command("rm -rf .tmp");
+}
+
 int Package::run()
 {
   int result = build_command(configuration, options) ? 0 : -10;
@@ -199,6 +214,7 @@ int Package::run()
     install_directory = options["install-root"].as<string>();
   if (result == 0)
   {
+    CleanupFunctor cleanup(std::bind(&Package::cleanup_tmp, this));
     vector<filesystem::path> application_binaries;
     vector<filesystem::path> exported_libraries;
     string output = options.count("output") ? options["output"].as<string>() : string("package.tar.gz");
@@ -211,10 +227,7 @@ int Package::run()
     copy(application_binaries.begin(),  application_binaries.end(), back_inserter(package_files));
     copy(exported_libraries.begin(),    exported_libraries.end(),   back_inserter(package_files));
     if (generate_scripts() && generate_tarball())
-    {
-      Crails::run_command("rm -rf .tmp");
       return true;
-    }
   }
   return result;
 }

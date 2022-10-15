@@ -26,6 +26,7 @@ public:
 private:
   bool generate_scripts();
   bool generate_tarball();
+  void cleanup_tmp();
 
   std::string bin_target() const { return install_directory + "/bin/" + configuration.variable("name"); }
   std::string share_target() const { return install_directory + "/share/" + configuration.variable("name"); }
