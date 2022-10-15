@@ -95,6 +95,7 @@ crails_packages=(
   libcrails-http-client
   libcrails-mail
   libcrails-oauth
+  libcrails-selenium
   libcrails-sentry
   libcrails-sidekix
   libcrails-signin
