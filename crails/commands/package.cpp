@@ -13,7 +13,7 @@ struct CleanupFunctor
   CleanupFunctor(std::function<void()> callback) : callback(callback) {}
   ~CleanupFunctor() { callback(); }
 private:
-  std::function<void>() callback;
+  std::function<void()> callback;
 };
 
 static bool build_command(const ProjectConfiguration& configuration, boost::program_options::variables_map& options)
