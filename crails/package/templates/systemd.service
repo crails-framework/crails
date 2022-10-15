@@ -3,7 +3,7 @@ std::string @application_user = "";
 std::string @application_group = "";
 std::string @bin_directory;
 std::string @share_directory;
-std::string @runtime_path = "/var/" + application_name;
+std::string @runtime_path = "/var/lib/" + application_name;
 // END LINKING
 [Unit]
 Description=<%= application_name %> Web Application

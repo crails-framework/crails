@@ -12,7 +12,7 @@ public:
     application_group(Crails::cast<std::string>(vars, "application_group",  "")), 
     bin_directory(Crails::cast<std::string>(vars, "bin_directory")), 
     share_directory(Crails::cast<std::string>(vars, "share_directory")), 
-    runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/" + application_name))
+    runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/lib/" + application_name))
   {}
 
   std::string render()
