@@ -79,6 +79,7 @@ BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
 crails_packages=(
   libcrails-action
   libcrails-archive
+  libcrails-cli
   libcrails-controllers
   libcrails-crud
   libcrails-cookies
@@ -210,6 +211,17 @@ for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; 
   bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
+
+if [ "$use_system_libraries" = "y" ] ; then
+  echo "+ fixing libboost-process not being properly imported when using system libraries"
+  if ! bpkg build libcrails-cli --yes --configure-only ${system_packages[@]} ; then
+    echo "(i) libcrails-cli failed to configure (just according to keikaku)"
+    tail -n +2 libcrails-cli-2.0.0/libcrails-cli/buildfile > /tmp/tmpfile
+    mv /tmp/tmpfile libcrails-cli-2.0.0/libcrails-cli/buildfile
+  else
+    echo "(!) libcrails-cli configuration was supposed to fail, but it didn't."
+  fi
+fi
 
 if [ ! "$use_system_libraries" = "y" ] ; then
   # Patch compiling issue with boost 1.78 and 1.79, see https://github.com/boostorg/process/issues/235
