@@ -128,24 +128,13 @@ bool Package::generate_scripts()
   renderer.vars["bin_directory"]    = bin_target();
   renderer.vars["share_directory"]  = share_target();
   renderer.vars["lib_directory"]    = lib_target();
-  renderer.vars["pidfile"]          = pidfile_target();
-  if (options.count("install-runtime-path"))
-    renderer.vars["runtime_path"] = options["install-runtime-path"].as<string>();
-  if (options.count("install-user"))
-    renderer.vars["application_user"] = remove_quotes(options["install-user"].as<string>());
-  if (options.count("install-group"))
-    renderer.vars["application_group"] = remove_quotes(options["install-group"].as<string>());
-  renderer.generate_file("package/start.sh",        ".tmp/start.sh");
-  renderer.generate_file("package/stop.sh",         ".tmp/stop.sh");
-  renderer.generate_file("package/systemd.service", ".tmp/systemd.service");
-  renderer.generate_file("package/service.rc",      ".tmp/service.rc");
+  renderer.generate_file("package/start.sh", ".tmp/start.sh");
+  renderer.generate_file("package/stop.sh",  ".tmp/stop.sh");
   for (const string& script : scripts)
   {
     Crails::run_command("chmod +x .tmp/" + script);
     package_files.push_back(".tmp/" + script);
   }
-  package_files.push_back(".tmp/systemd.service");
-  package_files.push_back(".tmp/service.rc");
   return true;
 }
 
@@ -163,28 +152,19 @@ bool Package::generate_tarball()
   string output = options.count("output") ? options["output"].as<string>() : string("package.tar.gz");
   string tar_command = Crails::which("tar");
   stringstream command;
-  string bin_path, lib_path, share_path, etc_path;
+  string bin_path, lib_path, share_path;
 
   bin_path = relative_path(bin_target());
   lib_path = relative_path(lib_target());
   share_path = relative_path(share_target());
-  etc_path = relative_path(etc_target());
   if (tar_command.length() > 0)
   {
     command << tar_command << " czf \"" << output << '"'
       << " --dereference"
       << " --transform \"s|usr/local/lib|" << lib_path << "|\""
       << " --transform \"s|build|" << bin_path << "|\""
-      << " --transform \"s|.tmp/systemd.service|etc/systemd/system/" << configuration.variable("name") << ".service|\""
-      << " --transform \"s|.tmp/service.rc|" << etc_path << "/rc.d/" << configuration.variable("name") << ".rc|\""
       << " --transform \"s|.tmp|" << bin_path << "|\""
       << " --transform \"s|public|" << share_path << "/public|\"";
-    if (options.count("env"))
-    {
-      command
-      << " --transform \"s|" << options["env"].as<string>() << '|' << "usr/local/share/" << configuration.variable("name") << "/environment|\"";
-      package_files.push_back(options["env"].as<string>());
-    }
     for (const auto& file : package_files)
       command << ' ' << file;
     command << " public";

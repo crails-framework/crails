@@ -106,11 +106,7 @@ public:
         ("output,o",      boost::program_options::value<std::string>(), "output path for the package")
         ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
         ("name,n",        boost::program_options::value<std::string>(), "alternative application name to use for the deployed application")
-        ("env,e",         boost::program_options::value<std::string>(), "environment file to be used by the deployed application")
         ("install-root",  boost::program_options::value<std::string>(), "expected remote install directory")
-        ("install-user",  boost::program_options::value<std::string>(), "user which should run the application in the runtime environment")
-        ("install-group", boost::program_options::value<std::string>(), "user group which should run the application in the runtime environment")
-        ("install-runtime-path", boost::program_options::value<std::string>(), "path of the folder in which the application will run")
         ("skip-tests", "does not condition the building of a package on the success of the test suite");
     }
   };
@@ -131,7 +127,8 @@ public:
         ("root,r",        boost::program_options::value<string>(), "remote install directory")
         ("user,u",        boost::program_options::value<string>(), "user which will run the application")
         ("group,g",       boost::program_options::value<string>(), "user group which will run the application")
-        ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
+        ("app-port,p",    boost::program_options::value<unsigned short>(), "network port the application service will bind to")
+        ("app-host",      boost::program_options::value<std::string>(), "network host the application service will bind to")
         ("runtime-path",  boost::program_options::value<string>(), "runtime path (defaults to /var/application-name)")
         ("env,e",         boost::program_options::value<string>(), "environment file to be used by the deployed application")
         ("pubkey", "ssh authentication using rsa public key")

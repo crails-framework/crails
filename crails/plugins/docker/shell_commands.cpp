@@ -110,14 +110,13 @@ int DockerPlugin::DockerDeploy::run()
 
   crails_command << configuration.crails_bin_path() << "/crails plugins docker package ";
   deploy_command << configuration.crails_bin_path() << "/crails-deploy ";
-  if (options.count("user"))
-    crails_command << " --install-user " << options["user"].as<string>();
-  if (options.count("group"))
-    crails_command << " --install-group " << options["group"].as<string>();
-  forward_command(crails_command, options, {"sudo","hostname","deploy-user","root","user","group","runtime-path","pubkey","password","jail-path"});
-  forward_command(deploy_command, options, {"dockerfile","mode","port","env","skip-tests"});
+  forward_command(crails_command, options, {"sudo","hostname","deploy-user","env","root","user","group","app-port","app-host","runtime-path","pubkey","password","jail-path"});
+  forward_command(deploy_command, options, {"dockerfile","mode","skip-tests"});
   crails_command << " --output " << temporary_package_file;
-  deploy_command << " --package " << temporary_package_file;
+  deploy_command << " --app-name \"" << configuration.variable("name") << '"'
+                 << " --start \"/usr/local/bin/" << configuration.variable("name") << "/start.sh\""
+                 << " --stop \"/usr/local/bin/" << configuration.variable("name") << "/stop.sh\""
+                 << " --package " << temporary_package_file;
   if (options.count("verbose"))
     cout << "+ " << crails_command.str() << endl;
   if (Crails::run_command(crails_command.str()))

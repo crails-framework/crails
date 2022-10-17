@@ -7,30 +7,26 @@ class PackageStartSh : public Crails::Template
 public:
   PackageStartSh(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
     Crails::Template(renderer, vars), 
-    application_port(Crails::cast<unsigned short>(vars, "application_port",  3001)), 
+    application_port(Crails::cast<unsigned short>(vars, "application_port",  80)), 
     application_host(Crails::cast<std::string>(vars, "application_host",  "0.0.0.0")), 
     application_name(Crails::cast<std::string>(vars, "application_name")), 
     bin_directory(Crails::cast<std::string>(vars, "bin_directory")), 
     lib_directory(Crails::cast<std::string>(vars, "lib_directory")), 
     share_directory(Crails::cast<std::string>(vars, "share_directory")), 
-    runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/" + application_name)), 
-    pidfile(Crails::cast<std::string>(vars, "pidfile")), 
-    environment_file( share_directory + "/environment")
+    runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/lib/" + application_name))
   {}
 
   std::string render()
   {
-ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\nexport APPLICATION_ENV=\"" << ( environment_file );
-  ecpp_stream << "\"\n\nif [ -f \"$APPLICATION_ENV\" ] ; then\n  . \"$APPLICATION_ENV\"\nfi\n\ncd \"" << ( runtime_path );
-  ecpp_stream << "\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
+ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\n\nif [ -z \"$VAR_DIRECTORY\" ]        ; then export VAR_DIRECTORY=\"" << ( runtime_path );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_HOSTNAME\" ] ; then export APPLICATION_HOSTNAME=\"" << ( application_host );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_PORT\" ]     ; then export APPLICATION_PORT=\"" << ( application_port );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_NAME\" ]     ; then export APPLICATION_NAME=\"" << ( application_name );
+  ecpp_stream << "\" ; fi\nif [ -z \"$PID_FILE\" ]             ; then export PID_FILE=\"/tmp/$APPLICATION_NAME.pid\" ; fi\n\ncd \"$VAR_DIRECTORY\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
   ecpp_stream << ":" << ( bin_directory );
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
-  ecpp_stream << "/public\"\nif [ -z \"$APPLICATION_HOSTNAME\" ] ; then export APPLICATION_HOSTNAME=\"" << ( application_host );
-  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_PORT\" ]     ; then export APPLICATION_PORT=\"" << ( application_port );
-  ecpp_stream << "\" ; fi\n\nexec \"" << ( bin_directory );
-  ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"" << ( pidfile );
-  ecpp_stream << "\" \\\n  --log      \"/var/log/" << ( application_name );
-  ecpp_stream << "/event.log\"\n";
+  ecpp_stream << "/public\"\n\nexec \"" << ( bin_directory );
+  ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
     return ecpp_stream.str();
   }
 private:
@@ -42,8 +38,6 @@ private:
   std::string lib_directory;
   std::string share_directory;
   std::string runtime_path;
-  std::string pidfile;
-  std::string environment_file;
 };
 
 std::string render_package_start_sh(const Crails::Renderer* renderer, Crails::SharedVars& vars)

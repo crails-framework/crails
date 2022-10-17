@@ -240,11 +240,3 @@ $ECPP \
   -n PackageStopSh \
   -i $PACKAGE_TPL/stop.sh \
   >  $PACKAGE_TPL/build/stop.sh.cpp
-$ECPP \
-  -n PackageSystemdService \
-  -i $PACKAGE_TPL/systemd.service \
-  >  $PACKAGE_TPL/build/systemd.service.cpp
-$ECPP \
-  -n PackageServiceRc \
-  -i $PACKAGE_TPL/service.rc \
-  >  $PACKAGE_TPL/build/service.rc.cpp

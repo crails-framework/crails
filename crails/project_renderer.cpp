@@ -67,8 +67,6 @@ declare_renderer(sidekix_sidetask_cpp)
 declare_renderer(sentry_config_sentry_cpp)
 declare_renderer(package_start_sh)
 declare_renderer(package_stop_sh)
-declare_renderer(package_systemd_service)
-declare_renderer(package_service_rc)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -117,8 +115,6 @@ ProjectRenderer::ProjectRenderer()
 
   add_renderer("package/start.sh",        package_start_sh);
   add_renderer("package/stop.sh",         package_stop_sh);
-  add_renderer("package/systemd.service", package_systemd_service);
-  add_renderer("package/service.rc",      package_service_rc);
 
   add_renderer("config/odb.hpp", odb_hpp);
   add_renderer("config/odb.cpp", odb_cpp);
