@@ -93,12 +93,12 @@ static void initialize_pid_file(const std::string& filepath)
   {
     pid_t pid = getpid();
 
-    logger << ">> PID " << pid << " (stored in " << filepath << ')' << Logger::endl;
+    logger << Logger::Info << ">> PID " << pid << " (stored in " << filepath << ')' << Logger::endl;
     output << pid;
     output.close();
   }
   else
-    logger << "!! Failed to open PID file " << filepath << Logger::endl;
+    logger << Logger::Error << "!! Failed to open PID file " << filepath << Logger::endl;
 }
 
 int main(int argc, const char** argv)
