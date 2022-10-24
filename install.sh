@@ -161,9 +161,9 @@ if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.
   export WITH_CRAILS_DEPLOY="y"
 fi
 
-if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/v_noabi ] ; then
+if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/include/v_noabi ] ; then
   echo "+ Detected mongocxx"
-  if [ -d /usr/include/bsoncxx/v_noabi ] || [ -d /usr/local/bsoncxx/v_noabi ] ; then
+  if [ -d /usr/include/bsoncxx/v_noabi ] || [ -d /usr/local/bsoncxx/include/v_noabi ] ; then
     echo "+ Detected bsoncxx: adding libcrails-mongodb"
     crails_packages+=(libcrails-mongodb)
   fi
