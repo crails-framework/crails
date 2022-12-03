@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <list>
@@ -7,15 +8,15 @@ using namespace std;
 class DockerBuildEnvironment : public Crails::Template
 {
 public:
-  DockerBuildEnvironment(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  DockerBuildEnvironment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
     packages(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "packages"))), 
     sql_backends(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "sql_backends")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "crails_packages=(";
  for (const auto& package : packages){
@@ -40,7 +41,7 @@ ecpp_stream << "crails_packages=(";
   ecpp_stream << "\n  ?sys:libsqlite3\n  ?sys:libpq\n  ?sys:libmysqlclient";
  };
   ecpp_stream << "\n)\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -50,7 +51,7 @@ private:
   list<string>& sql_backends;
 };
 
-std::string render_docker_build_environment(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_docker_build_environment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return DockerBuildEnvironment(renderer, vars).render();
+  DockerBuildEnvironment(renderer, target, vars).render();
 }

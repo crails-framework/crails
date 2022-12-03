@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 using namespace std;
@@ -6,8 +7,8 @@ using namespace std;
 class ScaffoldsControllerHpp : public Crails::Template
 {
 public:
-  ScaffoldsControllerHpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsControllerHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     classname(Crails::cast<string>(vars, "classname")), 
     parent_class(Crails::cast<string>(vars, "parent_class",  "ApplicationController")), 
     parent_header(Crails::cast<string>(vars, "parent_header",  "app/controllers/application.hpp")), 
@@ -17,7 +18,7 @@ public:
     crud_scaffold(Crails::cast<bool>(vars, "crud_scaffold",  false))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#pragma once\n#include \"" << ( parent_header );
   ecpp_stream << "\"";
@@ -45,7 +46,7 @@ ecpp_stream << "#pragma once\n#include \"" << ( parent_header );
   ecpp_stream << "> model_list;";
  };
   ecpp_stream << "\n};\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -58,7 +59,7 @@ private:
   bool crud_scaffold;
 };
 
-std::string render_scaffolds_controller_hpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_controller_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsControllerHpp(renderer, vars).render();
+  ScaffoldsControllerHpp(renderer, target, vars).render();
 }

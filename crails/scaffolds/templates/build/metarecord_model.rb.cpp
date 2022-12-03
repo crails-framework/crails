@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 using namespace std;
@@ -6,15 +7,15 @@ using namespace std;
 class ScaffoldsMetarecordModelRb : public Crails::Template
 {
 public:
-  ScaffoldsMetarecordModelRb(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsMetarecordModelRb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     resource_name(Crails::cast<string>(vars, "resource_name")), 
     classname(Crails::cast<string>(vars, "classname")), 
     include(Crails::cast<string>(vars, "include")), 
     properties(reinterpret_cast<map<string, string>&>(*Crails::cast<map<string, string>*>(vars, "properties")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "Model.add '" << ( classname );
   ecpp_stream << "', hpp: '" << ( include );
@@ -33,7 +34,7 @@ ecpp_stream << "Model.add '" << ( classname );
   ecpp_stream << "";
  };
   ecpp_stream << "\nend\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -43,7 +44,7 @@ private:
   map<string, string>& properties;
 };
 
-std::string render_scaffolds_metarecord_model_rb(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_metarecord_model_rb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsMetarecordModelRb(renderer, vars).render();
+  ScaffoldsMetarecordModelRb(renderer, target, vars).render();
 }

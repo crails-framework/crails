@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <crails/utils/random_string.hpp>
@@ -8,24 +9,24 @@ using namespace std;
 class ProjectConfigCookiesCpp : public Crails::Template
 {
 public:
-  ProjectConfigCookiesCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ProjectConfigCookiesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     charset( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include <crails/cookie_data.hpp>\n\nusing namespace Crails;\nusing namespace std;\n\nconst bool   CookieData::use_encryption = true;\nconst string CookieData::password       = \"" << ( generate_random_string(charset, 50) );
   ecpp_stream << "\";\nconst string CookieData::salt           = \"" << ( generate_random_string(charset, 8) );
   ecpp_stream << "\";\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
   const std::string charset;
 };
 
-std::string render_project_config_cookies_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_config_cookies_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectConfigCookiesCpp(renderer, vars).render();
+  ProjectConfigCookiesCpp(renderer, target, vars).render();
 }

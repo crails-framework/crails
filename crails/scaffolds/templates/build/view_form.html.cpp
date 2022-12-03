@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <algorithm>
@@ -7,8 +8,8 @@
 class ScaffoldsViewFormHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewFormHtml(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsViewFormHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     numerical_types( {"int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","float","double"}), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
@@ -17,7 +18,7 @@ public:
     properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n#include <crails/html_form_builder.hpp>\n\nusing namespace std;\n" << ( classname );
@@ -59,7 +60,7 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\n  </div>";
  };
   ecpp_stream << "\n  <button type=\"submit\" class=\"btn btn-primary\">Save</button>\n<% yields-end %>\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -71,7 +72,7 @@ private:
   std::map<std::string, std::string>& properties;
 };
 
-std::string render_scaffolds_view_form_html(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_view_form_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsViewFormHtml(renderer, vars).render();
+  ScaffoldsViewFormHtml(renderer, target, vars).render();
 }

@@ -1,24 +1,25 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class ProjectGitignore : public Crails::Template
 {
 public:
-  ProjectGitignore(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars)
+  ProjectGitignore(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars)
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "/build/\n/docker/build-*\n/lib/\n/lib-client/\n/logs/\n/package/\n/public/assets/\n*.d\n*.o\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
 };
 
-std::string render_project_gitignore(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_gitignore(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectGitignore(renderer, vars).render();
+  ProjectGitignore(renderer, target, vars).render();
 }

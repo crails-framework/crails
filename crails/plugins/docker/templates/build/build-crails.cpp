@@ -1,12 +1,13 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class DockerBuildCrails : public Crails::Template
 {
 public:
-  DockerBuildCrails(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  DockerBuildCrails(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     crails_version(Crails::cast<std::string>(vars, "crails_version",  "master")), 
     build2_fingerprint(Crails::cast<std::string>(vars, "build2_fingerprint")), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
@@ -15,7 +16,7 @@ public:
     postbuild_patches( {"fix-boost-pc"})
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#!/bin/bash -e\n\nCRAILS_VERSION=" << ( crails_version );
   ecpp_stream << "\nCOMPILER_VERSION=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`\nCPPGET_FINGERPRINT=\"" << ( build2_fingerprint );
@@ -46,7 +47,7 @@ ecpp_stream << "#!/bin/bash -e\n\nCRAILS_VERSION=" << ( crails_version );
   ecpp_stream << "";
  };
   ecpp_stream << "\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -58,7 +59,7 @@ private:
   std::vector<std::string> postbuild_patches;
 };
 
-std::string render_docker_build_crails(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_docker_build_crails(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return DockerBuildCrails(renderer, vars).render();
+  DockerBuildCrails(renderer, target, vars).render();
 }

@@ -2,9 +2,9 @@
 #include <crails/utils/string.hpp>
 #include "../file_editor.hpp"
 
-std::string render_scaffolds_module_routes_cpp(const Crails::Renderer*, Crails::SharedVars& vars)
+void render_scaffolds_module_routes_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return
+  target.set_body(std::string(
     "#include <crails/router.hpp>\n"
     "#include \"module.hpp\"\n"
     "\n"
@@ -13,12 +13,12 @@ std::string render_scaffolds_module_routes_cpp(const Crails::Renderer*, Crails::
     "void Module::initialize_router(Crails::Router& router)\n"
     "{\n"
     "  // Append routes here (do not remove this line)\n"
-    "}";
+    "}"));
 }
 
-std::string render_scaffolds_module_module_hpp(const Crails::Renderer*, Crails::SharedVars& vars)
+void render_scaffolds_module_module_hpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return
+  target.set_body(std::string(
     "#pragma once\n"
     "#ifdef " + Crails::cast<std::string>(vars, "define") + "\n"
     "\n"
@@ -31,15 +31,15 @@ std::string render_scaffolds_module_module_hpp(const Crails::Renderer*, Crails::
     "    static void initialize_router(Crails::Router&);\n"
     "  };\n"
     "}\n"
-    "#endif";
+    "#endif"));
 }
 
-std::string render_scaffolds_module_cmakelists_txt(const Crails::Renderer*, Crails::SharedVars& vars)
+void render_scaffolds_module_cmakelists_txt(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return
+  target.set_body(std::string(
     "file(GLOB_RECURSE module_files *.cpp *.cxx)\n"
     "set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -D" + Crails::cast<std::string>(vars, "define") + "\" PARENT_SCOPE)\n"
-    "set(crails_app ${crails_app} ${module_files} PARENT_SCOPE)";
+    "set(crails_app ${crails_app} ${module_files} PARENT_SCOPE)"));
 }
 
 int ModuleScaffold::create(boost::program_options::variables_map& options)

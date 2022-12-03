@@ -1,17 +1,18 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class ProjectSpecMainCpp : public Crails::Template
 {
 public:
-  ProjectSpecMainCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ProjectSpecMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     configuration_type(Crails::cast<std::string>(vars, "configuration_type")), 
     has_router( configuration_type == "webservice" || configuration_type == "full")
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include <crails/tests/runner.hpp>";
  if (has_router){
@@ -26,7 +27,7 @@ ecpp_stream << "#include <crails/tests/runner.hpp>";
   ecpp_stream << "\n  Router::singleton::finalize();";
  };
   ecpp_stream << "\n}\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -34,7 +35,7 @@ private:
   bool has_router;
 };
 
-std::string render_project_spec_main_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_spec_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectSpecMainCpp(renderer, vars).render();
+  ProjectSpecMainCpp(renderer, target, vars).render();
 }

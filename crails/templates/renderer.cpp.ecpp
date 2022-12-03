@@ -7,7 +7,7 @@ string               classname = Crails::camelize(renderer_name) + "Renderer";
 map<string, string>& @targets;
 // END LINKING
 #include <crails/renderers/<%= renderer_name %>_renderer.hpp>
-#define declare_renderer(name) std::string render_##name(const Crails::Renderer*, Crails::SharedVars&)
+#define declare_renderer(name) void render_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)
 #define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, render_##name))
 
 <% for (auto it = targets.begin() ; it != targets.end() ; ++it) do -%>

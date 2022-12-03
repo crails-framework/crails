@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
@@ -7,8 +8,8 @@
 class ScaffoldsOdbModelCpp : public Crails::Template
 {
 public:
-  ScaffoldsOdbModelCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsOdbModelCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     filename(Crails::cast<std::string>(vars, "filename")), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     odb_at_once(Crails::cast<bool>(vars, "odb_at_once")), 
@@ -16,7 +17,7 @@ public:
     properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << ".hpp\"";
@@ -72,7 +73,7 @@ ecpp_stream << "#include \"" << ( filename );
   ecpp_stream << "() const\n{\n  DataTree out;\n\n  merge_data(out);\n  return out.to_json();\n}";
  };
   ecpp_stream << "\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -83,7 +84,7 @@ private:
   std::map<std::string, std::string>& properties;
 };
 
-std::string render_scaffolds_odb_model_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_odb_model_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsOdbModelCpp(renderer, vars).render();
+  ScaffoldsOdbModelCpp(renderer, target, vars).render();
 }

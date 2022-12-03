@@ -1,17 +1,18 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class ProjectAppMainCpp : public Crails::Template
 {
 public:
-  ProjectAppMainCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ProjectAppMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     with_action(Crails::cast<bool>(vars, "with_action",  true)), 
     with_cookies(Crails::cast<bool>(vars, "with_cookies",  false))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
  if (with_action){
@@ -30,7 +31,7 @@ ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
   ecpp_stream << "\n  Cipher::initialize();";
  };
   ecpp_stream << "\n  // Application loop\n  Server::launch(argc, argv);\n\n  // Finalizers\n  Renderer::finalize();\n  return (0);\n}\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -38,7 +39,7 @@ private:
   bool with_cookies;
 };
 
-std::string render_project_app_main_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_app_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectAppMainCpp(renderer, vars).render();
+  ProjectAppMainCpp(renderer, target, vars).render();
 }

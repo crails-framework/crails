@@ -1,17 +1,18 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class ScaffoldsSpecTestCpp : public Crails::Template
 {
 public:
-  ScaffoldsSpecTestCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsSpecTestCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     header(Crails::cast<std::string>(vars, "header")), 
     classname(Crails::cast<std::string>(vars, "classname"))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "" << ( classname );
   ecpp_stream << "::" << ( classname );
@@ -20,7 +21,7 @@ ecpp_stream << "" << ( classname );
   ecpp_stream << "::after_all, this));\n\n  describe(\"name of a method\", [this]()\n  {\n    it(\"fails\", [this]()\n    {\n      EXPECT(1, ==, 2);\n    });\n  });\n}\n\nvoid " << ( classname );
   ecpp_stream << "::before_all()\n{\n}\n\nvoid " << ( classname );
   ecpp_stream << "::after_all()\n{\n}\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -28,7 +29,7 @@ private:
   std::string classname;
 };
 
-std::string render_scaffolds_spec_test_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_spec_test_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsSpecTestCpp(renderer, vars).render();
+  ScaffoldsSpecTestCpp(renderer, target, vars).render();
 }

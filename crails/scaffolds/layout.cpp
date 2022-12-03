@@ -10,9 +10,9 @@ const std::map<std::string, LayoutScaffold::initializer> LayoutScaffold::initial
   {"bare", &LayoutScaffold::create_bare_layout}
 };
 
-std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crails::SharedVars&)
+void render_scaffolds_layout_bootstrap_html(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(string(
     "#include \"lib/assets.hpp\"\n\n"
     "const char* @yield = nullptr;\n"
     "// END LINKING\n"
@@ -28,12 +28,12 @@ std::string render_scaffolds_layout_bootstrap_html(const Crails::Renderer*, Crai
     "      <% end %>\n"
     "    </div>\n"
     "  </body>\n"
-    "</html>";
+    "</html>"));
 }
 
-std::string render_scaffolds_layout_materialize_html(const Crails::Renderer*, Crails::SharedVars&)
+void render_scaffolds_layout_materialize_html(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(std::string(
     "const char* @yield = nullptr;\n"
     "// END LINKING\n"
     "<html>\n"
@@ -47,12 +47,12 @@ std::string render_scaffolds_layout_materialize_html(const Crails::Renderer*, Cr
     "      <%= yield %>\n"
     "    <% end %>\n"
     "  </body>\n"
-    "</html>";
+    "</html>"));
 }
 
-std::string render_scaffolds_layout_bare_html(const Crails::Renderer*, Crails::SharedVars&)
+void render_scaffolds_layout_bare_html(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(std::string(
     "const char* @yield = nullptr;\n"
     "// END LINKING\n"
     "<html>\n"
@@ -64,7 +64,7 @@ std::string render_scaffolds_layout_bare_html(const Crails::Renderer*, Crails::S
     "      <%= yield %>\n"
     "    <% end %>\n"
     "  </body>\n"
-    "</html>";
+    "</html>"));
 }
 
 int LayoutScaffold::create_layout_from_toolkit()

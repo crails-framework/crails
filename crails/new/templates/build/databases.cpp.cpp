@@ -1,24 +1,25 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class ProjectConfigDatabasesCpp : public Crails::Template
 {
 public:
-  ProjectConfigDatabasesCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars)
+  ProjectConfigDatabasesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars)
   {}
 
-  std::string render()
+  void render()
   {
-ecpp_stream << "#include <crails/databases.hpp>\n\nusing namespace Crails;\n\nconst Databases::Settings Databases::settings = {\n  {\n    Production, {\n    }\n  },\n\n  {\n    Development, {\n    }\n  },\n\n  {\n    Test, {\n    }\n  }\n};\n";
-    return ecpp_stream.str();
+ecpp_stream << "#include <crails/databases.hpp>\n\nusing namespace Crails;\nusing namespace std;\n\nconst Databases::Settings Databases::settings = {\n  {\n    Production, {\n    }\n  },\n\n  {\n    Development, {\n    }\n  },\n\n  {\n    Test, {\n    }\n  }\n};\n";
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
 };
 
-std::string render_project_config_databases_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_config_databases_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectConfigDatabasesCpp(renderer, vars).render();
+  ProjectConfigDatabasesCpp(renderer, target, vars).render();
 }

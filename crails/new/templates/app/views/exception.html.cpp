@@ -1,9 +1,9 @@
 #include <crails/shared_vars.hpp>
 #include <crails/renderer.hpp>
 
-std::string render_project_app_views_exception_html (const Crails::Renderer*, Crails::SharedVars&)
+void render_project_app_views_exception_html (const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(std::string(
 "#include <boost/filesystem.hpp>\n"
 "#include <crails/params.hpp>\n"
 "#include <algorithm>\n"
@@ -122,5 +122,5 @@ std::string render_project_app_views_exception_html (const Crails::Renderer*, Cr
 "</div>\n"
 "\n"
 "</body>\n"
-"</html>";
+"</html>"));
 }

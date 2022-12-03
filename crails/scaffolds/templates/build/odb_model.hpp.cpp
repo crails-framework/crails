@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <algorithm>
@@ -8,8 +9,8 @@
 class ScaffoldsOdbModelHpp : public Crails::Template
 {
 public:
-  ScaffoldsOdbModelHpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsOdbModelHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     superclass(Crails::cast<std::string>(vars, "superclass",  "public Crails::Odb::Model")), 
     include(Crails::cast<std::string>(vars, "include",  "")), 
@@ -18,7 +19,7 @@ public:
     metarecord(Crails::cast<bool>(vars, "metarecord",  false))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#pragma once";
  if (metarecord){
@@ -92,7 +93,7 @@ ecpp_stream << "#pragma once";
   ecpp_stream << "";
  };
   ecpp_stream << "\n};\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -104,7 +105,7 @@ private:
   bool metarecord;
 };
 
-std::string render_scaffolds_odb_model_hpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_odb_model_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsOdbModelHpp(renderer, vars).render();
+  ScaffoldsOdbModelHpp(renderer, target, vars).render();
 }

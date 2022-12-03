@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 using namespace std;
@@ -6,8 +7,8 @@ using namespace std;
 class DockerDockerfile : public Crails::Template
 {
 public:
-  DockerDockerfile(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  DockerDockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     image(Crails::cast<string>(vars, "image",  "debian:sid")), 
     include_assets(Crails::cast<bool>(vars, "include_assets",  true)), 
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
@@ -19,7 +20,7 @@ public:
     script_path(Crails::cast<string>(vars, "script_path",  ""))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "FROM " << ( image );
   ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\nENV DEBIAN_FRONTEND \"noninteractive\"\nENV TZ \"Europe/London\"\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nCOPY " << ( script_path );
@@ -59,7 +60,7 @@ ecpp_stream << "FROM " << ( image );
   ecpp_stream << "build-comet.sh build-comet.sh\nRUN bash build-comet.sh";
  };
   ecpp_stream << "\n\nRUN mkdir -p /opt/application\nWORKDIR /opt/application\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -74,7 +75,7 @@ private:
   string script_path;
 };
 
-std::string render_docker_dockerfile(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_docker_dockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return DockerDockerfile(renderer, vars).render();
+  DockerDockerfile(renderer, target, vars).render();
 }

@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <algorithm>
@@ -6,14 +7,14 @@
 class ScaffoldsViewShowHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewShowHtml(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsViewShowHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     header(Crails::cast<std::string>(vars, "header")), 
     properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n" << ( classname );
@@ -33,7 +34,7 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "() %>\n</div>";
  };
   ecpp_stream << "\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -42,7 +43,7 @@ private:
   std::map<std::string, std::string>& properties;
 };
 
-std::string render_scaffolds_view_show_html(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_view_show_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsViewShowHtml(renderer, vars).render();
+  ScaffoldsViewShowHtml(renderer, target, vars).render();
 }

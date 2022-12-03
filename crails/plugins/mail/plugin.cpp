@@ -44,10 +44,10 @@ int MailPlugin::Disabler::run()
   return 0;
 }
 
-string render_mail_config_mailers_cpp(const Crails::Renderer*, Crails::SharedVars&)
+void render_mail_config_mailers_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
-"#include <crails/mail_servers.hpp>\n\n"
+  target.set_body(std::string(
+  "#include <crails/mail_servers.hpp>\n\n"
 "using namespace Crails;\n\n"
 "const MailServers::List MailServers::servers = {\n"
 "  {\n"
@@ -60,5 +60,5 @@ string render_mail_config_mailers_cpp(const Crails::Renderer*, Crails::SharedVar
 "      .username(\"roger\")\n"
 "      .password(\"secret\")\n"
 "  }\n"
-"};";
+"};"));
 }

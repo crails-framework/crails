@@ -1,12 +1,13 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
 class PackageStartSh : public Crails::Template
 {
 public:
-  PackageStartSh(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  PackageStartSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     application_port(Crails::cast<unsigned short>(vars, "application_port",  80)), 
     application_host(Crails::cast<std::string>(vars, "application_host",  "0.0.0.0")), 
     application_name(Crails::cast<std::string>(vars, "application_name")), 
@@ -16,7 +17,7 @@ public:
     runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/lib/" + application_name))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\n\nif [ -z \"$VAR_DIRECTORY\" ]        ; then export VAR_DIRECTORY=\"" << ( runtime_path );
   ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_HOSTNAME\" ] ; then export APPLICATION_HOSTNAME=\"" << ( application_host );
@@ -27,7 +28,7 @@ ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
   ecpp_stream << "/public\"\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -40,7 +41,7 @@ private:
   std::string runtime_path;
 };
 
-std::string render_package_start_sh(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_package_start_sh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return PackageStartSh(renderer, vars).render();
+  PackageStartSh(renderer, target, vars).render();
 }

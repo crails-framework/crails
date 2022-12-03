@@ -66,10 +66,10 @@ int SigninPlugin::Disabler::run()
   return 0;
 }
 
-string render_signin_config_signin_cpp(const Crails::Renderer*, Crails::SharedVars&)
+void render_signin_config_signin_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
   const std::string salt_charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  return
+  target.set_body(std::string(
 "#include <crails/signin/model.hpp>\n"
 "#include <crails/signin/password.hpp>\n"
 "#include <chrono>\n\n"
@@ -77,5 +77,5 @@ string render_signin_config_signin_cpp(const Crails::Renderer*, Crails::SharedVa
 "using namespace std;\n\n"
 "const time_t AuthenticableModel::session_duration = chrono::seconds(24h).count();\n\n"
 "const string Password::encrypt_key = \"" + Crails::generate_random_string(16) + "\";\n"
-"const string Password::encrypt_salt = \"" + Crails::generate_random_string(salt_charset, 8) + "\";\n";
+"const string Password::encrypt_salt = \"" + Crails::generate_random_string(salt_charset, 8) + "\";\n"));
 }

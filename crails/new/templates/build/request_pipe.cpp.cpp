@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 using namespace std;
@@ -6,13 +7,13 @@ using namespace std;
 class ProjectConfigRequestPipeCpp : public Crails::Template
 {
 public:
-  ProjectConfigRequestPipeCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ProjectConfigRequestPipeCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     parsers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "parsers"))), 
     handlers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "handlers")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "";
  for (auto parser : parsers){
@@ -35,7 +36,7 @@ ecpp_stream << "";
   ecpp_stream << "";
  };
   ecpp_stream << "\n}\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -43,7 +44,7 @@ private:
   vector<pair<string, string>>& handlers;
 };
 
-std::string render_project_config_request_pipe_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_config_request_pipe_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectConfigRequestPipeCpp(renderer, vars).render();
+  ProjectConfigRequestPipeCpp(renderer, target, vars).render();
 }

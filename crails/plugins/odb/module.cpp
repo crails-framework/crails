@@ -143,17 +143,17 @@ bool OdbModule::check_backends_validity(const list<string>& backends)
   return true;
 }
 
-std::string render_odb_hpp(const Crails::Renderer*, Crails::SharedVars&)
+void render_odb_hpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(std::string(
 "#pragma once\n"
 "#pragma db model version(1,1)\n"
-"#pragma db map type(\"INTEGER\\\\[\\\\]\") as(\"TEXT\") to(\"(?)::INTEGER[]\") from(\"(?)::TEXT\")\n";
+"#pragma db map type(\"INTEGER\\\\[\\\\]\") as(\"TEXT\") to(\"(?)::INTEGER[]\") from(\"(?)::TEXT\")\n"));
 }
 
-std::string render_odb_cpp(const Crails::Renderer*, Crails::SharedVars&)
+void render_odb_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
-  return
+  target.set_body(std::string(
 "#include <crails/odb/transaction.hpp>\n\n"
-"const bool Crails::Odb::Transaction::use_session = false;\n";
+"const bool Crails::Odb::Transaction::use_session = false;\n"));
 }

@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
@@ -6,8 +7,8 @@
 class ScaffoldsViewIndexHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewIndexHtml(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ScaffoldsViewIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
     header(Crails::cast<std::string>(vars, "header")), 
@@ -16,7 +17,7 @@ public:
     has_name( properties.find(name_property) != properties.end())
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n#include <boost/lexical_cast.hpp>\n\nusing namespace std;\n\nvector<" << ( classname );
@@ -34,7 +35,7 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "() %></td>";
  };
   ecpp_stream << "\n      <td>\n        <%= tag(\"a\", {{\"href\", '/' + route + '/' + id}}) yields %>Show<% yend %>\n        <%= tag(\"a\", {{\"href\", '/' + route + '/' + id + \"/edit\"}}) yields %>Edit<% yend %>\n      </td>\n    </tr>\n<% end %>\n  </tbody>\n</table>\n\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -46,7 +47,7 @@ private:
   bool has_name;
 };
 
-std::string render_scaffolds_view_index_html(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_scaffolds_view_index_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ScaffoldsViewIndexHtml(renderer, vars).render();
+  ScaffoldsViewIndexHtml(renderer, target, vars).render();
 }

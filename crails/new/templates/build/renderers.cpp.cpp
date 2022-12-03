@@ -1,4 +1,5 @@
 #include <sstream>
+#include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 using namespace std;
@@ -6,13 +7,13 @@ using namespace std;
 class ProjectConfigRenderersCpp : public Crails::Template
 {
 public:
-  ProjectConfigRenderersCpp(const Crails::Renderer* renderer, Crails::SharedVars& vars) :
-    Crails::Template(renderer, vars), 
+  ProjectConfigRenderersCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+    Crails::Template(renderer, target, vars), 
     default_format(Crails::cast<string>(vars, "default_format",  "text/html")), 
     renderers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "renderers")))
   {}
 
-  std::string render()
+  void render()
   {
 ecpp_stream << "#include <crails/renderer.hpp>\n";
  for (auto renderer : renderers){
@@ -26,7 +27,7 @@ ecpp_stream << "#include <crails/renderer.hpp>\n";
   ecpp_stream << "";
  };
   ecpp_stream << "\n}\n";
-    return ecpp_stream.str();
+    this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
@@ -34,7 +35,7 @@ private:
   vector<pair<string, string>>& renderers;
 };
 
-std::string render_project_config_renderers_cpp(const Crails::Renderer* renderer, Crails::SharedVars& vars)
+void render_project_config_renderers_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  return ProjectConfigRenderersCpp(renderer, vars).render();
+  ProjectConfigRenderersCpp(renderer, target, vars).render();
 }
