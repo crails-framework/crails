@@ -284,7 +284,7 @@ bool BuildOdb::generate_schema(const FileList& files)
 BuildOdb::FileList BuildOdb::collect_files()
 {
   FileList results;
-  regex pattern("#\\s*pragma\\s+db\\s+object", regex_constants::ECMAScript);
+  regex pattern("#\\s*pragma\\s+db\\s+(view|object)", regex_constants::ECMAScript);
   bool verbose = options.count("verbose");
 
   for (const string& input_dir : input_dirs)
