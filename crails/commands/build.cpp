@@ -3,6 +3,7 @@
 #include <crails/cli/process.hpp>
 #include <crails/cli/notifier.hpp>
 #include <crails/read_file.hpp>
+#include <crails/utils/join.hpp>
 #include <boost/process.hpp>
 #include <boost/filesystem.hpp>
 #include "odb.hpp"
@@ -21,10 +22,14 @@ bool BuildManager::prebuild_renderers()
   for (const auto& renderer : configuration.renderers())
   {
     stringstream command;
+    vector<string> inputs{"app/views"};
 
+    for (const string& module_ : configuration.modules())
+      inputs.push_back("modules/" + module_ + "/views");
     cout << "[renderers] generate " << renderer << "..." << endl;
     command << configuration.crails_bin_path() + "/crails"
-      << " templates build -r " << renderer << " -i app/views "
+      << " templates build -r " << renderer
+      << " -i " << Crails::join(inputs, ',')
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
@@ -48,9 +53,9 @@ bool BuildManager::generate_assets()
     cout << "[assets] generate assets..." << endl;
     command << configuration.crails_bin_path() + "/crails-assets"
       << " -o public"
-      << " -i " << Crails::join(configuration.asset_roots(), ',');
+      << " -i " << Crails::join(configuration.asset_roots(), ' ');
     for (const string& module_ : configuration.modules())
-      command << " -i " << module_ << ':' << "modules/" << module_ << "/assets";
+      command << ' ' << module_ << ':' << "modules/" << module_ << "/assets";
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str());

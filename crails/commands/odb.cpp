@@ -110,6 +110,15 @@ bool BuildOdb::increment_schema_version()
   return false;
 }
 
+static list<string> default_input_directories(const ProjectConfiguration& configuration)
+{
+  list<string> base{"app/models"};
+
+  for (const string& module_ : configuration.modules())
+    base.push_back("modules/" + module_ + "/models");
+  return base;
+}
+
 int BuildOdb::run()
 {
   FileList files;
@@ -129,7 +138,7 @@ int BuildOdb::run()
   if (options.count("includes"))
     custom_includes = Crails::split(options["includes"].as<string>(), ',');
   output_dir = options.count("output-dir") ? options["output-dir"].as<string>() : string("lib/odb");
-  input_dirs = options.count("input-dirs") ? Crails::split(options["input-dirs"].as<string>(), ',') : list<string>{"app/models"};
+  input_dirs = options.count("input-dirs") ? Crails::split(options["input-dirs"].as<string>(), ',') : default_input_directories(configuration);
   files = collect_files();
   if (files.size() > 0)
   {
