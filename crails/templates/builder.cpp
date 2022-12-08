@@ -7,6 +7,7 @@
 #include "../file_renderer.hpp"
 #include "../file_collector.hpp"
 #include <crails/utils/string.hpp>
+#include <crails/utils/split.hpp>
 
 using namespace std;
 
@@ -54,29 +55,32 @@ bool TemplateBuilder::validate_options()
 
 void TemplateBuilder::collect_files()
 {
-  string input = options["input"].as<string>();
+  auto inputs = Crails::split(options["input"].as<string>(), ',');
 
-  if (boost::filesystem::is_directory(input))
+  for (const string& input : inputs)
   {
-    FileCollector collector(input, pattern);
-
-    collector.collect_files([this, collector](const boost::filesystem::path& path)
+    if (boost::filesystem::is_directory(input))
     {
-      string filepath      = boost::filesystem::canonical(path).string();
-      string relative_path = collector.relative_path_for(path);
-      string alias         = collector.name_for(path);
-      string classname;
+      FileCollector collector(input, pattern);
 
-      for (unsigned int i = 0 ; i < alias.length() ; ++i)
+      collector.collect_files([this, collector](const boost::filesystem::path& path)
       {
-        if (alias[i] == '/' || alias[i] == '.') classname += '_';
-        else classname += alias[i];
-      }
-      classname = Crails::camelize(classname);
-      targets.emplace(filepath, Target{alias, classname, Crails::underscore(classname)});
-    });
-    all_targets = targets;
+        string filepath      = boost::filesystem::canonical(path).string();
+        string relative_path = collector.relative_path_for(path);
+        string alias         = collector.name_for(path);
+        string classname;
+
+        for (unsigned int i = 0 ; i < alias.length() ; ++i)
+        {
+          if (alias[i] == '/' || alias[i] == '.') classname += '_';
+          else classname += alias[i];
+        }
+        classname = Crails::camelize(classname);
+        targets.emplace(filepath, Target{alias, classname, Crails::underscore(classname)});
+      });
+    }
   }
+  all_targets = targets;
 }
 
 string TemplateBuilder::command_for_target(const pair<string, Target>& target) const
