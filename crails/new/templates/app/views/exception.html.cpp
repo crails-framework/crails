@@ -4,7 +4,7 @@
 void render_project_app_views_exception_html (const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
   target.set_body(std::string(
-"#include <boost/filesystem.hpp>\n"
+"#include <filesystem>\n"
 "#include <crails/params.hpp>\n"
 "#include <algorithm>\n"
 "\n"
@@ -96,7 +96,7 @@ void render_project_app_views_exception_html (const Crails::Renderer&, Crails::R
 "<% end -%>\n"
 "<pre style=\"width:calc(100% - 100px)\"><%= exception_what %></pre>\n"
 "\n"
-"<p><code>Crails directory: <%= boost::filesystem::current_path().string() %></code></p>\n"
+"<p><code>Crails directory: <%= std::filesystem::current_path().string() %></code></p>\n"
 "\n"
 "<div id=\"traces\">\n"
 "    <div id=\"trace\" style=\"display: block;\">\n"
