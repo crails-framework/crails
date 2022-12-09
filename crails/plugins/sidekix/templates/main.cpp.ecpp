@@ -103,7 +103,7 @@ static void initialize_pid_file(const std::string& filepath)
 
 int main(int argc, const char** argv)
 {
-  SingletonInstantiator<LogFiles, int, const char**> log_files(argc, argv);
+  SingletonInstantiator<LogFiles> log_files(argc, argv);
 
   {
     using namespace boost;

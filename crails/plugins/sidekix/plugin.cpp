@@ -26,7 +26,7 @@ int SidekixPlugin::Installer::run()
   cmakefile.save_file();
   main_cpp.load_file();
   main_cpp.add_include("crails/sidekix/process.hpp");
-  main_cpp.add_to_main_function("SingletonInstantiator<Sidekix::Process, int, const char**> sidekix(argc, argv);\n");
+  main_cpp.add_to_main_function("SingletonInstantiator<Sidekix::Process> sidekix(argc, argv);\n");
   main_cpp.save_file();
   renderer.vars["task_name"] = std::string("sidekix");
   renderer.generate_file("config/sidekix.cpp");
