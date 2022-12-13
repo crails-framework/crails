@@ -88,7 +88,7 @@ string TemplateBuilder::command_for_target(const pair<string, Target>& target) c
   string ecpp_binary = configuration.crails_bin_path() + "/ecpp";
   stringstream command;
 
-  command << ecpp_binary << " -n " << target.second.classname << " -i " << target.first;
+  command << ecpp_binary << " -i " << target.first;
   if (options.count("render-mode"))
     command << " -m " << options["render-mode"].as<string>();
   if (options.count("template-type"))

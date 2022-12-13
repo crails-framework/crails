@@ -33,6 +33,8 @@ bool BuildManager::prebuild_renderers()
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
       << " -p \\." << renderer << "$";
+    if (renderer == "json")
+      command << " -m raw";
     if (options.count("verbose"))
     {
       command << " -v";
