@@ -95,6 +95,7 @@ string TemplateBuilder::command_for_target(const pair<string, Target>& target) c
     command << " -t " << options["template-type"].as<string>();
   if (options.count("template-header"))
     command << " -z " << options["template-header"].as<string>();
+  command << " -p " << this->renderer << "_render";
   if (options.count("verbose"))
     cout << "[TEMPLATE] " << command.str() << endl;
   return command.str();
@@ -199,6 +200,7 @@ bool TemplateBuilder::generate_renderer_ctor()
     target_var.emplace(it->second.alias, Crails::underscore(it->second.classname));
   renderer.should_overwrite = true;
   renderer.vars["renderer_name"] = this->renderer;
+  renderer.vars["function_prefix"] = this->renderer + "_render";
   renderer.vars["targets"] = &target_var;
   renderer.generate_file("renderer.cpp", output_directory + '/' + this->renderer + ".cpp");
   return true;

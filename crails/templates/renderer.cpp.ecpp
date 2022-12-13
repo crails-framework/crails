@@ -3,12 +3,13 @@
 using namespace std;
 
 string               @renderer_name;
+string               @function_prefix = "render";
 string               classname = Crails::camelize(renderer_name) + "Renderer";
 map<string, string>& @targets;
 // END LINKING
 #include <crails/renderers/<%= renderer_name %>_renderer.hpp>
-#define declare_renderer(name) void render_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)
-#define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, render_##name))
+#define declare_renderer(name) void <%= function_prefix %>_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)
+#define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, <%= function_prefix %>_##name))
 
 <% for (auto it = targets.begin() ; it != targets.end() ; ++it) do -%>
 declare_renderer(<%= it->second %>);
