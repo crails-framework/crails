@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class PackageStopSh : public Crails::Template
+class render_PackageStopSh : public Crails::Template
 {
 public:
-  PackageStopSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_PackageStopSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     application_name(Crails::cast<std::string>(vars, "application_name"))
   {}
@@ -24,5 +24,5 @@ private:
 
 void render_package_stop_sh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  PackageStopSh(renderer, target, vars).render();
+  render_PackageStopSh(renderer, target, vars).render();
 }

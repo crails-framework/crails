@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class PackageStartSh : public Crails::Template
+class render_PackageStartSh : public Crails::Template
 {
 public:
-  PackageStartSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_PackageStartSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     application_port(Crails::cast<unsigned short>(vars, "application_port",  80)), 
     application_host(Crails::cast<std::string>(vars, "application_host",  "0.0.0.0")), 
@@ -43,5 +43,5 @@ private:
 
 void render_package_start_sh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  PackageStartSh(renderer, target, vars).render();
+  render_PackageStartSh(renderer, target, vars).render();
 }

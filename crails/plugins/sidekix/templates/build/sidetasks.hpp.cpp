@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class SidekixSidetasksHpp : public Crails::Template
+class render_SidekixSidetasksHpp : public Crails::Template
 {
 public:
-  SidekixSidetasksHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_SidekixSidetasksHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_sidekix_sidetasks_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  SidekixSidetasksHpp(renderer, target, vars).render();
+  render_SidekixSidetasksHpp(renderer, target, vars).render();
 }

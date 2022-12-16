@@ -8,6 +8,7 @@
 #include "../file_collector.hpp"
 #include <crails/utils/string.hpp>
 #include <crails/utils/split.hpp>
+#include <crails/cli/conventions.hpp>
 
 using namespace std;
 
@@ -20,18 +21,20 @@ void TemplateBuilder::options_description(boost::program_options::options_descri
 {
   desc.add_options()
     ("verbose,v", "enable verbose mode")
+    ("classname,n",       boost::program_options::value<string>(), "name of the Renderer class that will be generated")
     ("template-type,t",   boost::program_options::value<string>(), "name of the template class (defaults to Crails::Template)")
     ("template-header,z", boost::program_options::value<string>(), "path to the header defining the template class")
+    ("stream-property,s", boost::program_options::value<string>(), "use a stream property provided by the template class")
     ("render-mode,m",     boost::program_options::value<string>(), "use raw or markup mode")
     ("pattern,p",         boost::program_options::value<string>(), "pattern matching input files")
     ("input,i",           boost::program_options::value<string>(), "input folders, separated by commas")
-    ("renderer,r",        boost::program_options::value<string>(), "renderer name (ex: html)");
+    ("renderer,r",        boost::program_options::value<string>(), "renderer type (ex: html)");
 }
 
 int TemplateBuilder::run()
 {
   if (validate_options() && generate_templates())
-    return generate_renderer_ctor() ? 0 : -1;
+    return generate_renderer_header() && generate_renderer_ctor() ? 0 : -1;
   return -1;
 }
 
@@ -47,9 +50,17 @@ bool TemplateBuilder::validate_options()
     cerr << "No input directory specified." << endl;
     return false;
   }
+  if (!options.count("classname"))
+  {
+    cerr << "No classname specified:" << endl;
+    return false;
+  }
   if (options.count("pattern"))
     pattern = options["pattern"].as<string>();
   renderer = options["renderer"].as<string>();
+  renderer_name = options["classname"].as<string>();
+  renderer_filename = Crails::naming_convention.filenames(renderer_name);
+  function_prefix = Crails::underscore(this->renderer_name) + "_render";
   return true;
 }
 
@@ -88,14 +99,16 @@ string TemplateBuilder::command_for_target(const pair<string, Target>& target) c
   string ecpp_binary = configuration.crails_bin_path() + "/ecpp";
   stringstream command;
 
-  command << ecpp_binary << " -i " << target.first;
+  command << ecpp_binary << " -n " << target.second.classname << " -i " << target.first;
   if (options.count("render-mode"))
     command << " -m " << options["render-mode"].as<string>();
   if (options.count("template-type"))
     command << " -t " << options["template-type"].as<string>();
   if (options.count("template-header"))
     command << " -z " << options["template-header"].as<string>();
-  command << " -p " << this->renderer << "_render";
+  command << " -p " << function_prefix;
+  if (options.count("stream-property"))
+    command << " --stream-property " << options["stream-property"].as<string>();
   if (options.count("verbose"))
     cout << "[TEMPLATE] " << command.str() << endl;
   return command.str();
@@ -191,6 +204,20 @@ bool TemplateBuilder::generate_templates()
   return true;
 }
 
+bool TemplateBuilder::generate_renderer_header()
+{
+  FileRenderer renderer;
+
+  renderer.should_overwrite = true;
+  renderer.vars["renderer_name"] = renderer_name;
+  renderer.vars["renderer_type"] = this->renderer;
+  renderer.generate_file(
+    "renderer.hpp",
+    output_directory + '/' + renderer_filename + ".hpp"
+  );
+  return true;
+}
+
 bool TemplateBuilder::generate_renderer_ctor()
 {
   FileRenderer renderer;
@@ -199,9 +226,13 @@ bool TemplateBuilder::generate_renderer_ctor()
   for (auto it = all_targets.begin() ; it != all_targets.end() ; ++it)
     target_var.emplace(it->second.alias, Crails::underscore(it->second.classname));
   renderer.should_overwrite = true;
-  renderer.vars["renderer_name"] = this->renderer;
-  renderer.vars["function_prefix"] = this->renderer + "_render";
+  renderer.vars["renderer_name"] = renderer_name;
+  renderer.vars["renderer_filename"] = renderer_filename;
+  renderer.vars["function_prefix"] = function_prefix;
   renderer.vars["targets"] = &target_var;
-  renderer.generate_file("renderer.cpp", output_directory + '/' + this->renderer + ".cpp");
+  renderer.generate_file(
+    "renderer.cpp",
+    output_directory + '/' + renderer_filename + ".cpp"
+  );
   return true;
 }

@@ -44,6 +44,10 @@ $ECPP \
   -i $PROJECT_TPL/config/logger.cpp.ecpp \
   >  $PROJECT_TPL/build/logger.cpp.cpp
 $ECPP \
+  -n ProjectConfigRenderersHpp \
+  -i $PROJECT_TPL/config/renderers.cpp.ecpp \
+  >  $PROJECT_TPL/build/renderers.hpp.cpp
+$ECPP \
   -n ProjectConfigRenderersCpp \
   -i $PROJECT_TPL/config/renderers.cpp.ecpp \
   >  $PROJECT_TPL/build/renderers.cpp.cpp
@@ -80,6 +84,10 @@ $ECPP \
 ## Renderers
 ##
 mkdir -p $RENDERERS_TPL/build
+$ECPP \
+  -n RendererHpp \
+  -i $RENDERERS_TPL/renderer.hpp.ecpp \
+  >  $RENDERERS_TPL/build/renderer.hpp.cpp
 $ECPP \
   -n RendererCpp \
   -i $RENDERERS_TPL/renderer.cpp.ecpp \

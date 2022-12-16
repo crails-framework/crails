@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
 
-class ScaffoldsViewIndexHtml : public Crails::Template
+class render_ScaffoldsViewIndexHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
@@ -49,5 +49,5 @@ private:
 
 void render_scaffolds_view_index_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewIndexHtml(renderer, target, vars).render();
+  render_ScaffoldsViewIndexHtml(renderer, target, vars).render();
 }

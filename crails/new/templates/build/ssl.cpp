@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectConfigSslCpp : public Crails::Template
+class render_ProjectConfigSslCpp : public Crails::Template
 {
 public:
-  ProjectConfigSslCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigSslCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_project_config_ssl_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigSslCpp(renderer, target, vars).render();
+  render_ProjectConfigSslCpp(renderer, target, vars).render();
 }

@@ -16,8 +16,6 @@
 using namespace Crails;
 using namespace std;
 
-const string Renderer::default_format = "*";
-
 class Index : public CommandIndex
 {
 public:
@@ -36,6 +34,7 @@ public:
 
 int main(int argc, char **argv)
 {
+  SingletonInstantiator<Renderers> renderer;
   Index index;
 
   if (index.initialize(argc, const_cast<const char**>(argv)))

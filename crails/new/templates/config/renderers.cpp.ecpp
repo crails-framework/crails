@@ -3,20 +3,19 @@ using namespace std;
 string                        @default_format = "text/html";
 vector<pair<string, string>>& @renderers;
 // END LINKING
-#include <crails/renderer.hpp>
+#include "renderers.hpp"
 
 <% for (auto renderer : renderers) do -%>
-<%= "#include <crails/renderers/" + renderer.first + ".hpp>\n" %>
+<%= "#include \"lib/renderers/" + renderer.first + ".hpp\"\n" %>
 <% end %>
 
 using namespace Crails;
 
-const std::string Renderer::default_format = "<%= default_format %>";
-
-void Renderer::initialize()
+ApplicationRenderers::ApplicationRenderers()
 {
+  default_format = "<%= default_format %>";
   // Append renderers
 <% for (auto renderer : renderers) do -%>
-  <%= "renderers.push_back(new " + renderer.second + ");\n" %>
+  <%= "renderers.push_back(std::make_unique<" + renderer.second + ">);\n" %>
 <% end %>
 }

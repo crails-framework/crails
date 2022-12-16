@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectPublicIndexHtml : public Crails::Template
+class render_ProjectPublicIndexHtml : public Crails::Template
 {
 public:
-  ProjectPublicIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectPublicIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_project_public_index_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectPublicIndexHtml(renderer, target, vars).render();
+  render_ProjectPublicIndexHtml(renderer, target, vars).render();
 }

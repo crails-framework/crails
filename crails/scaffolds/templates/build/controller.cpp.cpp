@@ -5,10 +5,10 @@
 #include <crails/utils/string.hpp>
 using namespace std;
 
-class ScaffoldsControllerCpp : public Crails::Template
+class render_ScaffoldsControllerCpp : public Crails::Template
 {
 public:
-  ScaffoldsControllerCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsControllerCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<string>(vars, "classname")), 
     router_path(Crails::cast<string>(vars, "router_path")), 
@@ -113,5 +113,5 @@ private:
 
 void render_scaffolds_controller_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsControllerCpp(renderer, target, vars).render();
+  render_ScaffoldsControllerCpp(renderer, target, vars).render();
 }

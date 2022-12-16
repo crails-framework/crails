@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 using namespace std;
 
-class render_ProjectConfigRenderersCpp : public Crails::Template
+class render_ProjectConfigRenderersHpp : public Crails::Template
 {
 public:
-  render_ProjectConfigRenderersCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigRenderersHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     default_format(Crails::cast<string>(vars, "default_format",  "text/html")), 
     renderers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "renderers")))
@@ -35,7 +35,7 @@ private:
   vector<pair<string, string>>& renderers;
 };
 
-void render_project_config_renderers_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
+void render_project_config_renderers_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  render_ProjectConfigRenderersCpp(renderer, target, vars).render();
+  render_ProjectConfigRenderersHpp(renderer, target, vars).render();
 }

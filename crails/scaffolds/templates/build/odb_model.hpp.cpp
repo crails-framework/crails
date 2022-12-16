@@ -6,10 +6,10 @@
 #include <crails/cli/conventions.hpp>
 #include "../../helpers.hpp"
 
-class ScaffoldsOdbModelHpp : public Crails::Template
+class render_ScaffoldsOdbModelHpp : public Crails::Template
 {
 public:
-  ScaffoldsOdbModelHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsOdbModelHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     superclass(Crails::cast<std::string>(vars, "superclass",  "public Crails::Odb::Model")), 
@@ -107,5 +107,5 @@ private:
 
 void render_scaffolds_odb_model_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsOdbModelHpp(renderer, target, vars).render();
+  render_ScaffoldsOdbModelHpp(renderer, target, vars).render();
 }

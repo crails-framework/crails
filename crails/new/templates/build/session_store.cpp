@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
 
-class ProjectConfigSessionStoreCpp : public Crails::Template
+class render_ProjectConfigSessionStoreCpp : public Crails::Template
 {
 public:
-  ProjectConfigSessionStoreCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigSessionStoreCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     session_store(Crails::cast<std::string>(vars, "session_store",  "NoSessionStore"))
   {}
@@ -26,5 +26,5 @@ private:
 
 void render_project_config_session_store_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigSessionStoreCpp(renderer, target, vars).render();
+  render_ProjectConfigSessionStoreCpp(renderer, target, vars).render();
 }

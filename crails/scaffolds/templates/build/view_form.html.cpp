@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <crails/utils/string.hpp>
 
-class ScaffoldsViewFormHtml : public Crails::Template
+class render_ScaffoldsViewFormHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewFormHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewFormHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     numerical_types( {"int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","float","double"}), 
     classname(Crails::cast<std::string>(vars, "classname")), 
@@ -74,5 +74,5 @@ private:
 
 void render_scaffolds_view_form_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewFormHtml(renderer, target, vars).render();
+  render_ScaffoldsViewFormHtml(renderer, target, vars).render();
 }

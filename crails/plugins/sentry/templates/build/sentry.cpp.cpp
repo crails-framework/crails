@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class SentryConfigSentryCpp : public Crails::Template
+class render_SentryConfigSentryCpp : public Crails::Template
 {
 public:
-  SentryConfigSentryCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_SentryConfigSentryCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_sentry_config_sentry_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  SentryConfigSentryCpp(renderer, target, vars).render();
+  render_SentryConfigSentryCpp(renderer, target, vars).render();
 }

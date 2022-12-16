@@ -1,0 +1,15 @@
+#include <crails/utils/string.hpp>
+
+using namespace std;
+
+string @renderer_name;
+string @renderer_type;
+
+// END LINKING
+#include <crails/renderers/<%= renderer_type %>_renderer.hpp>
+
+class <%= renderer_name %> : public Crails::<%= Crails::camelize(renderer_type) %>Renderer
+{
+public:
+  <%= renderer_name %>();
+};

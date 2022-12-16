@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class DockerBuildCrails : public Crails::Template
+class render_DockerBuildCrails : public Crails::Template
 {
 public:
-  DockerBuildCrails(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_DockerBuildCrails(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     crails_version(Crails::cast<std::string>(vars, "crails_version",  "master")), 
     build2_fingerprint(Crails::cast<std::string>(vars, "build2_fingerprint")), 
@@ -61,5 +61,5 @@ private:
 
 void render_docker_build_crails(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  DockerBuildCrails(renderer, target, vars).render();
+  render_DockerBuildCrails(renderer, target, vars).render();
 }

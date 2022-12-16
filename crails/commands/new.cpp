@@ -3,6 +3,7 @@
 #include <boost/process.hpp>
 #include <boost/program_options.hpp>
 #include <crails/utils/string.hpp>
+#include <crails/cli/conventions.hpp>
 #include <regex>
 #include <iostream>
 #include "../version.hpp"
@@ -55,6 +56,7 @@ bool New::generate_project_structure()
   generate_file("app/main.cpp");
   generate_file("config/environment.cpp");
   generate_file("config/logger.cpp");
+  generate_file("config/renderers.hpp");
   generate_file("config/renderers.cpp");
   generate_file("config/request_pipe.cpp");
   generate_file("config/session_store.cpp");
@@ -176,13 +178,19 @@ void New::prepare_renderers()
   }
   if (find(formats.begin(), formats.end(), "html") != formats.end())
   {
-    project_renderers.push_back({"html_renderer", "HtmlRenderer"});
+    project_renderers.push_back({
+      Crails::naming_convention.filenames(configuration.project_name() + "_html_renderer"),
+      Crails::naming_convention.classnames(configuration.project_name() + "_html_renderer")
+    });
     configuration.add_renderer("html");
     configuration.add_plugin("libcrails-html-views");
   }
   if (find(formats.begin(), formats.end(), "json") != formats.end())
   {
-    project_renderers.push_back({"json_renderer", "JsonRenderer"});
+    project_renderers.push_back({
+      Crails::naming_convention.filenames(configuration.project_name() + "_json_renderer"),
+      Crails::naming_convention.classnames(configuration.project_name() + "_json_renderer")
+    });
     configuration.add_renderer("json");
     configuration.add_plugin("libcrails-json-views");
   }

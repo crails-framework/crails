@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ScaffoldsTaskCmakelistsTxt : public Crails::Template
+class render_ScaffoldsTaskCmakelistsTxt : public Crails::Template
 {
 public:
-  ScaffoldsTaskCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsTaskCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     task_name(Crails::cast<std::string>(vars, "task_name"))
   {}
@@ -26,5 +26,5 @@ private:
 
 void render_scaffolds_task_cmakelists_txt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsTaskCmakelistsTxt(renderer, target, vars).render();
+  render_ScaffoldsTaskCmakelistsTxt(renderer, target, vars).render();
 }

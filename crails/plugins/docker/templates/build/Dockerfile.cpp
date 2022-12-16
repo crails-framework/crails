@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 using namespace std;
 
-class DockerDockerfile : public Crails::Template
+class render_DockerDockerfile : public Crails::Template
 {
 public:
-  DockerDockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_DockerDockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     image(Crails::cast<string>(vars, "image",  "debian:sid")), 
     include_assets(Crails::cast<bool>(vars, "include_assets",  true)), 
@@ -77,5 +77,5 @@ private:
 
 void render_docker_dockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  DockerDockerfile(renderer, target, vars).render();
+  render_DockerDockerfile(renderer, target, vars).render();
 }

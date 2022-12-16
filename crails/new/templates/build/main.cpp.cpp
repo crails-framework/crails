@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectAppMainCpp : public Crails::Template
+class render_ProjectAppMainCpp : public Crails::Template
 {
 public:
-  ProjectAppMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectAppMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     with_action(Crails::cast<bool>(vars, "with_action",  true)), 
     with_cookies(Crails::cast<bool>(vars, "with_cookies",  false))
@@ -14,7 +14,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
+ecpp_stream << "#include \"config/renderers.hpp\"\n#include <crails/server.hpp>";
  if (with_action){
   ecpp_stream << "\n#include <crails/router.hpp>";
  };
@@ -22,15 +22,15 @@ ecpp_stream << "#include <crails/server.hpp>\n#include <crails/renderer.hpp>";
  if (with_cookies){
   ecpp_stream << "\n#include <crails/cipher.hpp>";
  };
-  ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{";
+  ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{\n  SingletonInstantiator<ApplicationRenderers> renderers;";
  if (with_action){
   ecpp_stream << "\n  SingletonInstantiator<Router> router;\n\n  router->initialize();";
  };
-  ecpp_stream << "\n  // Initializers\n  Renderer::initialize();";
+  ecpp_stream << "\n  // Initializers";
  if (with_cookies){
   ecpp_stream << "\n  Cipher::initialize();";
  };
-  ecpp_stream << "\n  // Application loop\n  Server::launch(argc, argv);\n\n  // Finalizers\n  Renderer::finalize();\n  return (0);\n}\n";
+  ecpp_stream << "\n  // Application loop\n  Server::launch(argc, argv);\n  return 0;\n}\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
@@ -41,5 +41,5 @@ private:
 
 void render_project_app_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectAppMainCpp(renderer, target, vars).render();
+  render_ProjectAppMainCpp(renderer, target, vars).render();
 }

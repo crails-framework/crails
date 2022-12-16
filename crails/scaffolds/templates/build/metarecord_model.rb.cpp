@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 using namespace std;
 
-class ScaffoldsMetarecordModelRb : public Crails::Template
+class render_ScaffoldsMetarecordModelRb : public Crails::Template
 {
 public:
-  ScaffoldsMetarecordModelRb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsMetarecordModelRb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     resource_name(Crails::cast<string>(vars, "resource_name")), 
     classname(Crails::cast<string>(vars, "classname")), 
@@ -46,5 +46,5 @@ private:
 
 void render_scaffolds_metarecord_model_rb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsMetarecordModelRb(renderer, target, vars).render();
+  render_ScaffoldsMetarecordModelRb(renderer, target, vars).render();
 }

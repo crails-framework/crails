@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectSpecMainCpp : public Crails::Template
+class render_ProjectSpecMainCpp : public Crails::Template
 {
 public:
-  ProjectSpecMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectSpecMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     configuration_type(Crails::cast<std::string>(vars, "configuration_type")), 
     has_router( configuration_type == "webservice" || configuration_type == "full")
@@ -37,5 +37,5 @@ private:
 
 void render_project_spec_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectSpecMainCpp(renderer, target, vars).render();
+  render_ProjectSpecMainCpp(renderer, target, vars).render();
 }

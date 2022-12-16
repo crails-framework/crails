@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 using namespace std;
 
-class ScaffoldsControllerHpp : public Crails::Template
+class render_ScaffoldsControllerHpp : public Crails::Template
 {
 public:
-  ScaffoldsControllerHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsControllerHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<string>(vars, "classname")), 
     parent_class(Crails::cast<string>(vars, "parent_class",  "ApplicationController")), 
@@ -61,5 +61,5 @@ private:
 
 void render_scaffolds_controller_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsControllerHpp(renderer, target, vars).render();
+  render_ScaffoldsControllerHpp(renderer, target, vars).render();
 }

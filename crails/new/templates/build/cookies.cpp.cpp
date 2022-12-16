@@ -6,10 +6,10 @@
 using namespace Crails;
 using namespace std;
 
-class ProjectConfigCookiesCpp : public Crails::Template
+class render_ProjectConfigCookiesCpp : public Crails::Template
 {
 public:
-  ProjectConfigCookiesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigCookiesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     charset( "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_")
   {}
@@ -28,5 +28,5 @@ private:
 
 void render_project_config_cookies_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigCookiesCpp(renderer, target, vars).render();
+  render_ProjectConfigCookiesCpp(renderer, target, vars).render();
 }

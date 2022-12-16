@@ -10,6 +10,8 @@ public:
   static std::string project_directory();
   static void        move_to_project_directory();
 
+  std::string            project_name() const;
+
   std::string            version() const;
   void                   version(const std::string&);
 

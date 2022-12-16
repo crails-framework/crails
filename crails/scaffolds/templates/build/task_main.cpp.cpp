@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ScaffoldsTaskMainCpp : public Crails::Template
+class render_ScaffoldsTaskMainCpp : public Crails::Template
 {
 public:
-  ScaffoldsTaskMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsTaskMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_scaffolds_task_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsTaskMainCpp(renderer, target, vars).render();
+  render_ScaffoldsTaskMainCpp(renderer, target, vars).render();
 }

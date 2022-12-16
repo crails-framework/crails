@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class OdbMigrateCpp : public Crails::Template
+class render_OdbMigrateCpp : public Crails::Template
 {
 public:
-  OdbMigrateCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_OdbMigrateCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_odb_migrate_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  OdbMigrateCpp(renderer, target, vars).render();
+  render_OdbMigrateCpp(renderer, target, vars).render();
 }

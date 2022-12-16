@@ -1,0 +1,9 @@
+#pragma once
+#include <crails/renderer.hpp>
+
+class ApplicationRenderers : public Crails::Renderers
+{
+  SINGLETON_IMPLEMENTATION(ApplicationRenderers, Crails::Renderers)
+public:
+  ApplicationRenderers();
+};

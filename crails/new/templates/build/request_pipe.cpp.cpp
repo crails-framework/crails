@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 using namespace std;
 
-class ProjectConfigRequestPipeCpp : public Crails::Template
+class render_ProjectConfigRequestPipeCpp : public Crails::Template
 {
 public:
-  ProjectConfigRequestPipeCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigRequestPipeCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     parsers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "parsers"))), 
     handlers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "handlers")))
@@ -46,5 +46,5 @@ private:
 
 void render_project_config_request_pipe_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigRequestPipeCpp(renderer, target, vars).render();
+  render_ProjectConfigRequestPipeCpp(renderer, target, vars).render();
 }

@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ScaffoldsViewEditHtml : public Crails::Template
+class render_ScaffoldsViewEditHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewEditHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewEditHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     header(Crails::cast<std::string>(vars, "header")), 
@@ -31,5 +31,5 @@ private:
 
 void render_scaffolds_view_edit_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewEditHtml(renderer, target, vars).render();
+  render_ScaffoldsViewEditHtml(renderer, target, vars).render();
 }

@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 #include <algorithm>
 
-class ScaffoldsViewShowHtml : public Crails::Template
+class render_ScaffoldsViewShowHtml : public Crails::Template
 {
 public:
-  ScaffoldsViewShowHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewShowHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     header(Crails::cast<std::string>(vars, "header")), 
@@ -45,5 +45,5 @@ private:
 
 void render_scaffolds_view_show_html(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewShowHtml(renderer, target, vars).render();
+  render_ScaffoldsViewShowHtml(renderer, target, vars).render();
 }

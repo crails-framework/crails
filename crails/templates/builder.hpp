@@ -13,6 +13,9 @@ class TemplateBuilder : public ::Command
   typedef std::map<std::string, Target> Targets;
 
   std::string renderer;
+  std::string renderer_name;
+  std::string renderer_filename;
+  std::string function_prefix;
   std::string pattern = "\\.ecpp$";
   std::string output_directory = "lib/renderers";
   Targets     targets, all_targets;
@@ -23,6 +26,7 @@ public:
   void             collect_files();
   bool             validate_options();
   bool             generate_templates();
+  bool             generate_renderer_header();
   bool             generate_renderer_ctor();
   std::string      command_for_target(const std::pair<std::string, Target>&) const;
   bool             run_ecpp(const std::pair<std::string, Target>&, Crails::RenderFile& output) const;

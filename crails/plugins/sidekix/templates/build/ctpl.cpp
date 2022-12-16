@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class SidekixCtplH : public Crails::Template
+class render_SidekixCtplH : public Crails::Template
 {
 public:
-  SidekixCtplH(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_SidekixCtplH(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_sidekix_ctpl_h(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  SidekixCtplH(renderer, target, vars).render();
+  render_SidekixCtplH(renderer, target, vars).render();
 }

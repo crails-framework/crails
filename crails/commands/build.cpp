@@ -2,6 +2,7 @@
 #include <crails/utils/string.hpp>
 #include <crails/cli/process.hpp>
 #include <crails/cli/notifier.hpp>
+#include <crails/cli/conventions.hpp>
 #include <crails/read_file.hpp>
 #include <crails/utils/join.hpp>
 #include <boost/process.hpp>
@@ -32,9 +33,10 @@ bool BuildManager::prebuild_renderers()
       << " -i " << Crails::join(inputs, ',')
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
+      << " -n " << Crails::naming_convention.classnames(configuration.project_name() + "_" + renderer + "_renderer")
       << " -p \\." << renderer << "$";
     if (renderer == "json")
-      command << " -m raw";
+      command << " -m raw -s stream";
     if (options.count("verbose"))
     {
       command << " -v";

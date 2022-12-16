@@ -5,10 +5,10 @@
 #include <algorithm>
 #include <list>
 
-class ProjectCmakelistsTxt : public Crails::Template
+class render_ProjectCmakelistsTxt : public Crails::Template
 {
 public:
-  ProjectCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     crails_version(Crails::cast<std::string>(vars, "crails_version")), 
     project_name(Crails::cast<std::string>(vars, "project_name")), 
@@ -45,5 +45,5 @@ private:
 
 void render_project_cmakelists_txt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectCmakelistsTxt(renderer, target, vars).render();
+  render_ProjectCmakelistsTxt(renderer, target, vars).render();
 }

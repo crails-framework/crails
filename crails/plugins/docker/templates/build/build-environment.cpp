@@ -5,10 +5,10 @@
 #include <list>
 using namespace std;
 
-class DockerBuildEnvironment : public Crails::Template
+class render_DockerBuildEnvironment : public Crails::Template
 {
 public:
-  DockerBuildEnvironment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_DockerBuildEnvironment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
@@ -53,5 +53,5 @@ private:
 
 void render_docker_build_environment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  DockerBuildEnvironment(renderer, target, vars).render();
+  render_DockerBuildEnvironment(renderer, target, vars).render();
 }

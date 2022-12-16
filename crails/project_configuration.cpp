@@ -46,6 +46,8 @@ string ProjectConfiguration::application_build_path() const
   return project_directory();
 }
 
+string ProjectConfiguration::project_name() const { return variable_or("name", "MyApplication"); }
+
 string ProjectConfiguration::version() const { return variable_or("crails-version", LIBCRAILS_VERSION_STR); }
 void ProjectConfiguration::version(const string& version) { variables["crails-version"] = version; }
 

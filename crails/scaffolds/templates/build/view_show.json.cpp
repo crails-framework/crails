@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 #include <algorithm>
 
-class ScaffoldsViewShowJson : public Crails::Template
+class render_ScaffoldsViewShowJson : public Crails::Template
 {
 public:
-  ScaffoldsViewShowJson(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewShowJson(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     header(Crails::cast<std::string>(vars, "header")), 
@@ -36,5 +36,5 @@ private:
 
 void render_scaffolds_view_show_json(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewShowJson(renderer, target, vars).render();
+  render_ScaffoldsViewShowJson(renderer, target, vars).render();
 }

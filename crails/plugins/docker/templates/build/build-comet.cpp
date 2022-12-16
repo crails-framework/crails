@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class DockerBuildComet : public Crails::Template
+class render_DockerBuildComet : public Crails::Template
 {
 public:
-  DockerBuildComet(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_DockerBuildComet(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_docker_build_comet(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  DockerBuildComet(renderer, target, vars).render();
+  render_DockerBuildComet(renderer, target, vars).render();
 }

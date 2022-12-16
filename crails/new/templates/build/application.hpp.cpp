@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectAppControllersApplicationHpp : public Crails::Template
+class render_ProjectAppControllersApplicationHpp : public Crails::Template
 {
 public:
-  ProjectAppControllersApplicationHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectAppControllersApplicationHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_project_app_controllers_application_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectAppControllersApplicationHpp(renderer, target, vars).render();
+  render_ProjectAppControllersApplicationHpp(renderer, target, vars).render();
 }

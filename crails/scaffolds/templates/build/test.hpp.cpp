@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ScaffoldsSpecTestHpp : public Crails::Template
+class render_ScaffoldsSpecTestHpp : public Crails::Template
 {
 public:
-  ScaffoldsSpecTestHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsSpecTestHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname"))
   {}
@@ -25,5 +25,5 @@ private:
 
 void render_scaffolds_spec_test_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsSpecTestHpp(renderer, target, vars).render();
+  render_ScaffoldsSpecTestHpp(renderer, target, vars).render();
 }

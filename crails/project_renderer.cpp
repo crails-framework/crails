@@ -15,6 +15,7 @@ declare_renderer(project_app_views_exception_html)
 declare_renderer(project_config_environment_cpp)
 declare_renderer(project_config_databases_cpp)
 declare_renderer(project_config_logger_cpp)
+declare_renderer(project_config_renderers_hpp)
 declare_renderer(project_config_renderers_cpp)
 declare_renderer(project_config_request_pipe_cpp)
 declare_renderer(project_config_cookies_cpp)
@@ -24,6 +25,7 @@ declare_renderer(project_config_i18n_cpp)
 declare_renderer(project_public_index_html)
 declare_renderer(project_spec_main_cpp)
 declare_renderer(renderer_cpp)
+declare_renderer(renderer_hpp)
 declare_renderer(scaffolds_controller_cpp)
 declare_renderer(scaffolds_controller_hpp)
 declare_renderer(scaffolds_metarecord_model_rb)
@@ -79,6 +81,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/environment.cpp",          project_config_environment_cpp);
   add_renderer("config/databases.cpp",            project_config_databases_cpp);
   add_renderer("config/logger.cpp",               project_config_logger_cpp);
+  add_renderer("config/renderers.hpp",            project_config_renderers_hpp);
   add_renderer("config/renderers.cpp",            project_config_renderers_cpp);
   add_renderer("config/request_pipe.cpp",         project_config_request_pipe_cpp);
   add_renderer("config/cookies.cpp",              project_config_cookies_cpp);
@@ -88,6 +91,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("public/index.html",               project_public_index_html);
   add_renderer("spec/main.cpp",                   project_spec_main_cpp);
 
+  add_renderer("renderer.hpp", renderer_hpp);
   add_renderer("renderer.cpp", renderer_cpp);
 
   add_renderer("scaffolds/controller.cpp", scaffolds_controller_cpp);

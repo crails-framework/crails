@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectConfigDatabasesCpp : public Crails::Template
+class render_ProjectConfigDatabasesCpp : public Crails::Template
 {
 public:
-  ProjectConfigDatabasesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigDatabasesCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars)
   {}
 
@@ -21,5 +21,5 @@ private:
 
 void render_project_config_databases_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigDatabasesCpp(renderer, target, vars).render();
+  render_ProjectConfigDatabasesCpp(renderer, target, vars).render();
 }

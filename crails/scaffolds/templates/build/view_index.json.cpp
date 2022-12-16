@@ -4,10 +4,10 @@
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
 
-class ScaffoldsViewIndexJson : public Crails::Template
+class render_ScaffoldsViewIndexJson : public Crails::Template
 {
 public:
-  ScaffoldsViewIndexJson(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsViewIndexJson(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     classname(Crails::cast<std::string>(vars, "classname")), 
     resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
@@ -40,5 +40,5 @@ private:
 
 void render_scaffolds_view_index_json(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsViewIndexJson(renderer, target, vars).render();
+  render_ScaffoldsViewIndexJson(renderer, target, vars).render();
 }

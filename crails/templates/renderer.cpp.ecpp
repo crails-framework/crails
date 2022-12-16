@@ -3,11 +3,11 @@
 using namespace std;
 
 string               @renderer_name;
+string               @renderer_filename;
 string               @function_prefix = "render";
-string               classname = Crails::camelize(renderer_name) + "Renderer";
 map<string, string>& @targets;
 // END LINKING
-#include <crails/renderers/<%= renderer_name %>_renderer.hpp>
+#include "<%= renderer_filename %>.hpp"
 #define declare_renderer(name) void <%= function_prefix %>_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)
 #define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, <%= function_prefix %>_##name))
 
@@ -15,7 +15,7 @@ map<string, string>& @targets;
 declare_renderer(<%= it->second %>);
 <% end %>
 
-Crails::<%= classname %>::<%= classname %>()
+<%= renderer_name %>::<%= renderer_name %>()
 {
 <% for (auto it = targets.begin() ; it != targets.end() ; ++it) do -%>
   add_renderer("<%= it->first %>", <%= it->second %>);

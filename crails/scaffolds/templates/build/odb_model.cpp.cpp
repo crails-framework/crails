@@ -5,10 +5,10 @@
 #include <crails/utils/string.hpp>
 #include <crails/cli/conventions.hpp>
 
-class ScaffoldsOdbModelCpp : public Crails::Template
+class render_ScaffoldsOdbModelCpp : public Crails::Template
 {
 public:
-  ScaffoldsOdbModelCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ScaffoldsOdbModelCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     filename(Crails::cast<std::string>(vars, "filename")), 
     classname(Crails::cast<std::string>(vars, "classname")), 
@@ -86,5 +86,5 @@ private:
 
 void render_scaffolds_odb_model_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ScaffoldsOdbModelCpp(renderer, target, vars).render();
+  render_ScaffoldsOdbModelCpp(renderer, target, vars).render();
 }

@@ -3,10 +3,10 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 
-class ProjectConfigEnvironmentCpp : public Crails::Template
+class render_ProjectConfigEnvironmentCpp : public Crails::Template
 {
 public:
-  ProjectConfigEnvironmentCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
+  render_ProjectConfigEnvironmentCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     environment(Crails::cast<std::string>(vars, "environment",  "Development"))
   {}
@@ -24,5 +24,5 @@ private:
 
 void render_project_config_environment_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)
 {
-  ProjectConfigEnvironmentCpp(renderer, target, vars).render();
+  render_ProjectConfigEnvironmentCpp(renderer, target, vars).render();
 }
