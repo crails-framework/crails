@@ -2,7 +2,7 @@ bool @with_action = true;
 bool @with_cookies = false;
 // END LINKING
 #include "config/renderers.hpp"
-#include <crails/server.hpp>
+#include "config/server.hpp"
 <% if (with_action) do -%>
 #include <crails/router.hpp>
 <% end -%>
@@ -16,6 +16,7 @@ using namespace Crails;
 
 int main(int argc, const char **argv)
 {
+  SingletonInstantiator<ApplicationServer> server;
   SingletonInstantiator<ApplicationRenderers> renderers;
 <% if (with_action) do -%>
   SingletonInstantiator<Router> router;
@@ -28,6 +29,7 @@ int main(int argc, const char **argv)
 <% end -%>
 
   // Application loop
-  Server::launch(argc, argv);
+  server->launch(argc, argv);
+
   return 0;
 }

@@ -54,6 +54,8 @@ bool New::generate_project_structure()
     generate_file("CMakeLists.txt");
   generate_file(".gitignore");
   generate_file("app/main.cpp");
+  generate_file("config/server.cpp");
+  generate_file("config/server.hpp");
   generate_file("config/environment.cpp");
   generate_file("config/logger.cpp");
   generate_file("config/renderers.hpp");

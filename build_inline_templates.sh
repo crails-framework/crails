@@ -32,6 +32,14 @@ $ECPP \
   -i $PROJECT_TPL/app/controllers/application.hpp.ecpp \
   >  $PROJECT_TPL/build/application.hpp.cpp
 $ECPP \
+  -n ProjectConfigServerCpp \
+  -i $PROJECT_TPL/config/server.cpp.ecpp \
+  >  $PROJECT_TPL/build/server.cpp.cpp
+$ECPP \
+  -n ProjectConfigServerHpp \
+  -i $PROJECT_TPL/config/server.hpp.ecpp \
+  >  $PROJECT_TPL/build/server.hpp.cpp
+$ECPP \
   -n ProjectConfigEnvironmentCpp \
   -i $PROJECT_TPL/config/environment.cpp.ecpp \
   >  $PROJECT_TPL/build/environment.cpp.cpp

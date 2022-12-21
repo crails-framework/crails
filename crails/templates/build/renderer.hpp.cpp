@@ -17,7 +17,7 @@ public:
   void render()
   {
 ecpp_stream << "#include <crails/renderers/" << ( renderer_type );
-  ecpp_stream << "_renderer.hpp>\n\nclass " << ( renderer_name );
+  ecpp_stream << ".hpp>\n\nclass " << ( renderer_name );
   ecpp_stream << " : public Crails::" << ( Crails::camelize(renderer_type) );
   ecpp_stream << "Renderer\n{\npublic:\n  " << ( renderer_name );
   ecpp_stream << "();\n};\n";

@@ -1,0 +1,10 @@
+#pragma once
+#include <crails/server.hpp>
+
+class ApplicationServer : public Crails::Server
+{
+  SINGLETON_IMPLEMENTATION(ApplicationServer, Crails::Server)
+
+  ApplicationServer();
+  void initialize_request_pipe();
+};

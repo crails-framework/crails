@@ -1,0 +1,7 @@
+#include "server.hpp"
+
+ApplicationServer::ApplicationServer()
+{
+  temporary_path = "/tmp";
+  initialize_request_pipe();
+}

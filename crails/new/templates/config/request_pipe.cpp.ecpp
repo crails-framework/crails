@@ -12,12 +12,11 @@ vector<pair<string, string>>& @handlers;
 #include <crails/request_handlers/file.hpp>
 #include <crails/request_handlers/action.hpp>
 #include <crails/request_parser.hpp>
+#inculde "server.hpp"
 
 using namespace Crails;
 
-const std::string Server::temporary_path = "/tmp";
-
-void Server::initialize_request_pipe()
+void ApplicationServer::initialize_request_pipe()
 {
 <% for (auto parser : parsers) do -%>
   <%= "add_request_parser(new " + parser.second + ");" %>

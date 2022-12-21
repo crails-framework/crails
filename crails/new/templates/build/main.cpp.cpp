@@ -14,7 +14,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include \"config/renderers.hpp\"\n#include <crails/server.hpp>";
+ecpp_stream << "#include \"config/renderers.hpp\"\n#include \"config/server.hpp\"";
  if (with_action){
   ecpp_stream << "\n#include <crails/router.hpp>";
  };
@@ -22,7 +22,7 @@ ecpp_stream << "#include \"config/renderers.hpp\"\n#include <crails/server.hpp>"
  if (with_cookies){
   ecpp_stream << "\n#include <crails/cipher.hpp>";
  };
-  ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{\n  SingletonInstantiator<ApplicationRenderers> renderers;";
+  ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nint main(int argc, const char **argv)\n{\n  SingletonInstantiator<ApplicationServer> server;\n  SingletonInstantiator<ApplicationRenderers> renderers;";
  if (with_action){
   ecpp_stream << "\n  SingletonInstantiator<Router> router;\n\n  router->initialize();";
  };
@@ -30,7 +30,7 @@ ecpp_stream << "#include \"config/renderers.hpp\"\n#include <crails/server.hpp>"
  if (with_cookies){
   ecpp_stream << "\n  Cipher::initialize();";
  };
-  ecpp_stream << "\n  // Application loop\n  Server::launch(argc, argv);\n  return 0;\n}\n";
+  ecpp_stream << "\n  // Application loop\n  server->launch(argc, argv);\n\n  return 0;\n}\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
