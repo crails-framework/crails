@@ -4,7 +4,7 @@ if [ -z "$INSTALL_ROOT" ] ; then
   export INSTALL_ROOT="/usr/local"
 fi
 
-list="icuuci icuuc icui18n crails-router"
+list="icuuci icuuc icui18n crails-router crails-design-patterns"
 boost_list="any \
      function \
      bind \

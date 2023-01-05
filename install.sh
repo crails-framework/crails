@@ -79,11 +79,14 @@ BUILD_DIR="build-$COMPILER-$COMPILER_VERSION"
 crails_packages=(
   libcrails-action
   libcrails-archive
+  libcrails-attachment
   libcrails-cli
   libcrails-controllers
   libcrails-crud
   libcrails-cookies
+  libcrails-design-patterns
   libcrails-encrypt
+  libcrails-fonticons
   libcrails-form-parser
   libcrails-i18n
   libcrails-multipart-parser
@@ -96,6 +99,7 @@ crails_packages=(
   libcrails-http-client
   libcrails-mail
   libcrails-oauth
+  libcrails-paginator
   libcrails-selenium
   libcrails-sentry
   libcrails-sidekix
@@ -159,6 +163,12 @@ if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.
   echo "+ Detected libssh: adding libcrails-ssh and crails-deploy"
   crails_packages+=(libcrails-ssh)
   export WITH_CRAILS_DEPLOY="y"
+fi
+
+if pkg-config Magick++ ; then
+  echo "+ Detected Magick++: adding libcrails-image"
+  crails_packages+=(libcrails-image)
+  system_packages+=(?sys:ImageMagick++/*)
 fi
 
 if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/include/v_noabi ] ; then
