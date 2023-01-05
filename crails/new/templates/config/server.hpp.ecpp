@@ -1,5 +1,6 @@
 #pragma once
 #include <crails/server.hpp>
+#include "session_store.hpp"
 
 class ApplicationServer : public Crails::Server
 {
@@ -7,4 +8,6 @@ class ApplicationServer : public Crails::Server
 
   ApplicationServer();
   void initialize_request_pipe();
+
+  ApplicationSessionStore session_store;
 };

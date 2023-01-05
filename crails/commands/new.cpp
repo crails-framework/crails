@@ -61,7 +61,7 @@ bool New::generate_project_structure()
   generate_file("config/renderers.hpp");
   generate_file("config/renderers.cpp");
   generate_file("config/request_pipe.cpp");
-  generate_file("config/session_store.cpp");
+  generate_file("config/session_store.hpp");
   generate_file("public/index.html");
   generate_file("spec/main.cpp");
   if (configuration.has_plugin("libcrails-action"))
@@ -103,7 +103,7 @@ int New::run()
     if (options.count("force") != 0)
       renderer.should_overwrite = true;
     if (options.count("session-store"))
-      session_store = options["session-store"].as<string>();
+      session_store = Crails::camelize(options["session-store"].as<string>());
     else if (configuration_type == "full")
       session_store = string("CookieStore");
     vars["session_store"] = session_store;

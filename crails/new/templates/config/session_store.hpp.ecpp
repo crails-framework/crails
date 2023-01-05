@@ -1,9 +1,9 @@
 #include <crails/utils/string.hpp>
+
 std::string @session_store = "NoSessionStore";
+
 // END LINKING
+#pragma once
 #include <crails/session_store/<%= Crails::underscore(session_store) %>.hpp>
-#include <crails/session_store.hpp>
 
-using namespace Crails;
-
-USE_SESSION_STORE(<%= session_store %>)
+typedef SingletonInstantiator<<%= Crails::camelize(session_store) %>> ApplicationSessionStore;

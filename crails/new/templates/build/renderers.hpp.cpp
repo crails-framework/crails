@@ -2,37 +2,21 @@
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
-using namespace std;
 
 class render_ProjectConfigRenderersHpp : public Crails::Template
 {
 public:
   render_ProjectConfigRenderersHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
-    Crails::Template(renderer, target, vars), 
-    default_format(Crails::cast<string>(vars, "default_format",  "text/html")), 
-    renderers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "renderers")))
+    Crails::Template(renderer, target, vars)
   {}
 
   void render()
   {
-ecpp_stream << "#include \"renderers.hpp\"\n";
- for (auto renderer : renderers){
-  ecpp_stream << "" << ( "#include \"lib/renderers/" + renderer.first + ".hpp\"\n" );
-  ecpp_stream << "";
- };
-  ecpp_stream << "\n\nusing namespace Crails;\n\nApplicationRenderers::ApplicationRenderers()\n{\n  default_format = \"" << ( default_format );
-  ecpp_stream << "\";\n  // Append renderers";
- for (auto renderer : renderers){
-  ecpp_stream << "\n  " << ( "renderers.push_back(std::make_unique<" + renderer.second + ">);\n" );
-  ecpp_stream << "";
- };
-  ecpp_stream << "\n}\n";
+ecpp_stream << "#pragma once\n#include <crails/renderer.hpp>\n\nclass ApplicationRenderers : public Crails::Renderers\n{\n  SINGLETON_IMPLEMENTATION(ApplicationRenderers, Crails::Renderers)\npublic:\n  ApplicationRenderers();\n};\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
   std::stringstream ecpp_stream;
-  string default_format;
-  vector<pair<string, string>>& renderers;
 };
 
 void render_project_config_renderers_hpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)

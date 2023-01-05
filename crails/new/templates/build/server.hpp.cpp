@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#pragma once\n#include <crails/server.hpp>\n\nclass ApplicationServer : public Crails::Server\n{\n  SINGLETON_IMPLEMENTATION(ApplicationServer, Crails::Server)\n\n  ApplicationServer();\n  void initialize_request_pipe();\n};\n";
+ecpp_stream << "#pragma once\n#include <crails/server.hpp>\n#include \"session_store.hpp\"\n\nclass ApplicationServer : public Crails::Server\n{\n  SINGLETON_IMPLEMENTATION(ApplicationServer, Crails::Server)\n\n  ApplicationServer();\n  void initialize_request_pipe();\n\n  ApplicationSessionStore session_store;\n};\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
