@@ -80,6 +80,8 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("app/routes.cpp",                  project_app_routes_cpp);
   add_renderer("app/controllers/application.hpp", project_app_controllers_application_hpp);
   add_renderer("app/views/exception.html",        project_app_views_exception_html);
+  add_renderer("config/server.cpp",               project_config_server_cpp);
+  add_renderer("config/server.hpp",               project_config_server_hpp);
   add_renderer("config/environment.cpp",          project_config_environment_cpp);
   add_renderer("config/databases.cpp",            project_config_databases_cpp);
   add_renderer("config/logger.cpp",               project_config_logger_cpp);
