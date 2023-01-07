@@ -7,6 +7,12 @@
 #include "../../file_renderer.hpp"
 #include "../../file_editor.hpp"
 
+I18nPlugin::I18nPlugin()
+{
+  add_command("install", []() { return std::make_shared<I18nPlugin::Installer>(); });
+  add_command("disable", []() { return std::make_shared<I18nPlugin::Disabler>(); });
+}
+
 int I18nPlugin::Installer::run()
 {
   FileRenderer renderer;

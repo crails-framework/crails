@@ -8,7 +8,7 @@ class I18nPlugin : public CommandIndex
 public:
   struct Installer : public ::Command
   {
-    int  run() override;
+    int run() override;
   };
 
   struct Disabler : public ::Command
