@@ -11,12 +11,16 @@ int I18nPlugin::Installer::run()
 {
   FileRenderer renderer;
   CMakeFileEditor cmakefile(configuration);
+  MainCppEditor main_cpp("app/main.cpp");
 
+  main_cpp.add_to_main_function("SingletonInstantiator<ApplicationI18n> translations;");
+  renderer.generate_file("config/i18n.hpp");
   renderer.generate_file("config/i18n.cpp");
   configuration.add_plugin("libcrails-i18n");
   cmakefile.load_file();
   cmakefile.update_plugins();
   configuration.save();
+  main_cpp.save_file();
   cmakefile.save_file();
   return 0;
 }

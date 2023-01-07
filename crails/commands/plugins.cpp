@@ -9,6 +9,7 @@
 #include "../plugins/sidekix/plugin.hpp"
 #include "../plugins/redis/plugin.hpp"
 #include "../plugins/sentry/plugin.hpp"
+#include "../plugins/i18n/plugin.hpp"
 #include "../plugins/others.hpp"
 
 using namespace std;
@@ -19,6 +20,7 @@ PluginManager::PluginManager()
   add_command("odb", []() { return make_shared<OdbModule>(); });
   add_command("comet", []() { return make_shared<CometPlugin>(); });
   add_command("docker", []() { return make_shared<DockerPlugin>(); });
+  add_command("i18n", []() { return make_shared<I18nPlugin>(); });
   add_command("mail", []() { return make_shared<MailPlugin>(); });
   add_command("metarecord", []() { return make_shared<MetarecordPlugin>(); });
   add_command("redis", []() { return make_shared<RedisPlugin>(); });

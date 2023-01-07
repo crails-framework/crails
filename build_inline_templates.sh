@@ -76,6 +76,10 @@ $ECPP \
   -i $PROJECT_TPL/config/ssl.cpp.ecpp \
   >  $PROJECT_TPL/build/ssl.cpp
 $ECPP \
+  -n ProjectConfigI18nHpp \
+  -i $PROJECT_TPL/config/i18n.hpp.ecpp \
+  >  $PROJECT_TPL/build/i18n.hpp
+$ECPP \
   -n ProjectConfigI18nCpp \
   -i $PROJECT_TPL/config/i18n.cpp.ecpp \
   >  $PROJECT_TPL/build/i18n.cpp

@@ -15,7 +15,7 @@ public:
   void render()
   {
 ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::underscore(session_store) );
-  ecpp_stream << ".hpp>\n\ntypedef SingletonInstantiator<" << ( Crails::camelize(session_store) );
+  ecpp_stream << ".hpp>\n\ntypedef SingletonInstantiator<Crails::" << ( Crails::camelize(session_store) );
   ecpp_stream << "> ApplicationSessionStore;\n";
     this->target.set_body(ecpp_stream.str());
   }

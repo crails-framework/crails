@@ -1,9 +1,15 @@
 #include <crails/i18n.hpp>
+#include <filesystem>
 
 using namespace std;
 using namespace i18n;
 
-const string         Settings::default_locale = "en";
-const vector<string> Settings::locales = {"en", "fr", "ru"};
-thread_local string  Settings::current_locale;
-const I18nData       Settings::t;
+ApplicationI18n::ApplicationI18n()
+{
+  directory = filesystem::current_path().string();
+  default_locale = "en";
+  locales = {"en", "es", "fr"};
+  t.add_locale("en", "locales/en.json");
+  t.add_locale("es", "locales/es.json");
+  t.add_locale("fr", "locales/fr.json");
+}
