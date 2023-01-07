@@ -4,7 +4,7 @@ if [ -z "$INSTALL_ROOT" ] ; then
   export INSTALL_ROOT="/usr/local"
 fi
 
-list="icuuci icuuc icui18n crails-router crails-design-patterns Magick++"
+list="icuuci icuuc icui18n crails-router crails-design-patterns"
 boost_list="any \
      function \
      bind \
@@ -74,4 +74,12 @@ for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/"*.pc` ; do
       "$pc_file" > tmpfile
     mv tmpfile "$pc_file"
   done
+done
+
+# ImageMagick fix
+for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/libcrails-image"*.pc` ; do
+  echo "boost-pc monkeypatch: checking $pc_file"
+  awk '{ if ($0 ~ /^Libs:/) { gsub(" -lMagick[+]{2} ", " "); print $0 } else { print $0 } }' \
+    "$pc_file" > tmpfile
+  mv tmpfile "$pc_file"
 done
