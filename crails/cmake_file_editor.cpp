@@ -34,12 +34,45 @@ void CMakeFileEditor::update_plugins()
   contents.insert(position, plugins_config_line());
 }
 
+static const char* dependency_symbol = "Custom dependencies \\(do not modify this line\\)";
+
+static std::string render_add_definitions(const std::set<std::string>& defines)
+{
+  stringstream stream;
+
+  stream << "add_definitions(";
+  for (const auto& define : defines)
+  {
+    if (define != *defines.begin())
+      stream << ", ";
+    stream << "-D" << define;
+  }
+  stream << ')' << endl;
+  return stream.str();
+}
+
+void CMakeFileEditor::add_definitions(const std::set<std::string>& defines)
+{
+  use_symbol(dependency_symbol);
+  insert(render_add_definitions(defines));
+}
+
+void CMakeFileEditor::remove_definitions(const std::set<std::string>& defines)
+{
+  std::string pattern = render_add_definitions(defines);
+  size_t position = contents.find(pattern);
+  size_t end_position = contents.find(contents.find("\n", position)) + 1;
+
+  if (position != std::string::npos)
+    contents.erase(position, end_position - position);
+}
+
 void CMakeFileEditor::add_dependency(const std::string& name, const std::string& category)
 {
   stringstream stream;
 
   stream << "set(" << category << " ${" << category << "} " << name << ')' << endl;
-  use_symbol("Custom dependencies \\(do not modify this line\\)");
+  use_symbol(dependency_symbol);
   insert(stream.str());
 }
 

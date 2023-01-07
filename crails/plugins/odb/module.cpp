@@ -65,6 +65,7 @@ int OdbModule::OdbInstaller::run()
   configuration.save();
   cmakefile.load_file();
   cmakefile.update_plugins();
+  cmakefile.add_definitions({"WITH_ODB"});
   cmakefile.add_dependency("odb");
   for (const string& backend : backends)
     cmakefile.add_dependency("odb-" + backend);
@@ -77,8 +78,14 @@ int OdbModule::OdbInstaller::run()
 
 int OdbModule::OdbDisabler::run()
 {
+  CMakeFileEditor cmakefile(configuration);
+
   configuration.remove_plugin("libcrails-odb");
   configuration.save();
+  cmakefile.load_file();
+  cmakefile.update_plugins();
+  cmakefile.remove_definitions({"WITH_ODB"});
+  cmakefile.save_file();
   return 0;
 }
 

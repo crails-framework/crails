@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <set>
 
 class CrailsFileEditor
 {
@@ -69,6 +70,8 @@ public:
   std::string plugins_config_line() const;
   void update_plugins();
   void add_dependency(const std::string& name, const std::string& category = "dependencies");
+  void add_definitions(const std::set<std::string>&);
+  void remove_definitions(const std::set<std::string>&);
   void add_task(const std::string& name);
   void add_module(const std::string& name);
   void remove_module(const std::string& name);
