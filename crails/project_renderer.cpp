@@ -16,7 +16,6 @@ declare_renderer(project_config_server_cpp)
 declare_renderer(project_config_server_hpp)
 declare_renderer(project_config_environment_cpp)
 declare_renderer(project_config_databases_cpp)
-declare_renderer(project_config_logger_cpp)
 declare_renderer(project_config_renderers_hpp)
 declare_renderer(project_config_renderers_cpp)
 declare_renderer(project_config_request_pipe_cpp)
@@ -85,7 +84,6 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("config/server.hpp",               project_config_server_hpp);
   add_renderer("config/environment.cpp",          project_config_environment_cpp);
   add_renderer("config/databases.cpp",            project_config_databases_cpp);
-  add_renderer("config/logger.cpp",               project_config_logger_cpp);
   add_renderer("config/renderers.hpp",            project_config_renderers_hpp);
   add_renderer("config/renderers.cpp",            project_config_renderers_cpp);
   add_renderer("config/request_pipe.cpp",         project_config_request_pipe_cpp);

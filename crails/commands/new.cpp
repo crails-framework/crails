@@ -57,7 +57,6 @@ bool New::generate_project_structure()
   generate_file("config/server.cpp");
   generate_file("config/server.hpp");
   generate_file("config/environment.cpp");
-  generate_file("config/logger.cpp");
   generate_file("config/renderers.hpp");
   generate_file("config/renderers.cpp");
   generate_file("config/request_pipe.cpp");

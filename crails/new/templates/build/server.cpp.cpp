@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include \"server.hpp\"\n\nApplicationServer::ApplicationServer()\n{\n  temporary_path = \"/tmp\";\n  initialize_request_pipe();\n}\n";
+ecpp_stream << "#include \"server.hpp\"\n#include <crails/logger.hpp>\n\nusing namespace Crails;\n\nApplicationServer::ApplicationServer()\n{\n  logger.set_log_level(Logger::Info);\n  temporary_path = \"/tmp\";\n  initialize_request_pipe();\n}\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
