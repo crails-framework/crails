@@ -1,7 +1,7 @@
 #pragma once
 #include <crails/i18n.hpp>
 
-class ApplicationI18n
+class ApplicationI18n : public i18n::Settings
 {
   SINGLETON_IMPLEMENTATION(ApplicationI18n, i18n::Settings)
   ApplicationI18n();

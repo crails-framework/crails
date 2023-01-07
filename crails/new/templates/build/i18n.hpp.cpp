@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#pragma once\n#include <crails/i18n.hpp>\n\nclass ApplicationI18n\n{\n  SINGLETON_IMPLEMENTATION(ApplicationI18n, i18n::Settings)\n  ApplicationI18n();\n};\n";
+ecpp_stream << "#pragma once\n#include <crails/i18n.hpp>\n\nclass ApplicationI18n : public i18n::Settings\n{\n  SINGLETON_IMPLEMENTATION(ApplicationI18n, i18n::Settings)\n  ApplicationI18n();\n};\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
