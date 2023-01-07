@@ -19,6 +19,7 @@ int I18nPlugin::Installer::run()
   CMakeFileEditor cmakefile(configuration);
   MainCppEditor main_cpp("app/main.cpp");
 
+  main_cpp.load_file();
   main_cpp.add_to_main_function("SingletonInstantiator<ApplicationI18n> translations;");
   renderer.generate_file("config/i18n.hpp");
   renderer.generate_file("config/i18n.cpp");
