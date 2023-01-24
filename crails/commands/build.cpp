@@ -11,6 +11,7 @@
 #include "../plugins/comet/plugin.hpp"
 #include "../plugins/metarecord/plugin.hpp"
 #include "../plugins/i18n/plugin.hpp"
+#include "../templates/app_renderer_name.hpp"
 #include <iostream>
 
 using namespace std;
@@ -33,7 +34,7 @@ bool BuildManager::prebuild_renderers()
       << " -i " << Crails::join(inputs, ',')
       << " -t Crails::" << Crails::camelize(renderer) << "Template"
       << " -z crails/" << renderer << "_template.hpp"
-      << " -n " << Crails::naming_convention.classnames(configuration.project_name() + "_" + renderer + "_renderer")
+      << " -n " << app_renderer_classname(configuration, renderer)
       << " -p \\." << renderer << "$";
     if (renderer == "json")
       command << " -m raw -s stream";

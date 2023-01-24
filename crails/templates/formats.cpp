@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../file_editor.hpp"
 #include <crails/utils/semantics.hpp>
+#include "app_renderer_name.hpp"
 
 using namespace std;
 
@@ -15,24 +16,31 @@ void TemplateFormatsManager::options_description(boost::program_options::options
 
 class RendererConfigEditor : public CppFileEditor
 {
+  const ProjectConfiguration& configuration;
 public:
-  RendererConfigEditor() : CppFileEditor("config/renderers.cpp") {}
+  RendererConfigEditor(const ProjectConfiguration& configuration) : CppFileEditor("config/renderers.cpp"), configuration(configuration) {}
 
   std::string renderer_line(const std::string& name) const
   {
-    return "renderers.push_back(new " + Crails::camelize(name) + "Renderer);";
+    return "  renderers.push_back(make_unique<" + app_renderer_classname(configuration, name) + "Renderer>());\n";
+  }
+
+  std::string include_path(const std::string& name) const
+  {
+    return "lib/renderers/" + app_renderer_filename(configuration, name) + ".hpp";
   }
 
   void add_renderer(const std::string& name)
   {
-    add_include("crails/renderers/" + name + "_renderer.hpp");
+    add_include(include_path(name));
     use_symbol("Append renderers");
     insert(renderer_line(name));
   }
 
   void remove_renderer(const std::string& name)
   {
-    string line = renderer_line(name), include = "#include \"crails/renderers/" + name + "_renderer.hpp\"\n";
+    string line = renderer_line(name);
+    string include = "#include \"" + include_path(name) + "\"\n";
     size_t position_line = contents.find(line);
     size_t position_include = contents.find(include);
 
@@ -45,7 +53,7 @@ public:
 
 int TemplateFormatsManager::run()
 {
-  RendererConfigEditor config_renderers;
+  RendererConfigEditor config_renderers(configuration);
 
   if (!options.count("add") && !options.count("remove"))
   {
