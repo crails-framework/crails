@@ -31,6 +31,7 @@ void require_cookie_plugin(ProjectConfiguration& configuration)
     configuration.add_plugin("libcrails-cookies");
     renderer.vars["session_store"] = string("CookieStore");
     renderer.generate_file("config/session_store.hpp");
+    renderer.generate_file("config/session_store.cpp");
   }
 }
 

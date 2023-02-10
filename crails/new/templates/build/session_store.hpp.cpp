@@ -3,7 +3,6 @@
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
 #include <crails/utils/string.hpp>
-#include <crails/utils/random_string.hpp>
 using namespace Crails;
 using namespace std;
 
@@ -22,16 +21,16 @@ ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::unde
   ecpp_stream << ".hpp>\n\nclass SessionStoreImpl : public Crails::" << ( camelize(session_store) );
   ecpp_stream << "\n{\n  SESSION_STORE_IMPLEMENTATION(SessionStoreImpl)\n";
  if (is_cookie_store){
-  ecpp_stream << "\n  static const string password;\n  static const string salt;\n\n  SessionStoreImpl() : Crails::" << ( camelize(session_store) );
-  ecpp_stream << "(password, salt)\n  {\n  }";
+  ecpp_stream << "\n  static const string password;\n  static const string salt;";
  };
-  ecpp_stream << "\n};\n";
+  ecpp_stream << "\npublic:\n";
  if (is_cookie_store){
-  ecpp_stream << "\nconst string SessionStoreImpl::password = \"" << ( generate_random_string(charset, 50) );
-  ecpp_stream << "\";\nconst string SessionStoreImpl::salt     = \"" << ( generate_random_string(charset, 8) );
-  ecpp_stream << "\";";
+  ecpp_stream << "\n  SessionStoreImpl() : Crails::" << ( camelize(session_store) );
+  ecpp_stream << "(password, salt)\n  {\n  }";
+ }else{
+  ecpp_stream << "\n  SessionStoreImpl() {}";
  };
-  ecpp_stream << "\ntypedef SingletonInstantiator<SessionStoreImpl::Factory> ApplicationSessionStore;\n";
+  ecpp_stream << "\n};\n\ntypedef SingletonInstantiator<SessionStoreImpl::Factory> ApplicationSessionStore;\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:

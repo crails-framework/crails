@@ -61,6 +61,7 @@ bool New::generate_project_structure()
   generate_file("config/renderers.cpp");
   generate_file("config/request_pipe.cpp");
   generate_file("config/session_store.hpp");
+  generate_file("config/session_store.cpp");
   generate_file("public/index.html");
   generate_file("spec/main.cpp");
   if (configuration.has_plugin("libcrails-action"))

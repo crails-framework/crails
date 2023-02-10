@@ -1,5 +1,4 @@
 #include <crails/utils/string.hpp>
-#include <crails/utils/random_string.hpp>
 
 using namespace Crails;
 using namespace std;
@@ -17,17 +16,18 @@ class SessionStoreImpl : public Crails::<%= camelize(session_store) %>
 <% if (is_cookie_store) do -%>
   static const string password;
   static const string salt;
+<% end -%>
 
+public:
+
+<% if (is_cookie_store) do -%>
   SessionStoreImpl() : Crails::<%= camelize(session_store) %>(password, salt)
   {
   }
+<% end else do -%>
+  SessionStoreImpl() {}
 <% end -%>
 
 };
-
-<% if (is_cookie_store) do -%>
-const string SessionStoreImpl::password = "<%= generate_random_string(charset, 50) %>";
-const string SessionStoreImpl::salt     = "<%= generate_random_string(charset, 8) %>";
-<% end -%>
 
 typedef SingletonInstantiator<SessionStoreImpl::Factory> ApplicationSessionStore;

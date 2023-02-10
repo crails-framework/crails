@@ -64,6 +64,10 @@ $ECPP \
   -i $PROJECT_TPL/config/session_store.hpp.ecpp \
   >  $PROJECT_TPL/build/session_store.hpp.cpp
 $ECPP \
+  -n ProjectConfigSessionStoreCpp \
+  -i $PROJECT_TPL/config/session_store.cpp.ecpp \
+  >  $PROJECT_TPL/build/session_store.cpp.cpp
+$ECPP \
   -n ProjectConfigSslCpp \
   -i $PROJECT_TPL/config/ssl.cpp.ecpp \
   >  $PROJECT_TPL/build/ssl.cpp
