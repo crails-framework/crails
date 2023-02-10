@@ -25,7 +25,7 @@ ecpp_stream << "";
   ecpp_stream << "" << ( "#include <crails/request_handlers/" + handler.first + ".hpp>\n" );
   ecpp_stream << "";
  };
-  ecpp_stream << "#include <crails/request_handlers/file.hpp>\n#include <crails/request_handlers/action.hpp>\n#include <crails/request_parser.hpp>\n#inculde \"server.hpp\"\n\nusing namespace Crails;\n\nvoid ApplicationServer::initialize_request_pipe()\n{";
+  ecpp_stream << "#include <crails/request_handlers/file.hpp>\n#include <crails/request_handlers/action.hpp>\n#include <crails/request_parser.hpp>\n#include \"server.hpp\"\n\nusing namespace Crails;\n\nvoid ApplicationServer::initialize_request_pipe()\n{";
  for (auto parser : parsers){
   ecpp_stream << "\n  " << ( "add_request_parser(new " + parser.second + ");" );
   ecpp_stream << "";

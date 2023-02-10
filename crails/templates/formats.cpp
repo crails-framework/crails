@@ -22,7 +22,7 @@ public:
 
   std::string renderer_line(const std::string& name) const
   {
-    return "  renderers.push_back(make_unique<" + app_renderer_classname(configuration, name) + "Renderer>());\n";
+    return "  renderers.push_back(make_unique<" + app_renderer_classname(configuration, name) + ">());\n";
   }
 
   std::string include_path(const std::string& name) const

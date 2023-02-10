@@ -9,6 +9,7 @@ vector<pair<string, string>>& @renderers;
 <%= "#include \"lib/renderers/" + renderer.first + ".hpp\"\n" %>
 <% end %>
 
+using namespace std;
 using namespace Crails;
 
 ApplicationRenderers::ApplicationRenderers()
@@ -16,6 +17,6 @@ ApplicationRenderers::ApplicationRenderers()
   default_format = "<%= default_format %>";
   // Append renderers
 <% for (auto renderer : renderers) do -%>
-  <%= "renderers.push_back(std::make_unique<" + renderer.second + ">);\n" %>
+  <%= "renderers.push_back(make_unique<" + renderer.second + ">);\n" %>
 <% end %>
 }

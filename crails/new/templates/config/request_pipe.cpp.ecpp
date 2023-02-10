@@ -12,7 +12,7 @@ vector<pair<string, string>>& @handlers;
 #include <crails/request_handlers/file.hpp>
 #include <crails/request_handlers/action.hpp>
 #include <crails/request_parser.hpp>
-#inculde "server.hpp"
+#include "server.hpp"
 
 using namespace Crails;
 
