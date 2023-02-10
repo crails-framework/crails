@@ -48,10 +48,6 @@ $ECPP \
   -i $PROJECT_TPL/config/databases.cpp.ecpp \
   >  $PROJECT_TPL/build/databases.cpp.cpp
 $ECPP \
-  -n ProjectConfigLoggerCpp \
-  -i $PROJECT_TPL/config/logger.cpp.ecpp \
-  >  $PROJECT_TPL/build/logger.cpp.cpp
-$ECPP \
   -n ProjectConfigRenderersHpp \
   -i $PROJECT_TPL/config/renderers.hpp.ecpp \
   >  $PROJECT_TPL/build/renderers.hpp.cpp
@@ -67,10 +63,6 @@ $ECPP \
   -n ProjectConfigSessionStoreHpp \
   -i $PROJECT_TPL/config/session_store.hpp.ecpp \
   >  $PROJECT_TPL/build/session_store.hpp.cpp
-$ECPP \
-  -n ProjectConfigCookiesCpp \
-  -i $PROJECT_TPL/config/cookies.cpp.ecpp \
-  >  $PROJECT_TPL/build/cookies.cpp.cpp
 $ECPP \
   -n ProjectConfigSslCpp \
   -i $PROJECT_TPL/config/ssl.cpp.ecpp \

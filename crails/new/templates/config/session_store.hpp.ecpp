@@ -1,9 +1,33 @@
 #include <crails/utils/string.hpp>
+#include <crails/utils/random_string.hpp>
 
-std::string @session_store = "NoSessionStore";
+using namespace Crails;
+suing namespace std;
 
+string @session_store = "NoSessionStore";
+bool is_cookie_store = Crails::camelize(session_store) == "CookieStore";
 // END LINKING
 #pragma once
 #include <crails/session_store/<%= Crails::underscore(session_store) %>.hpp>
 
-typedef SingletonInstantiator<Crails::<%= Crails::camelize(session_store) %>::Factory> ApplicationSessionStore;
+class SessionStoreImpl : public Crails::<%= camelize(session_store) %>
+{
+  SESSION_STORE_IMPLEMENTATION(SessionStoreImpl)
+
+<% if (is_cookie_store) do -%>
+  static const string password;
+  static const string salt;
+
+  SessionStoreImpl() : Crails::<%= camelize(session_store) %>(password, salt)
+  {
+  }
+<% end -%>
+
+};
+
+<% if (is_cookie_store) do -%>
+const string SessionStoreImpl::password = "<%= generate_random_string(charset, 50) %>";
+const string SessionStoreImpl::salt     = "<%= generate_random_string(charset, 8) %>";
+<% end -%>
+
+typedef SingletonInstantiator<SessionStoreImpl::Factory> ApplicationSessionStore;

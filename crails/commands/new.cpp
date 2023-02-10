@@ -67,8 +67,6 @@ bool New::generate_project_structure()
     generate_file("app/routes.cpp");
   if (configuration.has_plugin("libcrails-controllers"))
     generate_file("app/controllers/application.hpp");
-  if (configuration.has_plugin("libcrails-cookies"))
-    generate_file("config/cookies.cpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
   configuration.save();
