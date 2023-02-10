@@ -5,6 +5,7 @@
 #include <crails/utils/string.hpp>
 #include <crails/utils/random_string.hpp>
 using namespace Crails;
+using namespace std;
 
 class render_ProjectConfigSessionStoreHpp : public Crails::Template
 {
@@ -35,7 +36,6 @@ ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::unde
   }
 private:
   std::stringstream ecpp_stream;
-  suing namespace;
   string session_store;
   bool is_cookie_store;
 };

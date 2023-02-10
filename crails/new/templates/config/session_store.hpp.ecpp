@@ -2,7 +2,7 @@
 #include <crails/utils/random_string.hpp>
 
 using namespace Crails;
-suing namespace std;
+using namespace std;
 
 string @session_store = "NoSessionStore";
 bool is_cookie_store = Crails::camelize(session_store) == "CookieStore";
