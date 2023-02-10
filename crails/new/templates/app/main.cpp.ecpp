@@ -1,6 +1,7 @@
 bool @with_action = true;
 bool @with_cookies = false;
 // END LINKING
+#include <crails/logger.hpp>
 #include "config/renderers.hpp"
 #include "config/server.hpp"
 <% if (with_action) do -%>
@@ -29,7 +30,14 @@ int main(int argc, const char **argv)
 <% end -%>
 
   // Application loop
-  server->launch(argc, argv);
-
+  try
+  {
+    server->launch(argc, argv);
+  }
+  catch (const exception& error)
+  {
+    logger << Logger::Error << ">> Server crashed: " << error.what() << Logger::endl;
+    return -1;
+  }
   return 0;
 }

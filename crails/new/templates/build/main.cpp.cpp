@@ -14,7 +14,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include \"config/renderers.hpp\"\n#include \"config/server.hpp\"";
+ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\n#include \"config/server.hpp\"";
  if (with_action){
   ecpp_stream << "\n#include <crails/router.hpp>";
  };
@@ -30,7 +30,7 @@ ecpp_stream << "#include \"config/renderers.hpp\"\n#include \"config/server.hpp\
  if (with_cookies){
   ecpp_stream << "\n  Cipher::initialize();";
  };
-  ecpp_stream << "\n  // Application loop\n  server->launch(argc, argv);\n\n  return 0;\n}\n";
+  ecpp_stream << "\n  // Application loop\n  try\n  {\n    server->launch(argc, argv);\n  }\n  catch (const exception& error)\n  {\n    logger << Logger::Error << \">> Server crashed: \" << error.what() << Logger::endl;\n    return -1;\n  }\n  return 0;\n}\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
