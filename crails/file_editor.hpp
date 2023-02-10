@@ -16,7 +16,7 @@ public:
   bool use_symbol(const std::string& symbol, bool whole_line = true);
   void insert(const std::string& text);
   void append(const std::string& text) { contents += text; }
-  void prepend(const std::string& text) { contents.insert(0, contents); }
+  void prepend(const std::string& text) { contents.insert(0, text); }
   void save_file();
   void set_prefix_pattern(const std::string& prefix) { prefix_pattern = prefix; }
   std::size_t find(const std::string& str) { return contents.find(str); }
