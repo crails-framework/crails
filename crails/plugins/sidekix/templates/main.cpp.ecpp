@@ -8,6 +8,7 @@
 #include <crails/sidekix.hpp>
 #include <crails/log_files.hpp>
 #include <crails/server.hpp>
+#include <crails/session_store/no_session_store.hpp>
 #include <boost/program_options.hpp>
 #include <fstream>
 #include <thread>
@@ -104,6 +105,7 @@ static void initialize_pid_file(const std::string& filepath)
 int main(int argc, const char** argv)
 {
   SingletonInstantiator<LogFiles> log_files(argc, argv);
+  SingletonInstantiator<NoSessionStore::Factory> empty_session_store;
 
   {
     using namespace boost;
