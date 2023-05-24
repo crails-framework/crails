@@ -21,7 +21,7 @@ ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::unde
   ecpp_stream << ".hpp>\n\nclass SessionStoreImpl : public Crails::" << ( camelize(session_store) );
   ecpp_stream << "\n{\n  SESSION_STORE_IMPLEMENTATION(SessionStoreImpl)\n";
  if (is_cookie_store){
-  ecpp_stream << "\n  static const string password;\n  static const string salt;";
+  ecpp_stream << "\n  static const std::string password;\n  static const std::string salt;";
  };
   ecpp_stream << "\npublic:\n";
  if (is_cookie_store){

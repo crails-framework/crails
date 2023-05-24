@@ -14,8 +14,8 @@ class SessionStoreImpl : public Crails::<%= camelize(session_store) %>
   SESSION_STORE_IMPLEMENTATION(SessionStoreImpl)
 
 <% if (is_cookie_store) do -%>
-  static const string password;
-  static const string salt;
+  static const std::string password;
+  static const std::string salt;
 <% end -%>
 
 public:

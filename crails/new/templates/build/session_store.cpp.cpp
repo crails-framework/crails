@@ -19,7 +19,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include \"session_store.hpp\"\n";
+ecpp_stream << "#include \"session_store.hpp\"\n\nusing namespace std;\n";
  if (is_cookie_store){
   ecpp_stream << "\nconst string SessionStoreImpl::password = \"" << ( generate_random_string(charset, 50) );
   ecpp_stream << "\";\nconst string SessionStoreImpl::salt     = \"" << ( generate_random_string(charset, 8) );

@@ -11,6 +11,8 @@ string charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 // END LINKING
 #include "session_store.hpp"
 
+using namespace std;
+
 <% if (is_cookie_store) do -%>
 const string SessionStoreImpl::password = "<%= generate_random_string(charset, 50) %>";
 const string SessionStoreImpl::salt     = "<%= generate_random_string(charset, 8) %>";
