@@ -17,6 +17,6 @@ ApplicationRenderers::ApplicationRenderers()
   default_format = "<%= default_format %>";
   // Append renderers
 <% for (auto renderer : renderers) do -%>
-  <%= "renderers.push_back(make_unique<" + renderer.second + ">);\n" %>
+  <%= "renderers.push_back(make_unique<" + renderer.second + ">());\n" %>
 <% end %>
 }

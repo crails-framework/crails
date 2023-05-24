@@ -23,7 +23,7 @@ ecpp_stream << "#include \"renderers.hpp\"\n";
   ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nApplicationRenderers::ApplicationRenderers()\n{\n  default_format = \"" << ( default_format );
   ecpp_stream << "\";\n  // Append renderers";
  for (auto renderer : renderers){
-  ecpp_stream << "\n  " << ( "renderers.push_back(make_unique<" + renderer.second + ">);\n" );
+  ecpp_stream << "\n  " << ( "renderers.push_back(make_unique<" + renderer.second + ">());\n" );
   ecpp_stream << "";
  };
   ecpp_stream << "\n}\n";
