@@ -18,9 +18,9 @@ public:
 
   void render()
   {
-ecpp_stream << "#!/bin/bash -e\n\nCRAILS_VERSION=" << ( crails_version );
-  ecpp_stream << "\nCOMPILER_VERSION=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`\nCPPGET_FINGERPRINT=\"" << ( build2_fingerprint );
-  ecpp_stream << "\"\nINSTALL_ROOT=/usr/local\nBUILD_DIR=\"build-gcc-$COMPILER_VERSION\"\n\nsource ./build-environment.sh\n\n##\n## Build libraries\n##\necho \"+ creating package at $BUILD_DIR\"\nbpkg create -d \"$BUILD_DIR\" cc \\\n  config.cxx=g++ \\\n  config.cc.poptions=-I/usr/local/include \\\n  config.cc.coptions=-O3 \\\n  config.bin.rpath=\"$INSTALL_ROOT/lib\" \\\n  config.install.root=\"$INSTALL_ROOT\"\n\ncd \"$BUILD_DIR\"\n\necho \"+ fetching dependencies\"\nbpkg add https://pkg.cppget.org/1/beta --trust \"$CPPGET_FINGERPRINT\"\nfor package in crails comet.cpp libcrails ${crails_packages[@]} ; do\n  bpkg add \"https://github.com/crails-framework/$package.git#$CRAILS_VERSION\"\ndone\nbpkg fetch --trust \"$CPPGET_FINGERPRINT\"\n";
+ecpp_stream << "#!/bin/bash -e\n\nif [ -z \"$CPP_COMPILER\" ] ; then\n  CPP_COMPILER=\"g++\"\nfi\n\nCRAILS_VERSION=" << ( crails_version );
+  ecpp_stream << "\nCPPGET_FINGERPRINT=\"" << ( build2_fingerprint );
+  ecpp_stream << "\"\nINSTALL_ROOT=/usr/local\nBUILD_DIR=\"build-$CPP_COMPILER\"\n\nsource ./build-environment.sh\n\n##\n## Build libraries\n##\necho \"+ creating package at $BUILD_DIR\"\nbpkg create -d \"$BUILD_DIR\" cc \\\n  config.cxx=$CPP_COMPILER \\\n  config.cc.poptions=-I/usr/local/include \\\n  config.cc.coptions=-O3 \\\n  config.bin.rpath=\"$INSTALL_ROOT/lib\" \\\n  config.install.root=\"$INSTALL_ROOT\"\n\ncd \"$BUILD_DIR\"\n\necho \"+ fetching dependencies\"\nbpkg add https://pkg.cppget.org/1/beta --trust \"$CPPGET_FINGERPRINT\"\nfor package in crails comet.cpp libcrails ${crails_packages[@]} ; do\n  bpkg add \"https://github.com/crails-framework/$package.git#$CRAILS_VERSION\"\ndone\nbpkg fetch --trust \"$CPPGET_FINGERPRINT\"\n";
  if (prebuild_patches.size() > 0){
   ecpp_stream << "\necho \"+ applying patches\"";
    for (const std::string& patch : prebuild_patches){

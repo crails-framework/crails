@@ -7,11 +7,14 @@ std::vector<std::string> postbuild_patches = {"fix-boost-pc"};
 // END LINKING
 #!/bin/bash -e
 
+if [ -z "$CPP_COMPILER" ] ; then
+  CPP_COMPILER="g++"
+fi
+
 CRAILS_VERSION=<%= crails_version %>
-COMPILER_VERSION=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`
 CPPGET_FINGERPRINT="<%= build2_fingerprint %>"
 INSTALL_ROOT=/usr/local
-BUILD_DIR="build-gcc-$COMPILER_VERSION"
+BUILD_DIR="build-$CPP_COMPILER"
 
 source ./build-environment.sh
 
@@ -20,7 +23,7 @@ source ./build-environment.sh
 ##
 echo "+ creating package at $BUILD_DIR"
 bpkg create -d "$BUILD_DIR" cc \
-  config.cxx=g++ \
+  config.cxx=$CPP_COMPILER \
   config.cc.poptions=-I/usr/local/include \
   config.cc.coptions=-O3 \
   config.bin.rpath="$INSTALL_ROOT/lib" \
