@@ -12,6 +12,7 @@ public:
     Crails::Template(renderer, target, vars), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
+    with_imagemagick(Crails::cast<bool>(vars, "with_imagemagick",  false)), 
     packages(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "packages"))), 
     sql_backends(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "sql_backends")))
   {}
@@ -40,6 +41,10 @@ ecpp_stream << "crails_packages=(";
  if (with_odb){
   ecpp_stream << "\n  ?sys:libsqlite3\n  ?sys:libpq\n  ?sys:libmysqlclient";
  };
+  ecpp_stream << "";
+ if (with_imagemagick){
+  ecpp_stream << "\n  '?sys:ImageMagick++/*'";
+ };
   ecpp_stream << "\n)\n";
     this->target.set_body(ecpp_stream.str());
   }
@@ -47,6 +52,7 @@ private:
   std::stringstream ecpp_stream;
   bool with_odb;
   bool with_comet;
+  bool with_imagemagick;
   list<string>& packages;
   list<string>& sql_backends;
 };

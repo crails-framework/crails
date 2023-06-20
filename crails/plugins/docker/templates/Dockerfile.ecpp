@@ -6,6 +6,7 @@ bool   @with_comet = false;
 bool   @with_odb = false;
 bool   @with_metarecord = false;
 bool   @with_ssh = false;
+bool   @with_imagemagick = false;
 string sass_backend = with_metarecord ? "ruby" : "nodejs";
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
 string @script_path = "";
@@ -45,6 +46,10 @@ RUN apt-get -y install cheerp-core
 
 <% if (with_ssh) do %>
 RUN apt-get -y install libssh-dev
+<% end %>
+
+<% if (with_imagemagick) do %>
+RUN apt-get -y install imagemagick
 <% end %>
 
 <% if (with_metarecord) do %>

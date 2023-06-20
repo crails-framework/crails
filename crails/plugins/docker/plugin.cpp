@@ -5,6 +5,11 @@
 
 using namespace std;
 
+static bool has_imagemagick(const ProjectConfiguration& configuration)
+{
+  return configuration.has_plugin("libcrails-image") || configuration.has_plugin("libcrails-captcha");
+}
+
 DockerPlugin::DockerPlugin()
 {
   add_command("install", []() { return make_shared<DockerInstaller>(); });
@@ -28,20 +33,22 @@ void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration
   std::remove(packages.begin(), packages.end(), "comet");
   std::remove(packages.begin(), packages.end(), "metarecord");
   renderer.should_overwrite = true;
-  renderer.vars["with_odb"]     = configuration.has_plugin("libcrails-odb");
-  renderer.vars["with_comet"]   = configuration.has_plugin("comet");
-  renderer.vars["packages"]     = &packages;
-  renderer.vars["sql_backends"] = &sql_backends;
+  renderer.vars["with_odb"]         = configuration.has_plugin("libcrails-odb");
+  renderer.vars["with_comet"]       = configuration.has_plugin("comet");
+  renderer.vars["with_imagemagick"] = has_imagemagick(configuration);
+  renderer.vars["packages"]         = &packages;
+  renderer.vars["sql_backends"]     = &sql_backends;
   renderer.generate_file("docker/build-environment.sh", "docker/base/build-environment.sh");
 }
 
 int DockerPlugin::DockerInstaller::run()
 {
   FileRenderer renderer;
-  bool with_ssh        = configuration.has_plugin("libcrails-ssh");
-  bool with_odb        = configuration.has_plugin("libcrails-odb");
-  bool with_comet      = configuration.has_plugin("comet");
-  bool with_metarecord = configuration.has_plugin("metarecord");
+  bool with_ssh         = configuration.has_plugin("libcrails-ssh");
+  bool with_odb         = configuration.has_plugin("libcrails-odb");
+  bool with_comet       = configuration.has_plugin("comet");
+  bool with_imagemagick = has_imagemagick(configuration);
+  bool with_metarecord  = configuration.has_plugin("metarecord");
   string build2_fingerprint = "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43";
 
   if (options.count("image"))
@@ -49,6 +56,7 @@ int DockerPlugin::DockerInstaller::run()
   renderer.vars["crails_version"] = configuration.version();
   renderer.vars["with_odb"] = with_odb;
   renderer.vars["with_comet"] = with_comet;
+  renderer.vars["with_imagemagick"] = with_imagemagick;
   renderer.vars["with_metarecord"] = with_metarecord;
   renderer.vars["with_ssh"] = with_ssh;
   renderer.vars["build2_fingerprint"] = build2_fingerprint;
@@ -79,6 +87,7 @@ int DockerPlugin::DockerNew::run()
   renderer.vars["script_path"] = string("base/");
   renderer.vars["with_odb"] = configuration.has_plugin("libcrails-odb");
   renderer.vars["with_comet"] = configuration.has_plugin("comet");
+  renderer.vars["with_imagemagick"] = has_imagemagick(configuration);
   renderer.vars["with_metarecord"] = configuration.has_plugin("metarecord");
   renderer.generate_file("docker/Dockerfile", "docker/" + name + "/Dockerfile");
   return 0;

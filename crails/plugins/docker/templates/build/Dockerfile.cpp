@@ -15,6 +15,7 @@ public:
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_metarecord(Crails::cast<bool>(vars, "with_metarecord",  false)), 
     with_ssh(Crails::cast<bool>(vars, "with_ssh",  false)), 
+    with_imagemagick(Crails::cast<bool>(vars, "with_imagemagick",  false)), 
     sass_backend( with_metarecord ? "ruby" : "nodejs"), 
     cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
     script_path(Crails::cast<string>(vars, "script_path",  ""))
@@ -37,6 +38,10 @@ ecpp_stream << "FROM " << ( image );
   ecpp_stream << "\n";
  if (with_ssh){
   ecpp_stream << "\nRUN apt-get -y install libssh-dev";
+ };
+  ecpp_stream << "\n";
+ if (with_imagemagick){
+  ecpp_stream << "\nRUN apt-get -y install imagemagick";
  };
   ecpp_stream << "\n";
  if (with_metarecord){
@@ -70,6 +75,7 @@ private:
   bool with_odb;
   bool with_metarecord;
   bool with_ssh;
+  bool with_imagemagick;
   string sass_backend;
   string cheerp_repository;
   string script_path;

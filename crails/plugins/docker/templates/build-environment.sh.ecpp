@@ -3,6 +3,7 @@ using namespace std;
 
 bool          @with_odb = false;
 bool          @with_comet = false;
+bool          @with_imagemagick = false;
 list<string>& @packages;
 list<string>& @sql_backends;
 // END LINKING
@@ -38,5 +39,8 @@ system_packages=(
   ?sys:libsqlite3
   ?sys:libpq
   ?sys:libmysqlclient
+<% end %>
+<% if (with_imagemagick) do %>
+  '?sys:ImageMagick++/*'
 <% end %>
 )
