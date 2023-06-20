@@ -1,7 +1,6 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
 #include "../file_renderer.hpp"
-#include <boost/filesystem.hpp>
 #include <boost/process.hpp>
 
 class LayoutScaffold : public Crails::ScaffoldModel

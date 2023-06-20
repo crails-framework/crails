@@ -1,10 +1,10 @@
 #include "new.hpp"
-#include <boost/filesystem.hpp>
 #include <boost/process.hpp>
 #include <boost/program_options.hpp>
 #include <crails/utils/string.hpp>
 #include <crails/cli/conventions.hpp>
 #include <regex>
+#include <filesystem>
 #include <iostream>
 #include "../version.hpp"
 
@@ -233,19 +233,19 @@ void New::prepare_request_pipeline()
 
 bool New::move_to_project_directory()
 {
-  boost::filesystem::path path(target().data());
+  filesystem::path path(target().data());
 
-  if (!boost::filesystem::is_directory(path))
+  if (!filesystem::is_directory(path))
   {
-    boost::system::error_code ec;
+    error_code ec;
 
-    boost::filesystem::create_directories(path, ec);
+    filesystem::create_directories(path, ec);
     if (ec)
     {
       cout << "Failed to reach project directory: " << ec.message() << endl;
       return false;
     }
   }
-  boost::filesystem::current_path(path);
+  filesystem::current_path(path);
   return true;
 }

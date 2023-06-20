@@ -1,5 +1,5 @@
 #include "builder.hpp"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/process.hpp>
 #include <iostream>
 #include <regex>
@@ -70,13 +70,13 @@ void TemplateBuilder::collect_files()
 
   for (const string& input : inputs)
   {
-    if (boost::filesystem::is_directory(input))
+    if (filesystem::is_directory(input))
     {
       FileCollector collector(input, pattern);
 
-      collector.collect_files([this, collector](const boost::filesystem::path& path)
+      collector.collect_files([this, collector](const filesystem::path& path)
       {
-        string filepath      = boost::filesystem::canonical(path).string();
+        string filepath      = filesystem::canonical(path).string();
         string relative_path = collector.relative_path_for(path);
         string alias         = collector.name_for(path);
         string classname;
@@ -133,12 +133,12 @@ bool TemplateBuilder::run_ecpp(const pair<string, Target>& target, Crails::Rende
   return true;
 }
 
-void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, boost::filesystem::path template_path)
+void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, filesystem::path template_path)
 {
-  boost::filesystem::path directory(output_directory + '/' + renderer);
-  boost::filesystem::path existing_template_path(it->first);
+  filesystem::path directory(output_directory + '/' + renderer);
+  filesystem::path existing_template_path(it->first);
 
-  if (boost::filesystem::last_write_time(existing_template_path) < boost::filesystem::last_write_time(template_path))
+  if (filesystem::last_write_time(existing_template_path) < filesystem::last_write_time(template_path))
   {
     if (options.count("verbose"))
       cout << "[TEMPLATE] " << it->second.alias << " already up to date." << endl;
@@ -148,9 +148,9 @@ void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, boost::fil
 
 void TemplateBuilder::clear_dropped_templates()
 {
-  boost::filesystem::path directory(output_directory + '/' + renderer);
-  boost::filesystem::recursive_directory_iterator dir(directory);
-  list<boost::filesystem::path> marked_for_deletion;
+  filesystem::path directory(output_directory + '/' + renderer);
+  filesystem::recursive_directory_iterator dir(directory);
+  list<filesystem::path> marked_for_deletion;
 
   for (auto& entry : dir)
   {
@@ -170,7 +170,7 @@ void TemplateBuilder::clear_dropped_templates()
   for (const auto& path : marked_for_deletion)
   {
     cout << "[TEMPLATE] Clearing " << path.string() << endl;
-    boost::filesystem::remove(path);
+    filesystem::remove(path);
   }
 }
 
@@ -179,7 +179,7 @@ bool TemplateBuilder::generate_templates()
   string renderer_output_directory = output_directory + '/' + renderer;
 
   collect_files();
-  if (boost::filesystem::is_directory(renderer_output_directory))
+  if (filesystem::is_directory(renderer_output_directory))
     clear_dropped_templates();
   for (auto it = targets.begin() ; it != targets.end() ; ++it)
   {
@@ -188,8 +188,8 @@ bool TemplateBuilder::generate_templates()
     Crails::RenderFile render_target;
 
     cout << "[TEMPLATE] Generating template " << target.second.alias << endl;
-    boost::filesystem::create_directories(renderer_output_directory);
-    if (!boost::filesystem::is_directory(renderer_output_directory))
+    filesystem::create_directories(renderer_output_directory);
+    if (!filesystem::is_directory(renderer_output_directory))
     {
       cerr << "[TEMPLATE] Could not create directory " << renderer_output_directory << endl;
       return false;

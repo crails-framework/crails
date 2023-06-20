@@ -30,7 +30,6 @@ bpkg build crails \
   '?sys:libboost-beast' \
   '?sys:libboost-thread' \
   '?sys:libboost-random' \
-  '?sys:libboost-filesystem' \
   '?sys:libboost-system' \
   '?sys:libssl'
 ```

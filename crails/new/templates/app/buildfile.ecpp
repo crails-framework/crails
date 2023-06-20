@@ -6,7 +6,6 @@ std::vector<std::string>& @formats;
 // END LINKING
 libs =
 import libs += libboost-program-options%lib{boost_program_options}
-import libs += libboost-filesystem%lib{boost_filesystem}
 import libs += libboost-random%lib{boost_random}
 import libs += libcrails%lib{crails}
 <% if (configuration_type == "webservice" || configuration_type == "full") do -%>

@@ -6,12 +6,12 @@
 #include <crails/read_file.hpp>
 #include <crails/utils/join.hpp>
 #include <boost/process.hpp>
-#include <boost/filesystem.hpp>
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
 #include "../plugins/metarecord/plugin.hpp"
 #include "../plugins/i18n/plugin.hpp"
 #include "../templates/app_renderer_name.hpp"
+#include <filesystem>
 #include <iostream>
 
 using namespace std;
@@ -51,7 +51,7 @@ bool BuildManager::prebuild_renderers()
 
 bool BuildManager::generate_assets()
 {
-  if (boost::filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
+  if (filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
   {
     std::stringstream command;
 

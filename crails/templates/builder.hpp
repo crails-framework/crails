@@ -1,6 +1,6 @@
 #pragma once
 #include <boost/program_options.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <string>
 #include <map>
 #include "../command.hpp"
@@ -32,5 +32,5 @@ public:
   bool             run_ecpp(const std::pair<std::string, Target>&, Crails::RenderFile& output) const;
 
   void clear_dropped_templates();
-  void prune_up_to_date_template(Targets::iterator, boost::filesystem::path existing_template);
+  void prune_up_to_date_template(Targets::iterator, std::filesystem::path existing_template);
 };

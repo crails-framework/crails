@@ -1,12 +1,12 @@
 #pragma once
 #include "../command.hpp"
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <list>
 
 class BuildOdb : public ::Command
 {
 public:
-  typedef std::vector<boost::filesystem::path> FileList;
+  typedef std::vector<std::filesystem::path> FileList;
 
   BuildOdb()
   {

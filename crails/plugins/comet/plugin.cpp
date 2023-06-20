@@ -17,7 +17,7 @@ int CometPlugin::CometInstaller::run()
   string comet = find_comet_command(configuration);
   string output_path = "app/client";
 
-  boost::filesystem::create_directories(output_path);
+  filesystem::create_directories(output_path);
   if (configuration.has_plugin("comet"))
     cerr << "comet plugin already installed" << endl;
   else if (comet.length() == 0)
@@ -25,7 +25,7 @@ int CometPlugin::CometInstaller::run()
   else
   {
     stringstream command;
-    string asset_cpp_path = boost::filesystem::relative("lib/assets.cpp", boost::filesystem::canonical(output_path)).string();
+    string asset_cpp_path = filesystem::relative("lib/assets.cpp", filesystem::canonical(output_path)).string();
 
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();
@@ -55,7 +55,7 @@ string CometPlugin::find_comet_command(const ProjectConfiguration& configuration
 {
   string default_path = configuration.crails_bin_path() + "/comet";
 
-  if (!boost::filesystem::exists(default_path))
+  if (!filesystem::exists(default_path))
     return Crails::which("comet");
   return default_path;
 }
@@ -68,8 +68,8 @@ string CometPlugin::asset_exclusion_pattern(const ProjectConfiguration& configur
     string define = "__CHEERP_CLIENT__";
 
     return define
-      + ':' + std::filesystem::path(configuration.application_build_path() + "/client/application.js").string()
-      + ':' + std::filesystem::path(configuration.application_build_path() + "/client/application.js.map").string();
+      + ':' + filesystem::path(configuration.application_build_path() + "/client/application.js").string()
+      + ':' + filesystem::path(configuration.application_build_path() + "/client/application.js.map").string();
   }
   return "err:missing-asset-roots";
 }
@@ -81,12 +81,12 @@ string CometPlugin::assets_command_options(const ProjectConfiguration& configura
   string application_wasm   = configuration.application_build_path() + "/client/application.wasm";
   string application_js_map = configuration.application_build_path() + "/client/application.js.map";
 
-  if (std::filesystem::exists(application_js))
+  if (filesystem::exists(application_js))
     stream << " -i \"" << application_js << '"';
-  if (std::filesystem::exists(application_wasm))
+  if (filesystem::exists(application_wasm))
     stream << " -i \"" << application_wasm << '"';
   if (configuration.variable_or("build-type", "Release") == "Debug"
-   && std::filesystem::exists(application_js_map))
+   && filesystem::exists(application_js_map))
     stream << " -i \"" << application_js_map << '"';
   stream << " --ifndef " << asset_exclusion_pattern(configuration);
   return stream.str();
@@ -94,7 +94,7 @@ string CometPlugin::assets_command_options(const ProjectConfiguration& configura
 
 bool CometPlugin::update_assets(const ProjectConfiguration& configuration, bool verbose)
 {
-  if (boost::filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
+  if (filesystem::exists(configuration.crails_bin_path() + "/crails-assets"))
   {
     std::stringstream command;
 

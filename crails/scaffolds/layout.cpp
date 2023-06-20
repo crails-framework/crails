@@ -1,5 +1,7 @@
 #include "layout.hpp"
 #include <crails/cli/process.hpp>
+#include <filesystem>
+#include <cstdio>
 #include <iostream>
 
 using namespace std;
@@ -97,7 +99,7 @@ int LayoutScaffold::create_bootstrap_layout()
   const std::string asset_dir = "app/assets";
 
   renderer.generate_file("scaffolds/layouts/bootstrap.html", target_folder + "/views/layouts/" + name + ".html");
-  if (!boost::filesystem::exists(asset_dir + "/stylesheets/bootstrap/bootstrap.scss"))
+  if (!filesystem::exists(asset_dir + "/stylesheets/bootstrap/bootstrap.scss"))
     return download_bootstrap();
   return 0;
 }
@@ -114,7 +116,8 @@ static bool command_exists(const std::string& command)
 
 static bool download_archive(const std::string& url, std::function<void()> callback)
 {
-  boost::filesystem::path tmp_file = boost::filesystem::unique_path();
+  char tmp_filename[L_tmpnam];
+  filesystem::path tmp_file = std::tmpnam(tmp_filename);
   boost::process::child download_process("curl -o \"" + tmp_file.string() + "\" -L  \"" + url + '"');
 
   download_process.wait();
@@ -135,8 +138,8 @@ static bool download_archive(const std::string& url, std::function<void()> callb
 
 int LayoutScaffold::download_bootstrap()
 {
-  boost::filesystem::path css_output_dir = "app/assets/stylesheets/bootstrap";
-  boost::filesystem::path font_output_dir = "app/assets/fonts";
+  filesystem::path css_output_dir = "app/assets/stylesheets/bootstrap";
+  filesystem::path font_output_dir = "app/assets/fonts";
 
   if (command_exists("curl") && command_exists("unzip"))
   {
@@ -148,18 +151,18 @@ int LayoutScaffold::download_bootstrap()
 
     success = download_archive(css_url, [&]()
     {
-      boost::filesystem::create_directories(css_output_dir.parent_path());
-      boost::filesystem::rename("bootstrap-" + css_version + "/scss", css_output_dir);
-      boost::filesystem::remove_all("bootstrap-" + css_version);
+      filesystem::create_directories(css_output_dir.parent_path());
+      filesystem::rename("bootstrap-" + css_version + "/scss", css_output_dir);
+      filesystem::remove_all("bootstrap-" + css_version);
     });
     if (!success) return -2;
     success = download_archive(icon_url, [&]()
     {
-      boost::filesystem::create_directories(font_output_dir);
-      boost::filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff",  font_output_dir.string() + "/bootstrap-icons.woff");
-      boost::filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff2", font_output_dir.string() + "/bootstrap-icons.woff2");
-      boost::filesystem::rename("bootstrap-" + icon_version + "/bootstrap-icons.scss",        css_output_dir.string() + "/icons.scss");
-      boost::filesystem::remove_all("bootstrap-" + icon_version);
+      filesystem::create_directories(font_output_dir);
+      filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff",  font_output_dir.string() + "/bootstrap-icons.woff");
+      filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff2", font_output_dir.string() + "/bootstrap-icons.woff2");
+      filesystem::rename("bootstrap-" + icon_version + "/bootstrap-icons.scss",        css_output_dir.string() + "/icons.scss");
+      filesystem::remove_all("bootstrap-" + icon_version);
     });
     return !success ? -2 : 0;
   }

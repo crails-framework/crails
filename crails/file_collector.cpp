@@ -5,22 +5,22 @@ using namespace std;
 
 FileCollector::FileCollector(const string& input, const string& pattern) : root_path(input), pattern(pattern)
 {
-  root_path_length = boost::filesystem::canonical(root_path).string().length();
+  root_path_length = filesystem::canonical(root_path).string().length();
 }
 
-void FileCollector::collect_files(const boost::filesystem::path& directory, Callback callback) const
+void FileCollector::collect_files(const filesystem::path& directory, Callback callback) const
 {
-  if (boost::filesystem::is_directory(directory))
+  if (filesystem::is_directory(directory))
   {
-    boost::filesystem::recursive_directory_iterator dir(directory);
+    filesystem::recursive_directory_iterator dir(directory);
 
     for (auto& entry : dir)
     {
-      string filepath = boost::filesystem::canonical(entry.path()).string();
+      string filepath = filesystem::canonical(entry.path()).string();
       string filename = entry.path().filename().string();
       auto   match    = sregex_iterator(filename.begin(), filename.end(), pattern);
 
-      if (boost::filesystem::is_directory(entry))
+      if (filesystem::is_directory(entry))
       {
         collect_files(entry.path(), callback);
         continue ;
@@ -32,12 +32,12 @@ void FileCollector::collect_files(const boost::filesystem::path& directory, Call
   }
 }
 
-string FileCollector::relative_path_for(const boost::filesystem::path& path) const
+string FileCollector::relative_path_for(const filesystem::path& path) const
 {
-  return boost::filesystem::canonical(path).string().substr(root_path_length + 1);
+  return filesystem::canonical(path).string().substr(root_path_length + 1);
 }
 
-string FileCollector::name_for(const boost::filesystem::path& path) const
+string FileCollector::name_for(const filesystem::path& path) const
 {
   string relative_path = relative_path_for(path);
 
