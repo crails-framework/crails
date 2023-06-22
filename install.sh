@@ -167,9 +167,11 @@ if [ -f /usr/include/libssh/libssh.h ] || [ -f /usr/local/include/libssh/libssh.
 fi
 
 if pkg-config Magick++ ; then
+  system_packages+=(?sys:ImageMagick++/*)
   echo "+ Detected Magick++: adding libcrails-image"
   crails_packages+=(libcrails-image)
-  system_packages+=(?sys:ImageMagick++/*)
+  echo "+ Detected Magick++: adding libcrails-captcha"
+  crails_packages+=(libcrails-captcha)
 fi
 
 if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/include/v_noabi ] ; then
