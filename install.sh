@@ -4,6 +4,7 @@ DEFAULT_CRAILS_VERSION=master
 DEFAULT_COMPILER=none
 DEFAULT_INSTALL_ROOT=/usr/local
 CPPGET_FINGERPRINT="70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43"
+BPKG=bpkg
 
 echo ""
 echo "  ██████╗██████╗  █████╗ ██╗██╗     ███████╗"
@@ -182,8 +183,8 @@ fi
 ##
 ## Prepare build2
 ##
-if ! which bpkg ; then
-  echo "+ bpkg does not appear to be installed. Installing build2:"
+if ! which $BPKG ; then
+  echo "+ $BPKG does not appear to be installed. Installing build2:"
   BUILD2_VERSION="0.15.0"
   curl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh
   chmod +x build2-install-$BUILD2_VERSION.sh
@@ -200,7 +201,7 @@ if [ -d "$BUILD_DIR" ] ; then
   rm -rf "$BUILD_DIR"
 fi
 
-bpkg create -d "$BUILD_DIR" cc \
+$BPKG create -d "$BUILD_DIR" cc \
   config.cxx=$COMPILER \
   config.cc.coptions=-O3 \
   config.bin.rpath="$INSTALL_ROOT/lib" \
@@ -209,22 +210,24 @@ bpkg create -d "$BUILD_DIR" cc \
 
 cd "$BUILD_DIR"
 
+if [ ! "$SKIP_BPKG_FETCH" = "y" ] ; then
+  echo "+ fetching dependencies"
+  $BPKG add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
+  for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; do
+    $BPKG add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
+  done
+  $BPKG fetch --trust "$CPPGET_FINGERPRINT"
+fi
+
 if [ ! "$use_system_libraries" = "y" ] ; then
   echo "+ applying patches"
   sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-property-tree.sh")
   sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-broken-build2-packages.sh")
 fi
 
-echo "+ fetching dependencies"
-bpkg add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
-for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; do
-  bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
-done
-bpkg fetch --trust "$CPPGET_FINGERPRINT"
-
 if [ "$use_system_libraries" = "y" ] ; then
   echo "+ fixing libboost-process not being properly imported when using system libraries"
-  if ! bpkg build libcrails-cli --yes --configure-only ${system_packages[@]} ; then
+  if ! $BPKG build libcrails-cli --yes --configure-only ${system_packages[@]} ; then
     echo "(i) libcrails-cli failed to configure (just according to keikaku)"
     tail -n +2 libcrails-cli-2.0.0/libcrails-cli/buildfile > /tmp/tmpfile
     mv /tmp/tmpfile libcrails-cli-2.0.0/libcrails-cli/buildfile
@@ -235,7 +238,7 @@ fi
 
 if [ ! "$use_system_libraries" = "y" ] ; then
   # Patch compiling issue with boost 1.78 and 1.79, see https://github.com/boostorg/process/issues/235
-  bpkg build libboost-process --configure-only --yes || echo "failed with success"
+  $BPKG build libboost-process --configure-only --yes || echo "failed with success"
   version=`ls -d libboost-* | sed -n 1p | awk 'match($0, /[0-9]+.[0-9]+.[0-9]+/) { print substr($0, RSTART, RLENGTH) }'`
   if [ $version = "1.78.0" ] || [ $version = "1.79.0" ] ; then
     monkeypatch_target="libboost-process-$version/include/boost/process/detail/posix/executor.hpp"
@@ -245,15 +248,15 @@ if [ ! "$use_system_libraries" = "y" ] ; then
 fi
 
 echo "+ building core components"
-bpkg build crails    --yes ${system_packages[@]}
-bpkg build libcrails --yes ${system_packages[@]}
+$BPKG build crails    --yes ${system_packages[@]}
+$BPKG build libcrails --yes ${system_packages[@]}
 
 if [ "$WITH_CRAILS_DEPLOY" = "y" ] ; then
-  bpkg build crails-deploy --yes ${system_packages[@]}
+  $BPKG build crails-deploy --yes ${system_packages[@]}
 fi
 
 if [ "$WITH_COMET" = "y" ] ; then
-  bpkg build comet   --yes ${system_packages[@]}
+  $BPKG build comet   --yes ${system_packages[@]}
 fi
 
 if [ -z ${sql_backends} ] ; then
@@ -262,8 +265,8 @@ else
   echo "+ building libcrails-odb"
   config_file="libcrails-odb-2.0.0/build/config.build"
   build_file="libcrails-odb-2.0.0/libcrails-odb/buildfile"
-  bpkg build libodb --yes
-  bpkg build libcrails-odb --yes --configure-only ${system_packages[@]}
+  $BPKG build libodb --yes
+  $BPKG build libcrails-odb --yes --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
     if echo ${sql_backends} | grep $backend ; then
       echo "config.libcrails_odb.with_$backend = true"  >> $config_file
@@ -274,14 +277,14 @@ else
     fi
   done
   for backend in ${sql_backends} ; do
-    bpkg build libodb-$backend --yes ${system_packages[@]}
+    $BPKG build libodb-$backend --yes ${system_packages[@]}
   done
-  bpkg build libcrails-odb --yes ${system_packages[@]}
+  $BPKG build libcrails-odb --yes ${system_packages[@]}
 fi
 
 for package in ${crails_packages[@]} ; do
   echo "+ building $package"
-  bpkg build $package --yes ${system_packages[@]}
+  $BPKG build $package --yes ${system_packages[@]}
 done
 
 if [ -z "$install_confirmed" ] ; then
@@ -290,7 +293,7 @@ if [ -z "$install_confirmed" ] ; then
 fi
   
 if [ "$install_confirmed" = "y" ] ; then
-  bpkg install --all --recursive
+  $BPKG install --all --recursive
 
   # patch pkgconfig files containing invalid linking options
   patch_pc_script="fix-boost-pc.sh"
@@ -309,15 +312,15 @@ fi
 ##
 if [ "$WITH_ODB_COMPILER" = "y" ] ; then
   cd ..
-  bpkg create -d odb-gcc cc \
+  $BPKG create -d odb-gcc cc \
     config.cxx=g++ \
     config.cc.coptions=-O3 \
     config.bin.rpath="$INSTALL_ROOT/lib" \
     config.install.root="$INSTALL_ROOT"  \
     $SUDO_OPTION
   cd odb-gcc
-  bpkg build odb@https://pkg.cppget.org/1/beta --yes --trust "$CPPGET_FINGERPRINT"
-  bpkg install odb
+  $BPKG build odb@https://pkg.cppget.org/1/beta --yes --trust "$CPPGET_FINGERPRINT"
+  $BPKG install odb
 fi
 
 ##
