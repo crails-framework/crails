@@ -11,6 +11,7 @@ boost_list="any \
      type_index \
      lexical_cast \
      numeric_conversion \
+     describe_typesi \
      dynamic_bitset \
      range \
      array \
@@ -56,6 +57,8 @@ boost_list="any \
      logic \
      intrusive_types \
      intrusive \
+     containeral \
+     container_hash \
      container_hashi \
      ratio \
      rational \
