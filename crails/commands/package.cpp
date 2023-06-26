@@ -167,7 +167,7 @@ bool Package::generate_tarball()
       << " --transform \"s|public|" << share_path << "/public|\"";
     for (const auto& file : package_files)
       command << ' ' << file;
-    command << " public";
+    command << " public --exclude ./public/attachments --exclude CMakeFiles";
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str()) ? 0 : 1;
