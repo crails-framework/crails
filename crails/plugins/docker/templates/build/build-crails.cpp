@@ -12,7 +12,7 @@ public:
     build2_fingerprint(Crails::cast<std::string>(vars, "build2_fingerprint")), 
     with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
     with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
-    prebuild_patches( {"fix-boost-property-tree", "fix-broken-build2-packages"}), 
+    prebuild_patches( {"fix-broken-build2-packages"}), 
     postbuild_patches( {"fix-boost-pc"})
   {}
 

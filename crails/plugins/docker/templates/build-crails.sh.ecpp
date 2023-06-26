@@ -2,7 +2,7 @@ std::string @crails_version = "master";
 std::string @build2_fingerprint;
 bool @with_odb = false;
 bool @with_comet = false;
-std::vector<std::string> prebuild_patches  = {"fix-boost-property-tree", "fix-broken-build2-packages"};
+std::vector<std::string> prebuild_patches  = {"fix-broken-build2-packages"};
 std::vector<std::string> postbuild_patches = {"fix-boost-pc"};
 // END LINKING
 #!/bin/bash -e
