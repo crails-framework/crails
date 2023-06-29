@@ -161,13 +161,14 @@ bool Package::generate_tarball()
   {
     command << tar_command << " czf \"" << output << '"'
       << " --dereference"
+      << " --exclude ./public/attachments --exclude CMakeFiles"
       << " --transform \"s|usr/local/lib|" << lib_path << "|\""
       << " --transform \"s|build|" << bin_path << "|\""
       << " --transform \"s|.tmp|" << bin_path << "|\""
       << " --transform \"s|public|" << share_path << "/public|\"";
     for (const auto& file : package_files)
       command << ' ' << file;
-    command << " public --exclude ./public/attachments --exclude CMakeFiles";
+    command << " public";
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
     return Crails::run_command(command.str()) ? 0 : 1;
