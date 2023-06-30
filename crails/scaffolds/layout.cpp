@@ -159,10 +159,10 @@ int LayoutScaffold::download_bootstrap()
     success = download_archive(icon_url, [&]()
     {
       filesystem::create_directories(font_output_dir);
-      filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff",  font_output_dir.string() + "/bootstrap-icons.woff");
-      filesystem::rename("bootstrap-" + icon_version + "/fonts/bootstrap-icons.woff2", font_output_dir.string() + "/bootstrap-icons.woff2");
-      filesystem::rename("bootstrap-" + icon_version + "/bootstrap-icons.scss",        css_output_dir.string() + "/icons.scss");
-      filesystem::remove_all("bootstrap-" + icon_version);
+      filesystem::rename("bootstrap-icons-" + icon_version + "/fonts/bootstrap-icons.woff",  font_output_dir.string() + "/bootstrap-icons.woff");
+      filesystem::rename("bootstrap-icons-" + icon_version + "/fonts/bootstrap-icons.woff2", font_output_dir.string() + "/bootstrap-icons.woff2");
+      filesystem::rename("bootstrap-icons-" + icon_version + "/bootstrap-icons.scss",        css_output_dir.string() + "/icons.scss");
+      filesystem::remove_all("bootstrap-icons-" + icon_version);
     });
     return !success ? -2 : 0;
   }

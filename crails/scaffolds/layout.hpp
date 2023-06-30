@@ -15,7 +15,7 @@ public:
     desc.add_options()
       ("name,n",    boost::program_options::value<std::string>(), "layout's name (defaults to `application`)")
       ("target,t",  boost::program_options::value<std::string>(), "target view folder (defaults to `app`)")
-      ("toolkit,k", boost::program_options::value<std::vector<std::string>>(), "toolkit to use (defaults to bootstrap)");
+      ("toolkit,k", boost::program_options::value<std::string>(), "toolkit to use (defaults to bootstrap)");
   }
 
   int create(boost::program_options::variables_map& options) override
