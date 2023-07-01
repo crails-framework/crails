@@ -3,7 +3,7 @@ std::string @application_name;
 #!/bin/sh -ex
 
 if [ -z "$APPLICATION_NAME" ] ; then export APPLICATION_NAME="<%= application_name %>" ; fi
-if [ -z "$PID_FILE" ]         ; then export PID_FILE="/tmp/$APPLICATION_NAME.pid %>" ; fi
+if [ -z "$PID_FILE" ]         ; then export PID_FILE="/tmp/$APPLICATION_NAME.pid" ; fi
 
 if [ -f "$PID_FILE" ] ; then
   pid=`cat "$PID_FILE"`

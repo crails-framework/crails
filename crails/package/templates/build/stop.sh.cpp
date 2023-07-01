@@ -14,7 +14,7 @@ public:
   void render()
   {
 ecpp_stream << "#!/bin/sh -ex\n\nif [ -z \"$APPLICATION_NAME\" ] ; then export APPLICATION_NAME=\"" << ( application_name );
-  ecpp_stream << "\" ; fi\nif [ -z \"$PID_FILE\" ]         ; then export PID_FILE=\"/tmp/$APPLICATION_NAME.pid %>\" ; fi\n\nif [ -f \"$PID_FILE\" ] ; then\n  pid=`cat \"$PID_FILE\"`\n  kill -INT $pid\n  sleep 1\n  while [ $? -ne 0 ] ; do\n    kill -TERM $pid\n  done\n  rm \"$PID_FILE\"\nelse\n  exit -1\nfi\n";
+  ecpp_stream << "\" ; fi\nif [ -z \"$PID_FILE\" ]         ; then export PID_FILE=\"/tmp/$APPLICATION_NAME.pid\" ; fi\n\nif [ -f \"$PID_FILE\" ] ; then\n  pid=`cat \"$PID_FILE\"`\n  kill -INT $pid\n  sleep 1\n  while [ $? -ne 0 ] ; do\n    kill -TERM $pid\n  done\n  rm \"$PID_FILE\"\nelse\n  exit -1\nfi\n";
     this->target.set_body(ecpp_stream.str());
   }
 private:
