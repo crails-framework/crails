@@ -9,6 +9,8 @@
 #include <crails/utils/string.hpp>
 #include <crails/utils/split.hpp>
 #include <crails/cli/conventions.hpp>
+#include <crails/cli/process.hpp>
+#include <crails/logger.hpp>
 
 using namespace std;
 
@@ -16,6 +18,24 @@ using namespace std;
 // crails templates -r html -i app/views -t Crails::HtmlTemplate -z crails/html_template.hpp
 // json:
 // crails templates -r json -i app/views -t Crails::JsonTemplate -z crails/json_template.hpp
+// rss:
+// crails templates -r rss -i app/views -t Crails::RssTemplate -z crails/rss_template.hpp
+
+static string ecpp_binary(const ProjectConfiguration& configuration)
+{
+  string path = configuration.crails_bin_path();
+
+  Crails::logger << "ecpp_binary lookup: crails_bin_path=" << path << Crails::Logger::endl;
+  if (path.length() == 0)
+  {
+    string which_query = Crails::which("ecpp");
+
+    if (which_query.length() == 0)
+      throw std::runtime_error("Could not find ecpp binary");
+    return which_query;
+  }
+  return path + "/ecpp";
+}
 
 void TemplateBuilder::options_description(boost::program_options::options_description& desc) const
 {
@@ -96,10 +116,9 @@ void TemplateBuilder::collect_files()
 
 string TemplateBuilder::command_for_target(const pair<string, Target>& target) const
 {
-  string ecpp_binary = configuration.crails_bin_path() + "/ecpp";
   stringstream command;
 
-  command << ecpp_binary << " -n " << target.second.classname << " -i " << target.first;
+  command << ecpp_binary(configuration) << " -n " << target.second.classname << " -i " << target.first;
   if (options.count("render-mode"))
     command << " -m " << options["render-mode"].as<string>();
   if (options.count("template-type"))
