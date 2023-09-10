@@ -15,6 +15,7 @@ CRAILS_VERSION=<%= crails_version %>
 CPPGET_FINGERPRINT="<%= build2_fingerprint %>"
 INSTALL_ROOT=/usr/local
 BUILD_DIR="build-$CPP_COMPILER"
+BPKG_OPTS="--yes --sys-no-query"
 
 source ./build-environment.sh
 
@@ -46,10 +47,10 @@ sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/<
 <% end %>
 
 echo "+ building core components"
-bpkg build crails    --yes ${system_packages[@]}
-bpkg build libcrails --yes ${system_packages[@]}
+bpkg build crails    $BPKG_OPTS ${system_packages[@]}
+bpkg build libcrails $BPKG_OPTS ${system_packages[@]}
 <% if (with_comet) do %>
-bpkg build comet     --yes ${system_packages[@]}
+bpkg build comet     $BPKG_OPTS ${system_packages[@]}
 <% end %>
 
 <% if (with_odb) do %>
@@ -58,8 +59,8 @@ if [ -z ${sql_backends[@]} ] ; then
 else
   echo "+ building libcrails-odb"
   config_file="libcrails-odb-2.0.0/build/config.build"
-  bpkg build libodb
-  bpkg build libcrails-odb --yes --configure-only ${system_packages[@]}
+  bpkg build libodb $BPKG_OPTS
+  bpkg build libcrails-odb $BPKG_OPTS --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
     echo ${sql_backends[@]} | grep $backend \
       && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
@@ -67,7 +68,7 @@ else
   done
   bpkg install libodb
   for backend in ${sql_backends[@]} ; do
-    bpkg build libodb-$backend ${system_packages[@]}
+    bpkg build libodb-$backend $BPKG_OPTS ${system_packages[@]}
     bpkg install libodb-$backend
   done
   bpkg build libcrails-odb ${system_packages[@]}
@@ -76,7 +77,7 @@ fi
 
 for package in ${crails_packages[@]} ; do
   echo "+ building $package"
-  bpkg build $package --yes ${system_packages[@]}
+  bpkg build $package $BPKG_OPTS ${system_packages[@]}
 done
 
 echo "+ installing at $INSTALL_ROOT"
