@@ -147,3 +147,10 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("tasks/sidekix/sidetasks.cpp", sidekix_sidetasks_cpp);
   add_renderer("tasks/sidekix/sidetask.cpp",  sidekix_sidetask_cpp);
 }
+
+const vector<string>& ProjectRenderer::get_mimetypes() const
+{
+  static const vector<string> meep{};
+
+  return meep;
+}
