@@ -119,7 +119,6 @@ static list<string> get_input_paths(const ProjectConfiguration& configuration)
 {
   list<string> paths{"app/data"};
 
-  if (configuration.has_plugin("comet"))
   for (const string& mod : configuration.modules())
     paths.push_back("modules/" + mod + "/data");
   return paths;
