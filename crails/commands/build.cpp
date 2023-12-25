@@ -94,6 +94,8 @@ bool BuildManager::generate_database()
     argv[argv_array.size()] = 0;
     for (int i = 0 ; i < argv_array.size() ; ++i)
       argv[i] = argv_array[i].c_str();
+    if (options.count("verbose"))
+      cout << "+ crails plugins odb build " << Crails::join(argv_array) << endl;
     odb_builder.initialize(argv_array.size(), argv);
     switch (odb_builder.run())
     {
