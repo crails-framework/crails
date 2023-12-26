@@ -61,6 +61,17 @@ static list<string> get_generators(const ProjectConfiguration& configuration)
   return generators;
 }
 
+bool MetarecordPlugin::has_view_generator(const ProjectConfiguration& configuration)
+{
+  if (configuration.has_plugin("metarecord"))
+  {
+    auto generators = get_generators(configuration);
+
+    return std::find(generators.begin(), generators.end(), "crails/view") != generators.end();
+  }
+  return false;
+}
+
 int MetarecordPlugin::MetarecordInstaller::run()
 {
   auto generators = get_generators(configuration);

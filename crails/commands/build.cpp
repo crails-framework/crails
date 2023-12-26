@@ -26,6 +26,8 @@ bool BuildManager::prebuild_renderers()
     stringstream command;
     vector<string> inputs{"app/views"};
 
+    if (MetarecordPlugin::has_view_generator(configuration))
+      inputs.push_back("lib/modules");
     for (const string& module_ : configuration.modules())
       inputs.push_back("modules/" + module_ + "/views");
     cout << "[renderers] generate " << renderer << "..." << endl;

@@ -24,4 +24,5 @@ public:
   MetarecordPlugin();
 
   static bool build(const ProjectConfiguration&, bool verbose);
+  static bool has_view_generator(const ProjectConfiguration&);
 };
