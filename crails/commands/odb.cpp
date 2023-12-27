@@ -351,6 +351,7 @@ string BuildOdb::odb_command(const string& output_dir)
          << " --schema-format separate"
          << " --hxx-prologue \"" << hxx_prologue() << '"'
          << " --output-dir " << output_dir;
+  stream << " --changelog config/odb.xml";
   if (default_pointer.length() > 0)
     stream << " --default-pointer " << default_pointer;
   if (table_prefix.length() > 0)
