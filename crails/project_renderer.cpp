@@ -59,6 +59,7 @@ declare_renderer(docker_build_odb_compiler)
 declare_renderer(docker_build_crails)
 declare_renderer(docker_build_comet)
 declare_renderer(docker_build_environment)
+declare_renderer(mail_config_mailers_hpp)
 declare_renderer(mail_config_mailers_cpp)
 declare_renderer(sync_config_sync_cpp)
 declare_renderer(signin_config_signin_cpp)
@@ -129,6 +130,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
 
   add_renderer("config/mailers.cpp", mail_config_mailers_cpp);
+  add_renderer("config/mailers.hpp", mail_config_mailers_hpp);
   add_renderer("config/sync.cpp", sync_config_sync_cpp);
   add_renderer("config/signin.cpp", signin_config_signin_cpp);
   add_renderer("config/sentry.cpp", sentry_config_sentry_cpp);
