@@ -6,6 +6,7 @@
 #include <crails/cli/process.hpp>
 #include <boost/process.hpp>
 #include <iostream>
+#include <filesystem>
 
 using namespace std;
 
@@ -30,6 +31,13 @@ static bool create_directory(filesystem::path path)
     return false;
   }
   return true;
+}
+
+static bool is_path_to_schema(const filesystem::path& path)
+{
+  string filename = path.filename().string();
+
+  return filename.compare(filename.length() - 11, 11, "-schema.cxx") == 0;
 }
 
 std::string application_xml_path()
@@ -326,6 +334,8 @@ void BuildOdb::apply_new_version()
   });
   clearer.collect_files([&existing_files](const filesystem::path& path)
   {
+    if (is_path_to_schema(path))
+      return ;
     if (std::find(existing_files.begin(), existing_files.end(), path.filename().string()) == existing_files.end())
       filesystem::remove(path);
   });
