@@ -21,6 +21,7 @@ int I18nPlugin::Installer::run()
 
   main_cpp.load_file();
   main_cpp.add_to_main_function("SingletonInstantiator<ApplicationI18n> translations;");
+  main_cpp.add_include("config/i18n.hpp");
   renderer.generate_file("config/i18n.hpp");
   renderer.generate_file("config/i18n.cpp");
   configuration.add_plugin("libcrails-i18n");
