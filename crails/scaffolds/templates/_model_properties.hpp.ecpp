@@ -1,0 +1,24 @@
+#include <algorithm>
+#include <crails/cli/conventions.hpp>
+#include "../../helpers.hpp"
+
+std::map<std::string, std::string>& @properties;
+std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float","std::size_t","std::time_t"};
+
+// END LINKING
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (it->second == "DataTree") do %>
+  DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() { return <%= it->first %>; }
+  const DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(Data value) { this-><%= it->first %>.clear(); this-><%= it->first %>.as_data().merge(value); }
+<%   end else if (it->second == "Crails::Password") do %>
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(const std::string& value) { <%= it->first %> = Crails::Password(value); }
+  const std::string& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
+<%   end else if (std::find(scalar_types.begin(), scalar_types.end(), it->second) != scalar_types.end()) do %>
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(<%= it->second %> value) { this-><%= it->first %> = value; }
+  <%= it->second %> <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
+<%   end else do %>
+  void <%= Crails::naming_convention.functions("set_" + it->first) %>(const <%= it->second %>& value) { this-><%= it->first %> = value; }
+  const <%= it->second %>& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
+<%   end %>
+<% end %>

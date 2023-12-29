@@ -35,10 +35,19 @@ if [ -z "$COMPILER" ] ; then
   fi
 fi
 
-if [ -z "$sql_backends" ] ; then
-  echo "(i) Available database backends are: sqlite pgsql mysql oracle"
+if [ -z "$db_backends" ] ; then
+  echo "(i) Available database backends are: sqlite pgsql mysql oracle mongodb"
   echo -n "> Which database backend(s) do you want to use (separated with spaces): "
-  read sql_backends
+  read db_backends
+  sql_backends=""
+  use_mongodb="0"
+  for db_backend in $db_backends ; do
+    if [ "$db_backend" = "mongodb" ] ; then
+      use_mongodb="1"
+    else
+      sql_backends="$sql_backends $db_backend"
+    fi
+  done
 fi
 
 if [ ! -z "$sql_backends" ] ; then
@@ -92,6 +101,7 @@ crails_packages=(
   libcrails-form-parser
   libcrails-i18n
   libcrails-multipart-parser
+  libcrails-multimedia
   libcrails-url-parser
   libcrails-xml-parser
   libcrails-json-parser
@@ -175,11 +185,13 @@ if pkg-config Magick++ ; then
   crails_packages+=(libcrails-captcha)
 fi
 
-if [ -d /usr/include/mongocxx/v_noabi ] || [ -d /usr/local/mongocxx/include/v_noabi ] ; then
-  echo "+ Detected mongocxx"
-  if [ -d /usr/include/bsoncxx/v_noabi ] || [ -d /usr/local/bsoncxx/include/v_noabi ] ; then
-    echo "+ Detected bsoncxx: adding libcrails-mongodb"
+if [ "$use_mongodb" = "1" ] ; then 
+  if pkgconf libmongocxx ; then
+    echo "+ Detected mongocxx: adding libcrails-mongodb"
     crails_packages+=(libcrails-mongodb)
+    system_packages+=(?sys:libmongocxx/*)
+  else
+    echo "+ libmongocxx not found - pkgconf libmongocxx did not return zero"
   fi
 fi
 

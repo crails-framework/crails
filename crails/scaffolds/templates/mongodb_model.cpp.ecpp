@@ -1,0 +1,41 @@
+#include <crails/utils/string.hpp>
+#include <crails/cli/conventions.hpp>
+std::string @filename;
+std::string @classname;
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#include "<%= filename %>.hpp"
+
+const std::string <%= classname %>::collection_name = "<%= classname %>";
+const std::string <%= classname %>::scope = "<%= Crails::naming_convention.keys(classname) %>";
+const std::string <%= classname %>::plural_scope = "<%= Crails::pluralize(Crails::naming_convention.keys(classname)) %>";
+const std::string <%= classname %>::view = "";
+
+void <%= classname %>::<%= Crails::naming_convention.functions("edit") %>(Data params)
+{
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+  if (params["<%= it->first %>"].exists())
+    <%= Crails::naming_convention.functions("set_" + it->first) %>(params["<%= it->first %>"]);
+<% end %>
+}
+
+void <%= classname %>::<%= Crails::naming_convention.functions("merge_data") %>(Data out) const
+{
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (it->second == "DataTree") do %>
+  out["<%= it->first %>"].merge(this-><%= it->first %>);
+<%   end else if (it->second == "Crails::Password") do %>
+<%     continue %>
+<%   end else do %>
+  out["<%= it->first %>"] = this-><%= it->first %>;
+<%   end %>
+<% end %>
+}
+
+std::string <%= classname %>::<%= Crails::naming_convention.functions("to_json") %>() const
+{
+  DataTree out;
+
+  merge_data(out);
+  return out.to_json();
+}

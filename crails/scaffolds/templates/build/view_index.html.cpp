@@ -35,7 +35,9 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "() %></td>";
  };
   ecpp_stream << "\n      <td>\n        <%= tag(\"a\", {{\"href\", '/' + route + '/' + id}}) yields %>Show<% yend %>\n        <%= tag(\"a\", {{\"href\", '/' + route + '/' + id + \"/edit\"}}) yields %>Edit<% yend %>\n      </td>\n    </tr>\n<% end %>\n  </tbody>\n</table>\n\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

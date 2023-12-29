@@ -17,7 +17,9 @@ ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nfile(GLOB_RECURSE task_fi
   ecpp_stream << " ${task_files})\n\ntarget_link_libraries(" << ( task_name );
   ecpp_stream << " ${dependencies})\n\nset_target_properties(" << ( task_name );
   ecpp_stream << " PROPERTIES OUTPUT_NAME \"task\")\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

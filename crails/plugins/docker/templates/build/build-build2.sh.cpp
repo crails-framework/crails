@@ -18,7 +18,9 @@ public:
 ecpp_stream << "#!/bin/sh -ex\n\nexport BUILD2_VERSION=\"" << ( build2_version );
   ecpp_stream << "\"\nexport BUILD2_FINGERPRINT=\"" << ( build2_fingerprint );
   ecpp_stream << "\"\n\ncurl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh\nchmod +x build2-install-$BUILD2_VERSION.sh\nsh build2-install-$BUILD2_VERSION.sh --yes --trust \"$BUILD2_FINGERPRINT\"\n\n\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

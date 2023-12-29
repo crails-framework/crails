@@ -13,7 +13,9 @@ public:
   void render()
   {
 ecpp_stream << "#include <boost/program_options.hpp>\n#include <iostream>\n\nusing namespace std;\n\nint main(int argc, char** argv)\n{\n  boost::program_options::options_description options_description(\"Options\");\n  boost::program_options::variables_map options;\n\n  options_description.add_options()(\"help,h\", \"produce help message\");\n  boost::program_options::store(\n    boost::program_options::parse_command_line(argc, argv, options_description),\n    options\n  );\n  boost::program_options::notify(options);\n  if (options.count(\"help\"))\n    cout << \"usage: \" << argv[0] << \" [options]\" << endl << options_description;\n  return 0;\n}\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

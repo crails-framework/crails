@@ -13,7 +13,9 @@ public:
   void render()
   {
 ecpp_stream << "#include <boost/asio.hpp>\n#include <boost/asio/ssl.hpp>\n\nusing namespace boost;\n\nnamespace Crails\n{\n  std::string get_ssl_password(std::size_t max_length, asio::ssl::context_base::password_purpose purpose)\n  {\n    return \"your_ssl_password\";\n  }\n}\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

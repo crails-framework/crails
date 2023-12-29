@@ -20,7 +20,9 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "& @model;\n// END LINKING\n<h1>Edit " << ( classname );
   ecpp_stream << "</h1>\n\n<%= partial(\"" << ( view_path );
   ecpp_stream << "/form\", {{\"model\", &model}}) %>\n\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

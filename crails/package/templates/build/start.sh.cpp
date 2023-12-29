@@ -28,7 +28,9 @@ ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
   ecpp_stream << "/public\"\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

@@ -15,7 +15,9 @@ public:
   {
 ecpp_stream << "#include <crails/params.hpp>\n\nvoid " << ( function_name );
   ecpp_stream << "(Crails::Params& params)\n{\n}\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

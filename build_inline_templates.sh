@@ -114,6 +114,10 @@ $ECPP \
   -i $SCAFFOLDS_TPL/controller.hpp.ecpp \
   >  $SCAFFOLDS_TPL/build/controller.hpp.cpp
 $ECPP \
+  -n ScaffoldsModelPropertiesHpp \
+  -i $SCAFFOLDS_TPL/_model_properties.hpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/_model_properties.hpp.cpp
+$ECPP \
   -n ScaffoldsMetarecordModelRb \
   -i $SCAFFOLDS_TPL/metarecord_model.rb.ecpp \
   >  $SCAFFOLDS_TPL/build/metarecord_model.rb.cpp
@@ -125,6 +129,14 @@ $ECPP \
   -n ScaffoldsOdbModelHpp \
   -i $SCAFFOLDS_TPL/odb_model.hpp.ecpp \
   >  $SCAFFOLDS_TPL/build/odb_model.hpp.cpp
+$ECPP \
+  -n ScaffoldsMongodbModelCpp \
+  -i $SCAFFOLDS_TPL/mongodb_model.cpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/mongodb_model.cpp.cpp
+$ECPP \
+  -n ScaffoldsMongodbModelHpp \
+  -i $SCAFFOLDS_TPL/mongodb_model.hpp.ecpp \
+  >  $SCAFFOLDS_TPL/build/mongodb_model.hpp.cpp
 $ECPP \
   -n ScaffoldsViewIndexHtml \
   -i $SCAFFOLDS_TPL/view_index.html.ecpp \

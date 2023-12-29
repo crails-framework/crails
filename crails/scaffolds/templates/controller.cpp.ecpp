@@ -9,15 +9,20 @@ string @view_path;
 string @parent_class = "ApplicationController";
 string @model_class       = "";
 string @model_header      = "";
+string @id_type           = "";
+string @database_backend  = "";
 bool   @resource_scaffold = false;
 bool   @crud_scaffold     = false;
 // END LINKING
 #include "<%= path %>.hpp"
 #include <crails/params.hpp>
+#include <crails/http_response.hpp>
 <% if (model_header.length() > 0) do %>
 #include <crails/odb/to_vector.hpp>
 #include <boost/lexical_cast.hpp>
+<%   if (database_backend == "odb") do %>
 #include "lib/odb/application-odb.hxx"
+<%   end %>
 #include "<%= model_header %>"
 <% end %>
 
@@ -45,14 +50,16 @@ void <%= classname %>::finalize()
 }
 
 <% if (model_class.length() > 0) do %>
-shared_ptr<<%= model_class %>> <%= classname %>::find_model(Crails::Odb::id_type id)
+shared_ptr<<%= model_class %>> <%= classname %>::find_model(<%= id_type %> id)
 {
-  database.find_one(model, odb::query<<%= model_class %>>::id == id);
+<% if (database_backend.length() > 0) do -%>
+  database.find_one(model, id);
   vars["model"] = model.get();
+<% end -%>
   return model;
 }
 
-void <%= classname %>::require_model(Crails::Odb::id_type id)
+void <%= classname %>::require_model(<%= id_type %> id)
 {
   if (!model && !find_model(id))
     respond_with(Crails::HttpStatus::not_found);
@@ -60,10 +67,17 @@ void <%= classname %>::require_model(Crails::Odb::id_type id)
 
 void <%= classname %>::find_list()
 {
+<% if (database_backend == "odb") do -%>
   odb::result<<%= model_class %>> results;
 
   database.find(results);
   model_list = Crails::Odb::to_vector<<%= model_class %>>(results);
+<% end else if (database_backend == "mongodb") do -%>
+  Crails::MongoDB::Result<<%= model_class %>> results;
+
+  database.find(results);
+  model_list = results.to_vector();
+<% end -%>
   vars["models"] = &model_list;
 }
 <% end %>
@@ -94,7 +108,9 @@ void <%= classname %>::create()
 <% if (model_class.length() > 0) do %>
   <%= model_class %> model;
   model.edit(params[<%= model_class %>::scope]);
+<% if (database_backend.length() > 0) do %>
   database.save(model);
+<% end -%>
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model.get_id()));
 <% end %>
 }
@@ -110,14 +126,16 @@ void <%= classname %>::update()
 {
 <% if (model_class.length() > 0) do %>
   model->edit(params[<%= model_class %>::scope]);
+<% if (database_backend.length() > 0) do %>
   database.save(*model);
+<% end %>
   redirect_to("<%= router_path %>/" + boost::lexical_cast<std::string>(model->get_id()));
 <% end %>
 }
 
 void <%= classname %>::destroy()
 {
-<% if (model_class.length() > 0) do %>
+<% if (model_class.length() > 0 && database_backend.length() > 0) do %>
   database.destroy(*model);
 <% end %>
   redirect_to("<%= path %>");

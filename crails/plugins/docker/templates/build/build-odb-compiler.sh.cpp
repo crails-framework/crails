@@ -15,7 +15,9 @@ public:
   {
 ecpp_stream << "#!/bin/sh -ex\n\nSYSTEM_GCC=`gcc --version | grep gcc | awk '{print $3}' | cut -d. -f1`\nif [ -z \"$ODB_COMPILER_GCC\" ] ; then\n  ODB_COMPILER_GCC=10\nfi\nFINGERPRINT=\"" << ( build2_fingerprint );
   ecpp_stream << "\"\n\napt-get -y install \\\n  gcc-$ODB_COMPILER_GCC \\\n  g++-$ODB_COMPILER_GCC \\\n  gcc-$ODB_COMPILER_GCC-plugin-dev\n\nbpkg create -d odb-gcc-$ODB_COMPILER_GCC cc \\\n  config.cxx=g++-$ODB_COMPILER_GCC \\\n  config.cc.coptions=-O3 \\\n  config.bin.rpath=/usr/local/lib \\\n  config.install.root=/usr/local\n\ncd odb-gcc-$ODB_COMPILER_GCC\n\nbpkg build odb@https://pkg.cppget.org/1/beta --yes --trust \"$FINGERPRINT\"\nbpkg install odb\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

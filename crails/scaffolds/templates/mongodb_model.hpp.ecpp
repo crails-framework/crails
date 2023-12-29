@@ -1,0 +1,36 @@
+#include <algorithm>
+#include <crails/cli/conventions.hpp>
+#include "../../helpers.hpp"
+std::string @classname;
+std::string @superclass = "public Crails::MongoDB::ModelInterface";
+std::map<std::string, std::string>& @properties;
+// END LINKING
+#pragma once
+#include <crails/mongodb/model.hpp>
+<%= includes_for_properties(properties) -%>
+
+class <%= classname %> : <%= superclass %>
+{
+public:
+  static const std::string collection_name;
+  static const std::string scope;
+  static const std::string plural_scope;
+  static const std::string view;
+
+  void set_id(const std::string& value) { id = value; }
+  std::string get_id() const override { return id; }
+  std::string to_json() const override;
+  void edit(Data) override;
+  void merge_data(Data) const;
+  <%= partial("scaffolds/_model_properties.hpp") %>
+
+private:
+  std::string id;
+<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
+<%   if (it->second == "Crails::Password") do %>
+  std::string <%= it->first %>;
+<%   end else do %>
+  <%= it->second %> <%= it->first %>;
+<%   end %>
+<% end %>
+};

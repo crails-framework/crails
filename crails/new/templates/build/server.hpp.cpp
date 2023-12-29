@@ -13,7 +13,9 @@ public:
   void render()
   {
 ecpp_stream << "#pragma once\n#include <crails/server.hpp>\n#include \"session_store.hpp\"\n\nclass ApplicationServer : public Crails::Server\n{\n  SINGLETON_IMPLEMENTATION(ApplicationServer, Crails::Server)\n\n  ApplicationServer();\n  void initialize_request_pipe();\n\n  ApplicationSessionStore session_store;\n};\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

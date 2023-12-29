@@ -3,6 +3,7 @@
 #include "../project_configuration.hpp"
 #include "../scaffolds/controller.hpp"
 #include "../scaffolds/odb_model.hpp"
+#include "../scaffolds/mongodb_model.hpp"
 #include "../scaffolds/metarecord_model.hpp"
 #include "../scaffolds/view.hpp"
 #include "../scaffolds/task.hpp"
@@ -36,6 +37,8 @@ public:
       scaffolds.emplace("model", []() { return new MetaRecordModelScaffold; });
     else if (configuration.has_plugin("libcrails-odb"))
       scaffolds.emplace("model", []() { return new OdbModelScaffold; });
+    else if (configuration.has_plugin("libcrails-mongodb"))
+      scaffolds.emplace("model", []() { return new MongodbModelScaffold; });
     return scaffolds;
   }
 };

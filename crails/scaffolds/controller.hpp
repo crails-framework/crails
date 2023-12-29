@@ -27,6 +27,9 @@ public:
 
   int create(boost::program_options::variables_map& options) override
   {
+    ProjectConfiguration configuration;
+
+    configuration.initialize();
     if (!options.count("name") && !options.count("model"))
     {
       std::cerr << "Option --name or --model required" << std::endl;
@@ -54,7 +57,18 @@ public:
       renderer.vars["model_class"] = Crails::naming_convention.classnames(model_class);
       renderer.vars["model_header"] = ("app/models/" + path_name + ".hpp");
       renderer.vars["view_path"] = Crails::underscore(model_class);
-      renderer.vars["parent_class"] = std::string("Crails::Odb::Controller<ApplicationController>");
+      if (configuration.has_plugin("libcrails-odb"))
+      {
+        renderer.vars["database_backend"] = "odb";
+        renderer.vars["id_type"] = "Crails::Odb::id_type";
+        renderer.vars["parent_class"] = "Crails::Odb::Controller<ApplicationController>";
+      }
+      else if (configuration.has_plugin("libcrails-mongodb"))
+      {
+        renderer.vars["database_backend"] = "mongodb";
+        renderer.vars["id_type"] = "std::string";
+        renderer.vars["parent_class"] = "Crails::MongoDB::Controller<ApplicationController>";
+      }
     }
     if (options.count("header"))
       renderer.vars["model_header"] = options["header"].as<std::string>();
@@ -78,9 +92,9 @@ public:
     if (router.load_file() && router.use_symbol("Append routes here \\(do not remove this line\\)"))
     {
       if (options["mode"].as<std::string>() == "crud")
-        router.insert("  crud_actions(" + router_path + ", " + classname + ");\n");
+        router.insert("  crud_actions(\"" + router_path + "\", " + classname + ");\n");
       else if (options["mode"].as<std::string>() == "resource")
-        router.insert("  resource_actions(" + router_path + ", " + classname + ");\n");
+        router.insert("  resource_actions(\"" + router_path + "\", " + classname + ");\n");
       router.add_include(target_folder + '/' + path_name + ".hpp");
       router.save_file();
     }

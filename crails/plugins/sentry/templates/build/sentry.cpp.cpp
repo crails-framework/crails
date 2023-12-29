@@ -13,7 +13,9 @@ public:
   void render()
   {
 ecpp_stream << "#include <crails/sentry.hpp>\n#include <crails/getenv.hpp>\n\nusing namespace std;\nusing namespace Crails;\n\nconst string Sentry::project_id      = Crails::getenv(\"SENTRY_PROJECT_ID\");\nconst string Sentry::sentry_key      = Crails::getenv(\"SENTRY_KEY\");\nconst string Sentry::sentry_secret   = Crails::getenv(\"SENTRY_SECRET\");\nconst string Sentry::sentry_version  = Crails::getenv(\"SENTRY_VERSION\",  \"7\");\nconst string Sentry::server_protocol = Crails::getenv(\"SENTRY_PROTOCOL\", \"https\");\nconst string Sentry::server_url      = Crails::getenv(\"SENTRY_URL\",      \"sentry.io\");\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

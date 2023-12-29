@@ -30,9 +30,12 @@ declare_renderer(renderer_cpp)
 declare_renderer(renderer_hpp)
 declare_renderer(scaffolds_controller_cpp)
 declare_renderer(scaffolds_controller_hpp)
+declare_renderer(scaffolds_model_properties_hpp)
 declare_renderer(scaffolds_metarecord_model_rb)
 declare_renderer(scaffolds_odb_model_cpp)
 declare_renderer(scaffolds_odb_model_hpp)
+declare_renderer(scaffolds_mongodb_model_cpp)
+declare_renderer(scaffolds_mongodb_model_hpp)
 declare_renderer(scaffolds_view_index_html)
 declare_renderer(scaffolds_view_show_html)
 declare_renderer(scaffolds_view_new_html)
@@ -101,9 +104,12 @@ ProjectRenderer::ProjectRenderer()
 
   add_renderer("scaffolds/controller.cpp", scaffolds_controller_cpp);
   add_renderer("scaffolds/controller.hpp", scaffolds_controller_hpp);
+  add_renderer("scaffolds/_model_properties.hpp", scaffolds_model_properties_hpp);
   add_renderer("scaffolds/metarecord_model.rb", scaffolds_metarecord_model_rb);
   add_renderer("scaffolds/odb_model.cpp", scaffolds_odb_model_cpp);
   add_renderer("scaffolds/odb_model.hpp", scaffolds_odb_model_hpp);
+  add_renderer("scaffolds/mongodb_model.cpp", scaffolds_mongodb_model_cpp);
+  add_renderer("scaffolds/mongodb_model.hpp", scaffolds_mongodb_model_hpp);
   add_renderer("scaffolds/view_index.html", scaffolds_view_index_html);
   add_renderer("scaffolds/view_show.html", scaffolds_view_show_html);
   add_renderer("scaffolds/view_new.html", scaffolds_view_new_html);

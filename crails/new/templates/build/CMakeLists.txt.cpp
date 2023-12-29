@@ -31,7 +31,9 @@ ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nproject(" << ( project_na
   ecpp_stream << ")\npkg_check_modules(CRAILS_TESTS QUIET libcrails-tests>=" << ( crails_version);
   ecpp_stream << ")\npkg_check_modules(CRAILS_TESTS_SELENIUM QUIET libcrails-selenium>=" << ( crails_version );
   ecpp_stream << ")\n\ninclude_directories(/usr/local/include ${CRAILS_INCLUDE_DIRS} .)\n\nfile(GLOB server_files app/main.cpp)\nfile(GLOB_RECURSE crails_app\n  app/routes.cpp\n  app/controllers/*.cpp app/controllers/*.cxx\n  app/models/*.cpp      app/models/*.cxx\n  app/views/*.cpp       app/views/*.cxx\n  modules/*.cpp         modules/*.cxx\n  config/*.cpp          config/*.cxx\n  lib/*.cpp             lib/*.cxx)\nlist(FILTER crails_app EXCLUDE REGEX \"app/client/.*\")\n\nadd_library(crails-app SHARED ${crails_app})\nadd_executable(server ${server_files})\n\nset(dependencies crails-app\n                 ${CRAILS_LINK_LIBRARIES}\n                 pthread dl crypto ssl)\n# Custom dependencies (do not modify this line)\n\ntarget_link_libraries(server ${dependencies})\n\nif (CRAILS_TESTS_FOUND)\n  file(GLOB_RECURSE tests_files  spec/*.cpp)\n  add_executable(tests ${tests_files})\n  if (CRAILS_TESTS_SELENIUM_FOUND)\n    set(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -DTESTS_WITH_SELENIUM\")\n  endif()\n  target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${CRAILS_TESTS_SELENIUM_LIBRARIES} ${dependencies} ${tests_dependencies})\nendif()\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

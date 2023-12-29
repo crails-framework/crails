@@ -5,7 +5,6 @@ std::string @classname;
 std::string @superclass = "public Crails::Odb::Model";
 std::string @include = "";
 std::map<std::string, std::string>& @properties;
-std::vector<std::string> scalar_types = {"bool","char","unsigned char","char16_t","char32_t","wchar_t","signed char","int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","double","long double","float","std::size_t","std::time_t"};
 bool @metarecord = false;
 // END LINKING
 #pragma once
@@ -38,22 +37,7 @@ public:
   void <%= Crails::naming_convention.functions("edit") %>(Data);
   void <%= Crails::naming_convention.functions("merge_data") %>(Data) const;
   std::string <%= Crails::naming_convention.functions("to_json") %>() const;
-<% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>
-<%   if (it->second == "DataTree") do %>
-  DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() { return <%= it->first %>; }
-  const DataTree& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
-  void <%= Crails::naming_convention.functions("set_" + it->first) %>(Data value) { this-><%= it->first %>.clear(); this-><%= it->first %>.as_data().merge(value); }
-<%   end else if (it->second == "Crails::Password") do %>
-  void <%= Crails::naming_convention.functions("set_" + it->first) %>(const std::string& value) { <%= it->first %> = Crails::Password(value); }
-  const std::string& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
-<%   end else if (std::find(scalar_types.begin(), scalar_types.end(), it->second) != scalar_types.end()) do %>
-  void <%= Crails::naming_convention.functions("set_" + it->first) %>(<%= it->second %> value) { this-><%= it->first %> = value; }
-  <%= it->second %> <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
-<%   end else do %>
-  void <%= Crails::naming_convention.functions("set_" + it->first) %>(const <%= it->second %>& value) { this-><%= it->first %> = value; }
-  const <%= it->second %>& <%= Crails::naming_convention.functions("get_" + it->first) %>() const { return <%= it->first %>; }
-<%   end %>
-<% end %>
+  <%= partial("scaffolds/_model_properties.hpp") %>
 
 private:
 <% for (auto it = properties.begin() ; it != properties.end() ; ++it) do %>

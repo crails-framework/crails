@@ -14,6 +14,8 @@ public:
     parent_header(Crails::cast<string>(vars, "parent_header",  "app/controllers/application.hpp")), 
     model_class(Crails::cast<string>(vars, "model_class",  "")), 
     model_header(Crails::cast<string>(vars, "model_header",  "")), 
+    id_type(Crails::cast<string>(vars, "id_type",  "")), 
+    database_backend(Crails::cast<string>(vars, "database_backend",  "")), 
     resource_scaffold(Crails::cast<bool>(vars, "resource_scaffold",  false)), 
     crud_scaffold(Crails::cast<bool>(vars, "crud_scaffold",  false))
   {}
@@ -24,7 +26,13 @@ ecpp_stream << "#pragma once\n#include \"" << ( parent_header );
   ecpp_stream << "\"";
  if (model_class.length() > 0){
   ecpp_stream << "\n#include \"" << ( model_header );
-  ecpp_stream << "\"\n#include <crails/odb/controller.hpp>\n\nclass " << ( model_class );
+  ecpp_stream << "\"";
+ if (database_backend == "odb"){
+  ecpp_stream << "\n#include <crails/odb/controller.hpp>";
+ }else if (database_backend == "mongodb"){
+  ecpp_stream << "\n#include <crails/mongodb/controller.hpp>";
+ };
+  ecpp_stream << "\n\nclass " << ( model_class );
   ecpp_stream << ";";
  };
   ecpp_stream << "\n\nclass " << ( classname );
@@ -41,12 +49,16 @@ ecpp_stream << "#pragma once\n#include \"" << ( parent_header );
   ecpp_stream << "\nprotected:";
  if (model_class.length() > 0){
   ecpp_stream << "\n  std::shared_ptr<" << ( model_class );
-  ecpp_stream << "> find_model(Crails::Odb::id_type id);\n  void require_model(Crails::Odb::id_type id);\n  void find_list();\n\n  std::shared_ptr<" << ( model_class );
+  ecpp_stream << "> find_model(" << ( id_type );
+  ecpp_stream << " id);\n  void require_model(" << ( id_type );
+  ecpp_stream << " id);\n  void find_list();\n\n  std::shared_ptr<" << ( model_class );
   ecpp_stream << "> model;\n  std::vector<" << ( model_class );
   ecpp_stream << "> model_list;";
  };
   ecpp_stream << "\n};\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;
@@ -55,6 +67,8 @@ private:
   string parent_header;
   string model_class;
   string model_header;
+  string id_type;
+  string database_backend;
   bool resource_scaffold;
   bool crud_scaffold;
 };

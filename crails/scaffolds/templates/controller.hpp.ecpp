@@ -5,6 +5,8 @@ string @parent_class      = "ApplicationController";
 string @parent_header     = "app/controllers/application.hpp";
 string @model_class       = "";
 string @model_header      = "";
+string @id_type           = "";
+string @database_backend  = "";
 bool   @resource_scaffold = false;
 bool   @crud_scaffold     = false;
 // END LINKING
@@ -12,7 +14,11 @@ bool   @crud_scaffold     = false;
 #include "<%= parent_header %>"
 <% if (model_class.length() > 0) do %>
 #include "<%= model_header %>"
+<% if (database_backend == "odb") do %>
 #include <crails/odb/controller.hpp>
+<% end else if (database_backend == "mongodb") do %>
+#include <crails/mongodb/controller.hpp>
+<% end %>
 
 class <%= model_class %>;
 <% end %>
@@ -38,8 +44,8 @@ public:
 
 protected:
 <% if (model_class.length() > 0) do %>
-  std::shared_ptr<<%= model_class %>> find_model(Crails::Odb::id_type id);
-  void require_model(Crails::Odb::id_type id);
+  std::shared_ptr<<%= model_class %>> find_model(<%= id_type %> id);
+  void require_model(<%= id_type %> id);
   void find_list();
 
   std::shared_ptr<<%= model_class %>> model;

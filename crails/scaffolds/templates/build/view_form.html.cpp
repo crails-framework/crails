@@ -60,7 +60,9 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\n  </div>";
  };
   ecpp_stream << "\n  <button type=\"submit\" class=\"btn btn-primary\">Save</button>\n<% yields-end %>\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

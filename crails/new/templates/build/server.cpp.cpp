@@ -13,7 +13,9 @@ public:
   void render()
   {
 ecpp_stream << "#include \"server.hpp\"\n#include <crails/logger.hpp>\n\nusing namespace Crails;\n\nApplicationServer::ApplicationServer()\n{\n  logger.set_log_level(Logger::Info);\n  temporary_path = \"/tmp\";\n  initialize_request_pipe();\n}\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

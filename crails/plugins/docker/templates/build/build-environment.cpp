@@ -46,7 +46,9 @@ ecpp_stream << "crails_packages=(";
   ecpp_stream << "\n  '?sys:ImageMagick++/*'";
  };
   ecpp_stream << "\n)\n";
-    this->target.set_body(ecpp_stream.str());
+    std::string _out_buffer = ecpp_stream.str();
+    _out_buffer = this->apply_post_render_filters(_out_buffer);
+    this->target.set_body(_out_buffer);
   }
 private:
   std::stringstream ecpp_stream;

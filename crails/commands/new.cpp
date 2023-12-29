@@ -11,6 +11,7 @@
 using namespace std;
 
 const vector<string> odb_backends{"sqlite","pgsql","mysql","oracle"};
+const vector<string> db_backends{"sqlite","pgsql","mysql","oracle","mongodb"};
 
 New::New() : vars(renderer.vars)
 {
@@ -29,7 +30,7 @@ void New::options_description(boost::program_options::options_description& desc)
     ("build-dir,b",     boost::program_options::value<string>(), "build directory, relative to the project root (build/ by default)")
     ("toolchain,t",     boost::program_options::value<string>(), "options: cmake or build2 (defaults to cmake)")
     ("configuration,c", boost::program_options::value<string>(), "options: full or webservice (defaults to full)")
-    ("database,d",      boost::program_options::value<string>(), "options: sqlite, pgsql, mysql, oracle")
+    ("database,d",      boost::program_options::value<string>(), "options: sqlite, pgsql, mysql, oracle, mongodb")
     ("session-store",   boost::program_options::value<string>(), "options: NoSessionStore, CookieStore")
     ("formats,p",       boost::program_options::value<string>(), "options: html,json,xml")
     ("force,f", "overwrite existing files without asking");
@@ -80,6 +81,13 @@ bool New::generate_database(const string& backend)
   if (find(odb_backends.begin(), odb_backends.end(), backend) != odb_backends.end())
   {
     boost::process::child command(configuration.crails_bin_path() + "/crails plugins odb install -b " + backend);
+
+    command.wait();
+    return command.exit_code() == 0;
+  }
+  else if (backend == "mongodb")
+  {
+    boost::process::child command(configuration.crails_bin_path() + "/crails plugins mongodb install -b " + backend);
 
     command.wait();
     return command.exit_code() == 0;
@@ -160,9 +168,9 @@ bool New::validate_options()
   if (options.count("database"))
   {
     string database = options["database"].as<string>();
-    if (database != "none" && find(odb_backends.begin(), odb_backends.end(), database) == odb_backends.end())
+    if (database != "none" && find(db_backends.begin(), db_backends.end(), database) == db_backends.end())
     {
-      cerr << "Unknown database type `" << database << "`. Options are: " << Crails::join(odb_backends, ',') << '.' << endl;
+      cerr << "Unknown database type `" << database << "`. Options are: " << Crails::join(db_backends, ',') << '.' << endl;
       return false;
     }
   }
