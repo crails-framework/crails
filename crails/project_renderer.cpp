@@ -55,7 +55,6 @@ declare_renderer(scaffolds_module_routes_cpp)
 declare_renderer(scaffolds_spec_test_hpp)
 declare_renderer(scaffolds_spec_test_cpp)
 declare_renderer(odb_hpp)
-declare_renderer(odb_cpp)
 declare_renderer(odb_migrate_cpp)
 declare_renderer(docker_dockerfile)
 declare_renderer(docker_build_build2)
@@ -134,7 +133,6 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("package/stop.sh",         package_stop_sh);
 
   add_renderer("config/odb.hpp", odb_hpp);
-  add_renderer("config/odb.cpp", odb_cpp);
   add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
 
   add_renderer("config/mailers.cpp", mail_config_mailers_cpp);

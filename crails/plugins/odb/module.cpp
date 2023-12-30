@@ -61,7 +61,6 @@ int OdbModule::OdbInstaller::run()
     main_cpp.save_file();
   }
   renderer.generate_file("config/odb.hpp");
-  renderer.generate_file("config/odb.cpp");
   renderer.generate_file("tasks/odb_migrate/main.cpp");
   renderer.generate_file("scaffolds/task/CMakeLists.txt", "tasks/odb_migrate/CMakeLists.txt");
   configuration.remove_plugin("libcrails-databases"); // must be included after libcrails-odb
@@ -164,11 +163,4 @@ void render_odb_hpp(const Crails::Renderer&, Crails::RenderTarget& target, Crail
 "#pragma once\n"
 "#pragma db model version(1,1)\n"
 "#pragma db map type(\"INTEGER\\\\[\\\\]\") as(\"TEXT\") to(\"(?)::INTEGER[]\") from(\"(?)::TEXT\")\n"));
-}
-
-void render_odb_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
-{
-  target.set_body(std::string(
-"#include <crails/odb/transaction.hpp>\n\n"
-"const bool Crails::Odb::Transaction::use_session = false;\n"));
 }
