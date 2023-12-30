@@ -20,7 +20,7 @@ public:
 
   void render()
   {
-ecpp_stream << "cmake_minimum_required(VERSION 3.0)\n\nproject(" << ( project_name );
+ecpp_stream << "cmake_minimum_required(VERSION 3.5)\n\nproject(" << ( project_name );
   ecpp_stream << ")\n\nset(CMAKE_CXX_FLAGS \"${CMAKE_CXX_FLAGS} -std=" << ( cpp_version );
   ecpp_stream << " -Wall -Wno-unknown-pragmas -Wno-deprecated-declarations -pedantic\")\n\nfind_package(PkgConfig)\npkg_check_modules(CRAILS REQUIRED";
  for (auto plugin : plugins){

@@ -9,7 +9,7 @@ std::list<std::string>& @formats;
 std::list<std::string>& @plugins;
 
 // END LINKING
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 
 project(<%= project_name %>)
 
