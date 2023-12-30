@@ -1,5 +1,6 @@
 #include <crails/odb/database.hpp>
 #include <odb/schema-catalog.hxx>
+#include "config/databases.hpp"
 
 using namespace std;
 
@@ -14,7 +15,9 @@ int help(char* arg_command)
 
 void create_database(const std::string& database_name)
 {
-  const auto& settings = Crails::Databases::settings.at(Crails::environment).at(database_name);
+  const auto& settings = Crails::Databases::Settings::singleton::require()
+    .at(Crails::environment)
+    .at(database_name);
 
   // The second and third parameters are the user and password for the database,
   // If left empty, it uses the identity specified in the database settings.
