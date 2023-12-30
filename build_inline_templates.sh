@@ -24,6 +24,10 @@ $ECPP \
   -i $PROJECT_TPL/app/routes.cpp.ecpp \
   >  $PROJECT_TPL/build/routes.cpp.cpp
 $ECPP \
+  -n ProjectConfigRouterHpp \
+  -i $PROJECT_TPL/config/router.hpp.ecpp \
+  >  $PROJECT_TPL/build/router.hpp.cpp
+$ECPP \
   -n ProjectAppViewsExceptionHtml \
   -i $PROJECT_TPL/app/views/exception.html.ecpp \
   >  $PROJECT_TPL/build/exception.html.cpp

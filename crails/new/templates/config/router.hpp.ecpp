@@ -1,0 +1,9 @@
+#pragma once
+#include <crails/router.hpp>
+
+class ApplicationRouter : public Crails::Router
+{
+  SINGLETON_IMPLEMENTATION(ApplicationRouter, Crails::Router)
+public:
+  ApplicationRouter();
+};

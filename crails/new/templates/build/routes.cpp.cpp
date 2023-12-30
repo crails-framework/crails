@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include <crails/router.hpp>\n\nvoid Crails::Router::initialize(void)\n{\n  // Append routes here (do not remove this line)\n}\n";
+ecpp_stream << "#include \"config/router.hpp\"\n\nApplicationRouter::ApplicationRouter()\n{\n  // Append routes here (do not remove this line)\n}\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);

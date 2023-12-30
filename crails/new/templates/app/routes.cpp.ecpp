@@ -1,6 +1,6 @@
-#include <crails/router.hpp>
+#include "config/router.hpp"
 
-void Crails::Router::initialize(void)
+ApplicationRouter::ApplicationRouter()
 {
   // Append routes here (do not remove this line)
 }

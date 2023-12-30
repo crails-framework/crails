@@ -10,7 +10,7 @@ bool @with_databases = false;
 <% end -%>
 <% if (with_action) do -%>
 
-#include <crails/router.hpp>
+#include "config/router.hpp"
 <% end -%>
 <% if (with_cookies) do %>
 
@@ -29,9 +29,8 @@ int main(int argc, const char **argv)
 
 <% end %>
 <% if (with_action) do -%>
-  SingletonInstantiator<Router> router;
+  SingletonInstantiator<ApplicationRouter> router;
 
-  router->initialize();
 <% end %>
   // Initializers
 <% if (with_cookies) do -%>

@@ -66,7 +66,10 @@ bool New::generate_project_structure()
   generate_file("public/index.html");
   generate_file("spec/main.cpp");
   if (configuration.has_plugin("libcrails-action"))
+  {
     generate_file("app/routes.cpp");
+    generate_file("config/router.hpp");
+  }
   if (configuration.has_plugin("libcrails-controllers"))
     generate_file("app/controllers/application.hpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())

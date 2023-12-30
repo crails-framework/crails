@@ -21,7 +21,7 @@ ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\
  };
   ecpp_stream << "";
  if (with_action){
-  ecpp_stream << "\n#include <crails/router.hpp>";
+  ecpp_stream << "\n#include \"config/router.hpp\"";
  };
   ecpp_stream << "";
  if (with_cookies){
@@ -33,7 +33,7 @@ ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\
  };
   ecpp_stream << "";
  if (with_action){
-  ecpp_stream << "\n  SingletonInstantiator<Router> router;\n\n  router->initialize();";
+  ecpp_stream << "\n  SingletonInstantiator<ApplicationRouter> router;\n";
  };
   ecpp_stream << "\n  // Initializers";
  if (with_cookies){
