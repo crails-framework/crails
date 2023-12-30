@@ -9,22 +9,35 @@ public:
   render_ProjectSpecMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     configuration_type(Crails::cast<std::string>(vars, "configuration_type")), 
-    has_router( configuration_type == "webservice" || configuration_type == "full")
+    with_action(Crails::cast<bool>(vars, "with_action",  true)), 
+    with_databases(Crails::cast<bool>(vars, "with_databases",  false))
   {}
 
   void render()
   {
-ecpp_stream << "#include <crails/tests/runner.hpp>";
- if (has_router){
-  ecpp_stream << "\n#include <crails/router.hpp>";
+ecpp_stream << "#include <crails/tests/runner.hpp>\n#include \"config/server.hpp\"\n#include \"config/renderers.hpp\"";
+ if (with_databases){
+  ecpp_stream << "\n#include \"config/databases.hpp\"";
  };
-  ecpp_stream << "\n\nvoid Crails::Tests::Runner::setup()\n{";
- if (has_router){
-  ecpp_stream << "\n  Router::singleton::initialize();\n  Router::singleton::get()->initialize();";
+  ecpp_stream << "";
+ if (with_action){
+  ecpp_stream << "\n#include \"config/router.hpp\"";
  };
-  ecpp_stream << "\n}\n\nvoid Crails::Tests::Runner::shutdown()\n{";
- if (has_router){
-  ecpp_stream << "\n  Router::singleton::finalize();";
+  ecpp_stream << "\n\nvoid Crails::Tests::Runner::setup()\n{\n  ApplicationServer::singleton::initialize();\n  ApplicationRenderers::singleton::initialize();";
+ if (with_databases){
+  ecpp_stream << "\n  ApplicationDatabases::singleton::iniitalize();";
+ };
+  ecpp_stream << "";
+ if (with_action){
+  ecpp_stream << "\n  ApplicationRouter::singleton::initialize();";
+ };
+  ecpp_stream << "\n}\n\nvoid Crails::Tests::Runner::shutdown()\n{\n  ApplicationServer::singleton::finalize();\n  ApplicationRenderers::singleton::finalize();";
+ if (with_databases){
+  ecpp_stream << "\n  ApplicationDatabases::singleton::finalize();";
+ };
+  ecpp_stream << "";
+ if (with_action){
+  ecpp_stream << "\n  ApplicationRouter::singleton::finalize();";
  };
   ecpp_stream << "\n}\n";
     std::string _out_buffer = ecpp_stream.str();
@@ -34,7 +47,8 @@ ecpp_stream << "#include <crails/tests/runner.hpp>";
 private:
   std::stringstream ecpp_stream;
   std::string configuration_type;
-  bool has_router;
+  bool with_action;
+  bool with_databases;
 };
 
 void render_project_spec_main_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)

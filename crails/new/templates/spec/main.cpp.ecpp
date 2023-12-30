@@ -1,23 +1,38 @@
 std::string @configuration_type;
-bool has_router = configuration_type == "webservice" || configuration_type == "full";
+bool @with_action = true;
+bool @with_databases = false;
 
 // END LINKING
 #include <crails/tests/runner.hpp>
-<% if (has_router) do -%>
-#include <crails/router.hpp>
+#include "config/server.hpp"
+#include "config/renderers.hpp"
+<% if (with_databases) do -%>
+#include "config/databases.hpp"
+<% end %>
+<% if (with_action) do -%>
+#include "config/router.hpp"
 <% end %>
 
 void Crails::Tests::Runner::setup()
 {
-<% if (has_router) do -%>
-  Router::singleton::initialize();
-  Router::singleton::get()->initialize();
+  ApplicationServer::singleton::initialize();
+  ApplicationRenderers::singleton::initialize();
+<% if (with_databases) do -%>
+  ApplicationDatabases::singleton::iniitalize();
+<% end %>
+<% if (with_action) do -%>
+  ApplicationRouter::singleton::initialize();
 <% end %>
 }
 
 void Crails::Tests::Runner::shutdown()
 {
-<% if (has_router) do -%>
-  Router::singleton::finalize();
+  ApplicationServer::singleton::finalize();
+  ApplicationRenderers::singleton::finalize();
+<% if (with_databases) do -%>
+  ApplicationDatabases::singleton::finalize();
+<% end %>
+<% if (with_action) do -%>
+  ApplicationRouter::singleton::finalize();
 <% end %>
 }
