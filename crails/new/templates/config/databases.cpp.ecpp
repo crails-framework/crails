@@ -1,9 +1,9 @@
-#include <crails/databases.hpp>
+#include "databases.hpp"
 
 using namespace Crails;
 using namespace std;
 
-const Databases::Settings Databases::settings = {
+const Databases::SettingsMap ApplicationDatabases::settings = {
   {
     Production, {
     }

@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include <crails/databases.hpp>\n\nusing namespace Crails;\nusing namespace std;\n\nconst Databases::Settings Databases::settings = {\n  {\n    Production, {\n    }\n  },\n\n  {\n    Development, {\n    }\n  },\n\n  {\n    Test, {\n    }\n  }\n};\n";
+ecpp_stream << "#include \"databases.hpp\"\n\nusing namespace Crails;\nusing namespace std;\n\nconst Databases::SettingsMap ApplicationDatabases::settings = {\n  {\n    Production, {\n    }\n  },\n\n  {\n    Development, {\n    }\n  },\n\n  {\n    Test, {\n    }\n  }\n};\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);

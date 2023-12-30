@@ -51,7 +51,15 @@ int OdbModule::OdbInstaller::run()
     return -1;
   renderer.vars["task_name"] = string("odb_migrate");
   if (!std::filesystem::exists("config/databases.cpp"))
+  {
+    MainCppEditor   main_cpp("app/main.cpp");
+
+    renderer.generate_file("config/databases.hpp");
     renderer.generate_file("config/databases.cpp");
+    main_cpp.add_include("config/databases.hpp");
+    main_cpp.add_to_main_function("SingletonInstantiator<ApplicationDatabases> databases;\n");
+    main_cpp.save_file();
+  }
   renderer.generate_file("config/odb.hpp");
   renderer.generate_file("config/odb.cpp");
   renderer.generate_file("tasks/odb_migrate/main.cpp");

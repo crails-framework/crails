@@ -77,6 +77,7 @@ bool New::generate_project_structure()
 
 bool New::generate_database(const string& backend)
 {
+  generate_file("config/databases.hpp");
   generate_file("config/databases.cpp");
   if (find(odb_backends.begin(), odb_backends.end(), backend) != odb_backends.end())
   {
@@ -130,6 +131,7 @@ int New::run()
       vars["cpp_version"] = configuration.variable("std");
       use_actions(configuration_type == "full" || configuration_type == "webservice");
       use_cookies(Crails::cast<string>(vars, "session_store", "NoCookieStore") != "NoCookieStore");
+      use_databases(options.count("database"));
       prepare_renderers();
       prepare_request_pipeline();
       plugins = configuration.plugins();

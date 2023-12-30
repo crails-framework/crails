@@ -42,8 +42,11 @@ public:
 
   void add_to_main_function(const std::string& value)
   {
-    use_symbol("int\\s+main\\s*\\([^)]+\\)\\s*\\{");
-    insert("  " + value);
+    if (find(value) < 0)
+    {
+      use_symbol("int\\s+main\\s*\\([^)]+\\)\\s*\\{");
+      insert("  " + value);
+    }
   }
 };
 

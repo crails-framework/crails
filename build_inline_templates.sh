@@ -44,6 +44,10 @@ $ECPP \
   -i $PROJECT_TPL/config/environment.cpp.ecpp \
   >  $PROJECT_TPL/build/environment.cpp.cpp
 $ECPP \
+  -n ProjectConfigDatabasesHpp \
+  -i $PROJECT_TPL/config/databases.hpp.ecpp \
+  >  $PROJECT_TPL/build/databases.hpp.cpp
+$ECPP \
   -n ProjectConfigDatabasesCpp \
   -i $PROJECT_TPL/config/databases.cpp.ecpp \
   >  $PROJECT_TPL/build/databases.cpp.cpp

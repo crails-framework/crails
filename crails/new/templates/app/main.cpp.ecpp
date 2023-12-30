@@ -1,10 +1,15 @@
 bool @with_action = true;
 bool @with_cookies = false;
+bool @with_databases = false;
 // END LINKING
 #include <crails/logger.hpp>
 #include "config/renderers.hpp"
 #include "config/server.hpp"
+<% if (with_databases) do -%>
+#include "config/databases.hpp"
+<% end -%>
 <% if (with_action) do -%>
+
 #include <crails/router.hpp>
 <% end -%>
 <% if (with_cookies) do %>
@@ -19,6 +24,10 @@ int main(int argc, const char **argv)
 {
   SingletonInstantiator<ApplicationServer> server;
   SingletonInstantiator<ApplicationRenderers> renderers;
+<% if (with_databases) do -%>
+  SingletonInstantiator<ApplicationDatabases> databases;
+
+<% end %>
 <% if (with_action) do -%>
   SingletonInstantiator<Router> router;
 

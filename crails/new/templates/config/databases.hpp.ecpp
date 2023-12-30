@@ -1,0 +1,12 @@
+#pragma once
+#include <crails/databases.hpp>
+
+class ApplicationDatabases : public Crails::Databases::Settings
+{
+  SINGLETON_IMPLEMENTATION(ApplicationDatabases, Crails::Databases::Settings)
+  static const Crails::Databases::SettingsMap settings;
+public:
+  ApplicationDatabases() : Crails::Databases::Settings(settings)
+  {
+  }
+};
