@@ -12,6 +12,7 @@ declare_renderer(project_app_main_cpp)
 declare_renderer(project_app_routes_cpp)
 declare_renderer(project_app_controllers_application_hpp)
 declare_renderer(project_app_views_exception_html)
+declare_renderer(project_app_views_exception_json)
 declare_renderer(project_config_router_hpp)
 declare_renderer(project_config_server_cpp)
 declare_renderer(project_config_server_hpp)
@@ -85,6 +86,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("app/routes.cpp",                  project_app_routes_cpp);
   add_renderer("app/controllers/application.hpp", project_app_controllers_application_hpp);
   add_renderer("app/views/exception.html",        project_app_views_exception_html);
+  add_renderer("app/views/exception.json",        project_app_views_exception_json);
   add_renderer("config/server.cpp",               project_config_server_cpp);
   add_renderer("config/router.hpp",               project_config_router_hpp);
   add_renderer("config/server.hpp",               project_config_server_hpp);

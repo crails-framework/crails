@@ -32,6 +32,10 @@ $ECPP \
   -i $PROJECT_TPL/app/views/exception.html.ecpp \
   >  $PROJECT_TPL/build/exception.html.cpp
 $ECPP \
+  -n ProjectAppViewsExceptionJson \
+  -i $PROJECT_TPL/app/views/exception.json.ecpp \
+  >  $PROJECT_TPL/build/exception.json.cpp
+$ECPP \
   -n ProjectAppControllersApplicationHpp \
   -i $PROJECT_TPL/app/controllers/application.hpp.ecpp \
   >  $PROJECT_TPL/build/application.hpp.cpp

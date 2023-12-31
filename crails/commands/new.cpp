@@ -74,6 +74,8 @@ bool New::generate_project_structure()
     generate_file("app/controllers/application.hpp");
   if (find(renderers.begin(), renderers.end(), "html") != renderers.end())
     generate_file("app/views/exception.html");
+  if (find(renderers.begin(), renderers.end(), "json") != renderers.end())
+    generate_file("app/views/exception.json");
   configuration.save();
   return true;
 }
