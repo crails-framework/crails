@@ -31,6 +31,7 @@ int main(int argc, char** argv)
     return help(argv[0]);
   else
   {
+    SingletonInstantiator<ApplicationDatabases> databases;
     string database_name = argv[argc - 1];
     string option        = argc > 2 ? string(argv[1]) : string("");
 
