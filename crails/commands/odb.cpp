@@ -42,7 +42,7 @@ static bool is_path_to_schema(const filesystem::path& path)
 
 std::string application_xml_path()
 {
-  return "application.xml";
+  return "config/odb.xml";
 }
 
 void BuildOdb::clear_empty_changesets()
@@ -351,7 +351,7 @@ string BuildOdb::odb_command(const string& output_dir)
          << " --schema-format separate"
          << " --hxx-prologue \"" << hxx_prologue() << '"'
          << " --output-dir " << output_dir;
-  stream << " --changelog config/odb.xml";
+  stream << " --changelog \"" << application_xml_path() << '"';
   if (default_pointer.length() > 0)
     stream << " --default-pointer " << default_pointer;
   if (table_prefix.length() > 0)
