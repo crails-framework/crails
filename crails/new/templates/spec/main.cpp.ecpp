@@ -18,7 +18,7 @@ void Crails::Tests::Runner::setup()
   ApplicationServer::singleton::initialize();
   ApplicationRenderers::singleton::initialize();
 <% if (with_databases) do -%>
-  ApplicationDatabases::singleton::iniitalize();
+  ApplicationDatabases::singleton::initialize();
 <% end %>
 <% if (with_action) do -%>
   ApplicationRouter::singleton::initialize();

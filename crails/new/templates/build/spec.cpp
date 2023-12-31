@@ -25,7 +25,7 @@ ecpp_stream << "#include <crails/tests/runner.hpp>\n#include \"config/server.hpp
  };
   ecpp_stream << "\n\nvoid Crails::Tests::Runner::setup()\n{\n  ApplicationServer::singleton::initialize();\n  ApplicationRenderers::singleton::initialize();";
  if (with_databases){
-  ecpp_stream << "\n  ApplicationDatabases::singleton::iniitalize();";
+  ecpp_stream << "\n  ApplicationDatabases::singleton::initialize();";
  };
   ecpp_stream << "";
  if (with_action){
