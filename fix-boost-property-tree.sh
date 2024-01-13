@@ -1,6 +1,6 @@
 #!/bin/env sh
 
-BOOST_VERSION=1.78.0
+BOOST_VERSION=1.83.0
 BROKEN_FILE="include/boost/property_tree/ptree_serialization.hpp"
 
 bpkg build libboost-property-tree --configure-only --yes
