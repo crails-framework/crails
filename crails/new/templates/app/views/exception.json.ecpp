@@ -1,4 +1,4 @@
-// BEGIN LINKING
+// END LINKING
 #include <crails/params.hpp>
 
 using namespace Crails;
