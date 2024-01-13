@@ -80,7 +80,7 @@ for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/"*.pc` ; do
 done
 
 # ImageMagick fix
-for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/libcrails-image"*.pc` ; do
+for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/libcrails-image"*.pc || echo ""` ; do
   echo "boost-pc monkeypatch: checking $pc_file"
   awk '{ if ($0 ~ /^Libs:/) { gsub(" -lMagick[+]{2} ", " "); print $0 } else { print $0 } }' \
     "$pc_file" > tmpfile
