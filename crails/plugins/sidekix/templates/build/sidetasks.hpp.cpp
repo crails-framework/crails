@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#pragma once\n#include <map>\n#include <crails/params.hpp>\n\nextern const std::map<std::string, std::function<void (Crails::Params&)> > sidetasks;\n";
+ecpp_stream << "#pragma once\n#include <crails/sidekix/sidetasks.hpp>\n\nextern const Sidekix::Sidetasks sidetasks;\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);

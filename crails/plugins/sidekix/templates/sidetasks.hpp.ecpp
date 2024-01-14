@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
-#include <crails/params.hpp>
+#include <crails/sidekix/sidetasks.hpp>
 
-extern const std::map<std::string, std::function<void (Crails::Params&)> > sidetasks;
+extern const Sidekix::Sidetasks sidetasks;

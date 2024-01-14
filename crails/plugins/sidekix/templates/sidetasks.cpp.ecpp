@@ -5,6 +5,6 @@ using namespace Crails;
 
 // Sidetask declarations
 
-const map<string, function<void(Params&)>> sidetasks = {
+const Sidekix::Sidetasks sidetasks = {
   // Sidetask map
 };

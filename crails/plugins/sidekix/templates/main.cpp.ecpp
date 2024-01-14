@@ -17,6 +17,7 @@
 #else
 # include <unistd.h>
 #endif
+#include "config/databases.hpp"
 #include "ctpl.h"
 #include "sidetasks.hpp"
 
@@ -54,6 +55,24 @@ static void run_task(const std::string& type, std::function<void(Params&)> runne
     logger << Logger::Error <<
       "[!] Catched exception: " << e.what() << Logger::endl;
   }
+}
+
+static int run_inline_task(const std::string& json)
+{
+  auto data = std::make_shared<Crails::Params>();
+  string task_type;
+  Sidekix::Sidetasks::const_iterator runner;
+
+  data->from_json(json);
+  task_type = (*data)[Sidekix::task_type_param].as<string>();
+  runner = sidetasks.find(task_type);
+  if (runner == sidetasks.end())
+  {
+    logger << Logger::Error << "/!\\ Task of unknown type `" << task_type << '`' << Logger::endl;
+    return -1;
+  }
+  run_task(task_type, runner->second, data, 0);
+  return 0;
 }
 
 static void run_tasks(ctpl::thread_pool& pool, vector<string> tasks)
@@ -106,6 +125,7 @@ int main(int argc, const char** argv)
 {
   SingletonInstantiator<LogFiles> log_files(argc, argv);
   SingletonInstantiator<NoSessionStore::Factory> empty_session_store;
+  SingletonInstantiator<ApplicationDatabases> databases;
 
   {
     using namespace boost;
@@ -116,9 +136,12 @@ int main(int argc, const char** argv)
       ("log,l", program_options::value<std::string>(), "log output file")
       ("error,e", program_options::value<std::string>(), "error log output file")
       ("pidfile", program_options::value<std::string>(), "pid file")
-      ("interval", program_options::value<unsigned short>(), "task pulling interval in microseconds");
+      ("interval", program_options::value<unsigned short>(), "task pulling interval in microseconds")
+      ("task", program_options::value<std::string>(), "run a single task instead of polling from the task database");
     program_options::store(program_options::parse_command_line(argc, argv, desc), vm);
     program_options::notify(vm);
+    if (vm.count("task"))
+      return run_inline_task(vm["task"].as<std::string>());
     if (vm.count("pidfile"))
       initialize_pid_file(vm["pidfile"].as<std::string>());
     if (vm.count("interval"))

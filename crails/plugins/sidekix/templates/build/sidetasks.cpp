@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "#include \"sidetasks.hpp\"\n\nusing namespace std;\nusing namespace Crails;\n\n// Sidetask declarations\n\nconst map<string, function<void(Params&)>> sidetasks = {\n  // Sidetask map\n};\n";
+ecpp_stream << "#include \"sidetasks.hpp\"\n\nusing namespace std;\nusing namespace Crails;\n\n// Sidetask declarations\n\nconst Sidekix::Sidetasks sidetasks = {\n  // Sidetask map\n};\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);
