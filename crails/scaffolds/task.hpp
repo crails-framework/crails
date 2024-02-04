@@ -37,6 +37,7 @@ public:
     renderer.vars["task_name"] = task_name;
     renderer.generate_file("scaffolds/task/CMakeLists.txt", target_path + "/CMakeLists.txt");
     renderer.generate_file("scaffolds/task/main.cpp", target_path + "/main.cpp");
+    cmakefile.load_file();
     cmakefile.add_task(task_name);
     cmakefile.save_file();
     return 0;
