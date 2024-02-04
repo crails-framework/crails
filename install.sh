@@ -127,7 +127,6 @@ crails_packages=(
 
 system_packages=()
 boost_packages=(
-  ?sys:libboost-any
   ?sys:libboost-asio
   ?sys:libboost-beast
   ?sys:libboost-config
