@@ -191,6 +191,7 @@ if [ "$use_mongodb" = "1" ] ; then
     system_packages+=(?sys:libmongocxx/*)
   else
     echo "+ libmongocxx not found - pkgconf libmongocxx did not return zero"
+    exit -1
   fi
 fi
 
