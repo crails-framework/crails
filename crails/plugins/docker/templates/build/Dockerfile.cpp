@@ -18,7 +18,7 @@ public:
     with_imagemagick(Crails::cast<bool>(vars, "with_imagemagick",  false)), 
     sass_backend( with_metarecord ? "ruby" : "nodejs"), 
     cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
-    script_path(Crails::cast<string>(vars, "script_path",  ""))
+    script_path(Crails::cast<string>(vars, "script_path",  "base/"))
   {}
 
   void render()

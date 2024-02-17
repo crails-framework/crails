@@ -9,7 +9,7 @@ bool   @with_ssh = false;
 bool   @with_imagemagick = false;
 string sass_backend = with_metarecord ? "ruby" : "nodejs";
 string @cheerp_repository = "cheerp-nightly-ppa/ubuntu focal main";
-string @script_path = "";
+string @script_path = "base/";
 // END LINKING
 FROM <%= image %>
 
