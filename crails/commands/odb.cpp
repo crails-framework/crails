@@ -271,12 +271,18 @@ bool BuildOdb::generate_schema(const FileList& files)
   if (increment_schema_version())
   {
     filesystem::path project_dir = filesystem::canonical(configuration.project_directory());
+    filesystem::path config_odb_hpp = project_dir / "config" / "odb.hpp";
     stringstream command;
     bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
     string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");
 
     at_once = true;
-    command << odb_command(schema_output_dir) << ' ' << "--generate-schema-only" << ' ';
+    command << odb_command(schema_output_dir) << ' '
+            << "--generate-schema-only" << ' ';
+    if (filesystem::exists(config_odb_hpp))
+      command << filesystem::relative(config_odb_hpp, project_dir) << ' ';
+    else
+      cerr << "Could not find default ODB configuration file at " << config_odb_hpp << ". The database schema likely won't be versioned and the odb_migrate task will only be able to create databases from scratch." << endl; 
     for (auto file : files)
       command << filesystem::relative(file, project_dir) << ' ';
     if (options.count("verbose"))
