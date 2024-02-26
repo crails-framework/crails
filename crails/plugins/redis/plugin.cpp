@@ -36,6 +36,7 @@ int RedisPlugin::RedisInstaller::run()
   configuration.remove_plugin("libcrails-databases"); // must be included after libcrails-odb
   configuration.add_plugin("libcrails-redis");
   configuration.add_plugin("libcrails-databases");
+  configuration.add_plugin("libcrails-database-url");
   cmakefile.load_file();
   cmakefile.update_plugins();
   cmakefile.save_file();

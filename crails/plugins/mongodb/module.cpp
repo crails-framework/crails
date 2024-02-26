@@ -46,6 +46,7 @@ int MongodbModule::Installer::run()
   }
   configuration.add_plugin("libcrails-mongodb");
   configuration.add_plugin("libcrails-databases");
+  configuration.add_plugin("libcrails-database-url");
   configuration.save();
   cmakefile.load_file();
   cmakefile.update_plugins();

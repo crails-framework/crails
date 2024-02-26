@@ -66,6 +66,7 @@ int OdbModule::OdbInstaller::run()
   configuration.remove_plugin("libcrails-databases"); // must be included after libcrails-odb
   configuration.add_plugin("libcrails-odb");
   configuration.add_plugin("libcrails-databases");
+  configuration.add_plugin("libcrails-database-url");
   configuration.variable("odb-backends", Crails::join(backends, ','));
   configuration.variable("odb-at-once", "1");
   configuration.variable("odb-default-pointer", "std::shared_ptr");
