@@ -19,15 +19,15 @@ public:
 
   void render()
   {
-ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\n\nif [ -z \"$VAR_DIRECTORY\" ]        ; then export VAR_DIRECTORY=\"" << ( runtime_path );
-  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_HOSTNAME\" ] ; then export APPLICATION_HOSTNAME=\"" << ( application_host );
-  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_PORT\" ]     ; then export APPLICATION_PORT=\"" << ( application_port );
-  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_NAME\" ]     ; then export APPLICATION_NAME=\"" << ( application_name );
-  ecpp_stream << "\" ; fi\nif [ -z \"$PID_FILE\" ]             ; then export PID_FILE=\"/tmp/$APPLICATION_NAME.pid\" ; fi\n\ncd \"$VAR_DIRECTORY\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
+ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\n\nif [ -z \"$VAR_DIRECTORY\" ]    ; then export VAR_DIRECTORY=\"" << ( runtime_path );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_HOST\" ] ; then export APPLICATION_HOST=\"" << ( application_host );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_PORT\" ] ; then export APPLICATION_PORT=\"" << ( application_port );
+  ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_NAME\" ] ; then export APPLICATION_NAME=\"" << ( application_name );
+  ecpp_stream << "\" ; fi\nif [ -z \"$PID_FILE\" ]         ; then export PID_FILE=\"/tmp/$APPLICATION_NAME.pid\" ; fi\n\ncd \"$VAR_DIRECTORY\"\n\nexport LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH:" << ( lib_directory );
   ecpp_stream << ":" << ( bin_directory );
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
   ecpp_stream << "/public\"\n\nexec \"" << ( bin_directory );
-  ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOSTNAME\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
+  ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOST\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);
