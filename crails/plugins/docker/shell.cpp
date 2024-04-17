@@ -10,26 +10,66 @@ using namespace std;
 
 static const string workdir = "docker";
 
-static vector<string> make_shell_command(const string& machine_name, const boost::program_options::variables_map& options)
+static filesystem::path get_application_path(const boost::program_options::variables_map& options)
 {
-  vector<string> shell_command;
-  string application_path = options.count("application-path")
+  return options.count("application-path")
     ? options["application-path"].as<string>()
     : filesystem::current_path().string();
-  string build_path = application_path + "/docker/build/" + machine_name;
+}
+
+static filesystem::path get_build_path(const string& machine_name, const boost::program_options::variables_map& options)
+{
+  return get_application_path(options) / "docker" / "build" / machine_name;
+}
+
+static map<string,string> get_docker_volumes(const string& machine_name, const boost::program_options::variables_map& options, const ProjectConfiguration& configuration)
+{
+  map<string,string> paths{
+    {get_application_path(options).string(),         "/opt/application"},
+    {get_build_path(machine_name, options).string(), "/opt/application/build"}
+  };
+  string configured_paths = configuration.variable("docker-paths");
+
+  for (const string& token : Crails::split(configured_paths, ';'))
+  {
+    const auto parts = Crails::split(token, ':');
+
+    if (parts.size() == 2)
+    {
+      error_code err;
+      filesystem::path local_path = filesystem::canonical(*parts.begin(), err);
+
+      if (!err)
+        paths.emplace(local_path.string(), *parts.rbegin());
+      else
+        cerr << "invalid docker-path: " << token << endl;
+    }
+    else
+      cerr << "malformed docker-path: " << token << endl;
+  }
+  return paths;
+}
+
+static vector<string> make_shell_command(const string& machine_name, const boost::program_options::variables_map& options, const ProjectConfiguration& configuration)
+{
+  vector<string> shell_command;
+  string application_path = get_application_path(options).string();
+  string build_path = get_build_path(machine_name, options).string();
   string command = options.count("command")
     ? options["command"].as<string>()
     : "bash";
+  map<string,string> docker_volumes = get_docker_volumes(machine_name, options, configuration);
 
   filesystem::create_directories(build_path);
   shell_command.push_back("run");
   shell_command.push_back("--net=host");
   shell_command.push_back(!options.count("noninteractive") ? "-it" : "-t");
   shell_command.push_back("--rm");
-  shell_command.push_back("-v");
-  shell_command.push_back(application_path + ':' + "/opt/application");
-  shell_command.push_back("-v");
-  shell_command.push_back(build_path + ':' + "/opt/application/build");
+  for (auto it = docker_volumes.begin() ; it != docker_volumes.end() ; ++it)
+  {
+    shell_command.push_back("-v");
+    shell_command.push_back(it->first + ':' + it->second);
+  }
   shell_command.push_back(machine_name);
   for (const string& part : Crails::split(command, ' '))
     shell_command.push_back(part);
@@ -82,7 +122,7 @@ int DockerPlugin::DockerShell::run()
 
     build_process.wait();
     if (build_process.exit_code() == 0)
-      return Crails::execve(docker_path, make_shell_command(machine_name, options));
+      return Crails::execve(docker_path, make_shell_command(machine_name, options, configuration));
   }
   return -1;
 }
