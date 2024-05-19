@@ -104,16 +104,6 @@ int LayoutScaffold::create_bootstrap_layout()
   return 0;
 }
 
-static bool command_exists(const std::string& command)
-{
-  if (Crails::which(command).length() == 0)
-  {
-    std::cout << "Requires `" << command << "` to be installed." << std::endl;
-    return false;
-  }
-  return true;
-}
-
 static bool download_archive(const std::string& url, std::function<void()> callback)
 {
   char tmp_filename[L_tmpnam];
@@ -141,7 +131,7 @@ int LayoutScaffold::download_bootstrap()
   filesystem::path css_output_dir = "app/assets/stylesheets/bootstrap";
   filesystem::path font_output_dir = "app/assets/fonts";
 
-  if (command_exists("curl") && command_exists("unzip"))
+  if (Crails::require_command("curl") && Crails::require_command("unzip"))
   {
     const std::string css_version = "5.0.2";
     const std::string css_url = "https://github.com/twbs/bootstrap/archive/v" + css_version + ".zip";
