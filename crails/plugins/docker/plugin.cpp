@@ -34,7 +34,7 @@ void DockerPlugin::refresh_environment(const ProjectConfiguration& configuration
   list<string> sql_backends = Crails::split(configuration.variable("odb-backends"), ',');
 
   for (string_view package : packages_blacklist)
-    remove(packages.begin(), packages.end(), package);
+    packages.erase(remove(packages.begin(), packages.end(), package), packages.end());
   renderer.should_overwrite = true;
   renderer.vars["with_odb"]         = configuration.has_plugin("libcrails-odb");
   renderer.vars["with_comet"]       = configuration.has_plugin("comet");
