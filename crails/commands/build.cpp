@@ -80,6 +80,13 @@ static string model_input_dirs(ProjectConfiguration& configuration)
   return model_input_dirs.str();
 }
 
+struct ArgvArray
+{
+  const char** data;
+  ArgvArray(const std::vector<std::string>& argv_array) { data = new const char*[argv_array.size() + 1]; }
+  ~ArgvArray() { delete[] data; }
+};
+
 bool BuildManager::generate_database()
 {
   if (configuration.has_plugin("libcrails-odb"))
@@ -90,15 +97,15 @@ bool BuildManager::generate_database()
       "--output-dir","lib/odb"
     };
     if (options.count("verbose")) argv_array.push_back("--verbose");
-    const char* argv[argv_array.size() + 1];
+    ArgvArray argv(argv_array);
 
     std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
-    argv[argv_array.size()] = 0;
+    argv.data[argv_array.size()] = 0;
     for (int i = 0 ; i < argv_array.size() ; ++i)
-      argv[i] = argv_array[i].c_str();
+      argv.data[i] = argv_array[i].c_str();
     if (options.count("verbose"))
       cout << "+ crails plugins odb build " << Crails::join(argv_array) << endl;
-    odb_builder.initialize(argv_array.size(), argv);
+    odb_builder.initialize(argv_array.size(), argv.data);
     switch (odb_builder.run())
     {
     default:
