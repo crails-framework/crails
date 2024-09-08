@@ -8,7 +8,7 @@
 
 using namespace std;
 
-static const string workdir = "docker";
+static const filesystem::path workdir = "docker";
 
 static filesystem::path get_application_path(const boost::program_options::variables_map& options)
 {
@@ -78,24 +78,24 @@ static vector<string> make_shell_command(const string& machine_name, const boost
   return shell_command;
 }
 
-static string make_dockerfile_path(const boost::program_options::variables_map& options)
+static filesystem::path make_dockerfile_path(const boost::program_options::variables_map& options)
 {
-  string dockerfile_path = workdir + "/base";
+  filesystem::path dockerfile_path = workdir / "base";
 
   if (options.count("dockerfile"))
-    dockerfile_path  = workdir + '/' + options["dockerfile"].as<string>();
+    dockerfile_path  = workdir / options["dockerfile"].as<string>();
   return dockerfile_path;
 }
 
 static string make_build_command(const string& machine_name, const boost::program_options::variables_map& options)
 {
   stringstream command;
-  string dockerfile_path = make_dockerfile_path(options);
+  filesystem::path dockerfile_path = make_dockerfile_path(options);
 
   command << Crails::which("docker") << " build";
   if (!options.count("verbose"))
     command << " -q";
-  command << " -t \"" << machine_name << "\" -f \"" << dockerfile_path << "/Dockerfile\"" << " \"" << workdir << '"';
+  command << " -t \"" << machine_name << "\" -f " << (dockerfile_path / "Dockerfile") << ' ' << workdir;
   if (options.count("verbose"))
     cout << "+ " << command.str() << endl;
   return command.str();
