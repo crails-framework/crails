@@ -33,12 +33,12 @@ comet_packages=(
 <% end %>
 
 system_packages=(
-  ?sys:libcrypto
-  ?sys:libssl
+  '?sys:libcrypto/*'
+  '?sys:libssl/*'
 <% if (with_odb) do %>
-  ?sys:libsqlite3
-  ?sys:libpq
-  ?sys:libmysqlclient
+  '?sys:libsqlite3/*'
+  '?sys:libpq/*'
+  '?sys:libmysqlclient/*'
 <% end %>
 <% if (with_imagemagick) do %>
   '?sys:ImageMagick++/*'
