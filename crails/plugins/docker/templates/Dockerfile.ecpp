@@ -14,9 +14,9 @@ string @script_path = "base/";
 FROM <%= image %>
 
 WORKDIR /tmp
-ENV LD_LIBRARY_PATH /usr/local/lib
-ENV DEBIAN_FRONTEND "noninteractive"
-ENV TZ "Europe/London"
+ENV LD_LIBRARY_PATH=/usr/local/lib
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV TZ="Europe/London"
 
 RUN apt-get -y --allow-unauthenticated update && \
     apt-get -y --allow-unauthenticated upgrade && \

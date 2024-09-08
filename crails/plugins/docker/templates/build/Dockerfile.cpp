@@ -24,7 +24,7 @@ public:
   void render()
   {
 ecpp_stream << "FROM " << ( image );
-  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH /usr/local/lib\nENV DEBIAN_FRONTEND \"noninteractive\"\nENV TZ \"Europe/London\"\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nCOPY " << ( script_path );
+  ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH=/usr/local/lib\nENV DEBIAN_FRONTEND=\"noninteractive\"\nENV TZ=\"Europe/London\"\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nCOPY " << ( script_path );
   ecpp_stream << "build-build2.sh build-build2.sh\nRUN bash build-build2.sh\n";
  if (with_odb){
   ecpp_stream << "\nRUN apt-get -y install libpq-dev libsqlite3-dev libmysqlclient-dev\nCOPY " << ( script_path );
