@@ -60,16 +60,16 @@ else
   echo "+ building libcrails-odb"
   config_file="libcrails-odb-2.0.0/build/config.build"
   bpkg build libodb $BPKG_OPTS
+  bpkg install libodb
+  for backend in ${sql_backends[@]} ; do
+    bpkg build libodb-$backend $BPKG_OPTS ${system_packages[@]}
+    bpkg install libodb-$backend
+  done
   bpkg build libcrails-odb $BPKG_OPTS --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
     echo ${sql_backends[@]} | grep $backend \
       && echo "config.libcrails_odb.with_$backend = true"  >> $config_file \
       || echo "config.libcrails_odb.with_$backend = false" >> $config_file
-  done
-  bpkg install libodb
-  for backend in ${sql_backends[@]} ; do
-    bpkg build libodb-$backend $BPKG_OPTS ${system_packages[@]}
-    bpkg install libodb-$backend
   done
   bpkg build libcrails-odb ${system_packages[@]}
 fi
