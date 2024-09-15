@@ -62,7 +62,7 @@ void render_mail_config_mailers_hpp(const Crails::Renderer&, Crails::RenderTarge
 void render_mail_config_mailers_cpp(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
   target.set_body(std::string(
-  "#include <crails/mail_servers.hpp>\n\n"
+  "#include \"mailers.hpp\"\n\n"
 "using namespace Crails;\n\n"
 "ApplicationMailServers::ApplicationMailServers()\n"
 "{\n"
