@@ -22,6 +22,7 @@ pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests>=<%= crails_version%>)
 pkg_check_modules(CRAILS_TESTS_SELENIUM QUIET libcrails-selenium>=<%= crails_version %>)
 
 include_directories(/usr/local/include ${CRAILS_INCLUDE_DIRS} .)
+list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN")
 list(APPEND CMAKE_INSTALL_RPATH ${CRAILS_LIBRARY_DIRS})
 
 file(GLOB server_files app/main.cpp)
