@@ -117,9 +117,16 @@ int MetarecordPlugin::MetarecordGenerators::run()
   }
   if (options.count("remove"))
   {
-    auto removed_modules = options["remove"].as<vector<string>>();
-    std::remove_if(generators.begin(), generators.end(), [&removed_modules](const string& mod)
-    { return std::find(removed_modules.begin(), removed_modules.end(), mod) != removed_modules.end(); });
+    list<string>::iterator it = generators.begin();
+    vector<string> removed_modules = options["remove"].as<vector<string>>();
+
+    while (it != generators.end())
+    {
+      if (find(removed_modules.begin(), removed_modules.end(), *it) == removed_modules.end())
+        ++it;
+      else
+        it = generators.erase(it);
+    }
   }
   configuration.variable(generator_key, Crails::join(generators, ','));
   configuration.save();
