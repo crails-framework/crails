@@ -9,20 +9,20 @@
         width: 100%;
         text-align: center;
         font-family: Arial;
-	background-color: #ced5ff;
+        background-color: #ced5ff;
       }
 
       .crails-logo {
         position: relative;
         background-color: #ff0000;
-	color: white;
-	font-weight: bold;
-	font-size: 2em;
-	width: 100px;
-	margin: 50px auto 25px;
-	padding: 5px 0 15px;
-	line-height: 0.8em;
-	border-top: 10px #f10000 solid;
+        color: white;
+        font-weight: bold;
+        font-size: 2em;
+        width: 100px;
+        margin: 50px auto 25px;
+        padding: 5px 0 15px;
+        line-height: 0.8em;
+        border-top: 10px #f10000 solid;
       }
 
       .crails-logo-layer {
