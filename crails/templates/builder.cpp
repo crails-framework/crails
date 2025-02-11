@@ -205,15 +205,16 @@ bool TemplateBuilder::generate_templates()
     string             generated_template;
     auto               target = pair{it->first, it->second};
     Crails::RenderFile render_target;
+    string             output_path = renderer_output_directory + '/' + target.second.function + ".cpp";
 
-    cout << "[TEMPLATE] Generating template " << target.second.alias << endl;
+    cout << "[TEMPLATE] Generating template " << target.second.alias << " at " << output_path << endl;
     filesystem::create_directories(renderer_output_directory);
     if (!filesystem::is_directory(renderer_output_directory))
     {
       cerr << "[TEMPLATE] Could not create directory " << renderer_output_directory << endl;
       return false;
     }
-    render_target.open(renderer_output_directory + '/' + target.second.function + ".cpp");
+    render_target.open(output_path);
     if (!run_ecpp(target, render_target))
     {
       cerr << "[TEMPLATE] Could not generate " << target.second.alias << endl;
