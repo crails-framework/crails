@@ -4,13 +4,13 @@ bool @with_databases = false;
 
 // END LINKING
 #include <crails/tests/runner.hpp>
-#include "config/server.hpp"
-#include "config/renderers.hpp"
+#include "app/config/server.hpp"
+#include "app/config/renderers.hpp"
 <% if (with_databases) do -%>
-#include "config/databases.hpp"
+#include "app/config/databases.hpp"
 <% end %>
 <% if (with_action) do -%>
-#include "config/router.hpp"
+#include "app/config/router.hpp"
 <% end %>
 
 void Crails::Tests::Runner::setup()

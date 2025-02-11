@@ -15,13 +15,13 @@ public:
 
   void render()
   {
-ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\n#include \"config/server.hpp\"";
+ecpp_stream << "#include <crails/logger.hpp>\n#include \"app/config/renderers.hpp\"\n#include \"app/config/server.hpp\"";
  if (with_databases){
-  ecpp_stream << "\n#include \"config/databases.hpp\"";
+  ecpp_stream << "\n#include \"app/config/databases.hpp\"";
  };
   ecpp_stream << "";
  if (with_action){
-  ecpp_stream << "\n#include \"config/router.hpp\"";
+  ecpp_stream << "\n#include \"app/config/router.hpp\"";
  };
   ecpp_stream << "";
  if (with_cookies){

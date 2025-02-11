@@ -15,7 +15,7 @@ CometPlugin::CometPlugin()
 int CometPlugin::CometInstaller::run()
 {
   string comet = find_comet_command(configuration);
-  string output_path = "app/client";
+  string output_path = "client";
 
   filesystem::create_directories(output_path);
   if (configuration.has_plugin("comet"))
@@ -25,7 +25,7 @@ int CometPlugin::CometInstaller::run()
   else
   {
     stringstream command;
-    string asset_cpp_path = filesystem::relative("lib/assets.cpp", filesystem::canonical(output_path)).string();
+    string asset_cpp_path = filesystem::relative("app/autogen/assets.cpp", filesystem::canonical(output_path)).string();
 
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();

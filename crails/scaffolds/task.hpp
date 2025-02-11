@@ -33,7 +33,7 @@ public:
       return -1;
     }
     task_name = options["name"].as<std::string>();
-    target_path = "tasks/" + task_name;
+    target_path = "exe/" + task_name;
     renderer.vars["task_name"] = task_name;
     renderer.generate_file("scaffolds/task/CMakeLists.txt", target_path + "/CMakeLists.txt");
     renderer.generate_file("scaffolds/task/main.cpp", target_path + "/main.cpp");

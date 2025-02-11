@@ -25,16 +25,8 @@ include_directories(/usr/local/include ${CRAILS_INCLUDE_DIRS} .)
 list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN")
 list(APPEND CMAKE_INSTALL_RPATH ${CRAILS_LIBRARY_DIRS})
 
-file(GLOB server_files app/main.cpp)
-file(GLOB_RECURSE crails_app
-  app/routes.cpp
-  app/controllers/*.cpp app/controllers/*.cxx
-  app/models/*.cpp      app/models/*.cxx
-  app/views/*.cpp       app/views/*.cxx
-  modules/*.cpp         modules/*.cxx
-  config/*.cpp          config/*.cxx
-  lib/*.cpp             lib/*.cxx)
-list(FILTER crails_app EXCLUDE REGEX "app/client/.*")
+file(GLOB server_files exe/server/*.cpp)
+file(GLOB_RECURSE crails_app app/*.cpp app/*.cxx)
 
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})

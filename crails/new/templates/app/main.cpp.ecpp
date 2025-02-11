@@ -3,14 +3,14 @@ bool @with_cookies = false;
 bool @with_databases = false;
 // END LINKING
 #include <crails/logger.hpp>
-#include "config/renderers.hpp"
-#include "config/server.hpp"
+#include "app/config/renderers.hpp"
+#include "app/config/server.hpp"
 <% if (with_databases) do -%>
-#include "config/databases.hpp"
+#include "app/config/databases.hpp"
 <% end -%>
 <% if (with_action) do -%>
 
-#include "config/router.hpp"
+#include "app/config/router.hpp"
 <% end -%>
 <% if (with_cookies) do %>
 

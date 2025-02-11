@@ -85,10 +85,10 @@ bool I18nPlugin::build(const ProjectConfiguration& configuration)
     collect_translations_from("modules/" + mod + "/translations", translations);
   for (const auto& entry : translations)
   {
-    std::string filepath = "lib/assets/translations." + entry.first + ".json";
+    std::string filepath = "app/autogen/assets/translations." + entry.first + ".json";
     Crails::RenderFile output;
 
-    std::filesystem::create_directories("lib/assets");
+    std::filesystem::create_directories("app/autogen/assets");
     if (output.open(filepath))
     {
       std::string json = entry.second.to_json();

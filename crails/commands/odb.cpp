@@ -83,7 +83,7 @@ bool BuildOdb::increment_schema_version()
   Crails::RenderFile odb_hpp_output;
 
   Crails::read_file(application_xml_path(), application_xml);
-  if (Crails::read_file("config/odb.hpp", odb_hpp))
+  if (Crails::read_file("app/config/odb.hpp", odb_hpp))
   {
     regex version_pattern("^#pragma db model version\\([0-9]+,([0-9]+)\\)$", std::regex_constants::multiline);
     auto match = sregex_iterator(odb_hpp.begin(), odb_hpp.end(), version_pattern);
@@ -102,19 +102,19 @@ bool BuildOdb::increment_schema_version()
       }
       odb_hpp.erase(match->position(1), match->length(1));
       odb_hpp.insert(match->position(1), boost::lexical_cast<string>(current_version + 1));
-      if (odb_hpp_output.open("config/odb.hpp"))
+      if (odb_hpp_output.open("app/config/odb.hpp"))
       {
         odb_hpp_output.set_body(odb_hpp.c_str(), odb_hpp.length());
         return true;
       }
       else
-        cerr << "Cannot write into config/odb.hpp" << endl;
+        cerr << "Cannot write into app/config/odb.hpp" << endl;
     }
     else
       cerr << "Cannot find #pragma db model version in odb.hpp" << endl;
   }
   else
-    cerr << "Cannot open config/odb.hpp" << endl;
+    cerr << "Cannot open app/config/odb.hpp" << endl;
   return false;
 }
 
@@ -145,7 +145,7 @@ int BuildOdb::run()
     use_session = options["use-session"].as<bool>();
   if (options.count("includes"))
     custom_includes = Crails::split(options["includes"].as<string>(), ',');
-  output_dir = options.count("output-dir") ? options["output-dir"].as<string>() : string("lib/odb");
+  output_dir = options.count("output-dir") ? options["output-dir"].as<string>() : string("app/autogen/odb");
   input_dirs = options.count("input-dirs") ? Crails::split(options["input-dirs"].as<string>(), ',') : default_input_directories(configuration);
   files = collect_files();
   if (files.size() > 0)
@@ -271,7 +271,7 @@ bool BuildOdb::generate_schema(const FileList& files)
   if (increment_schema_version())
   {
     filesystem::path project_dir = filesystem::canonical(configuration.project_directory());
-    filesystem::path config_odb_hpp = project_dir / "config" / "odb.hpp";
+    filesystem::path config_odb_hpp = project_dir / "app" / "config" / "odb.hpp";
     stringstream command;
     bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
     string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");

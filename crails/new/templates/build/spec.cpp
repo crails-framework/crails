@@ -15,13 +15,13 @@ public:
 
   void render()
   {
-ecpp_stream << "#include <crails/tests/runner.hpp>\n#include \"config/server.hpp\"\n#include \"config/renderers.hpp\"";
+ecpp_stream << "#include <crails/tests/runner.hpp>\n#include \"app/config/server.hpp\"\n#include \"app/config/renderers.hpp\"";
  if (with_databases){
-  ecpp_stream << "\n#include \"config/databases.hpp\"";
+  ecpp_stream << "\n#include \"app/config/databases.hpp\"";
  };
   ecpp_stream << "";
  if (with_action){
-  ecpp_stream << "\n#include \"config/router.hpp\"";
+  ecpp_stream << "\n#include \"app/config/router.hpp\"";
  };
   ecpp_stream << "\n\nvoid Crails::Tests::Runner::setup()\n{\n  ApplicationServer::singleton::initialize();\n  ApplicationRenderers::singleton::initialize();";
  if (with_databases){
