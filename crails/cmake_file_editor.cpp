@@ -78,7 +78,7 @@ void CMakeFileEditor::add_dependency(const std::string& name, const std::string&
 
 void CMakeFileEditor::add_task(const std::string& name)
 {
-  contents += "\nadd_subdirectory(tasks/" + name + ')';
+  contents += "\nadd_subdirectory(exe/" + name + ')';
 }
 
 void CMakeFileEditor::add_module(const std::string& name)

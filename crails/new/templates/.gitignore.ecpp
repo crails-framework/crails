@@ -1,9 +1,13 @@
-/build/
-/docker/build-*
-/lib/
+std::string @build_system;
+// END LINKING
+/app/autogen/
 /lib-client/
 /logs/
-/package/
 /public/assets/
+/docker/build-*
 *.d
 *.o
+
+<% if (build_system == "cmake") do -%>
+/build/
+<% end -%>

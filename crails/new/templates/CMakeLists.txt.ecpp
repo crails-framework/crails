@@ -21,20 +21,12 @@ pkg_check_modules(CRAILS REQUIRED<% for (auto plugin : plugins) do %> <%= plugin
 pkg_check_modules(CRAILS_TESTS QUIET libcrails-tests>=<%= crails_version%>)
 pkg_check_modules(CRAILS_TESTS_SELENIUM QUIET libcrails-selenium>=<%= crails_version %>)
 
-include_directories(/usr/local/include ${CRAILS_INCLUDE_DIRS} .)
+include_directories(/usr/local/include ${CRAILS_INCLUDE_DIRS} ./app)
 list(APPEND CMAKE_INSTALL_RPATH "$ORIGIN")
 list(APPEND CMAKE_INSTALL_RPATH ${CRAILS_LIBRARY_DIRS})
 
-file(GLOB server_files app/main.cpp)
-file(GLOB_RECURSE crails_app
-  app/routes.cpp
-  app/controllers/*.cpp app/controllers/*.cxx
-  app/models/*.cpp      app/models/*.cxx
-  app/views/*.cpp       app/views/*.cxx
-  modules/*.cpp         modules/*.cxx
-  config/*.cpp          config/*.cxx
-  lib/*.cpp             lib/*.cxx)
-list(FILTER crails_app EXCLUDE REGEX "app/client/.*")
+file(GLOB server_files exe/server/*.cpp)
+file(GLOB_RECURSE crails_app app/*.cpp app/*.cxx)
 
 add_library(crails-app SHARED ${crails_app})
 add_executable(server ${server_files})
@@ -47,10 +39,5 @@ set(dependencies crails-app
 target_link_libraries(server ${dependencies})
 
 if (CRAILS_TESTS_FOUND)
-  file(GLOB_RECURSE tests_files  spec/*.cpp)
-  add_executable(tests ${tests_files})
-  if (CRAILS_TESTS_SELENIUM_FOUND)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTS_WITH_SELENIUM")
-  endif()
-  target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${CRAILS_TESTS_SELENIUM_LIBRARIES} ${dependencies} ${tests_dependencies})
+  add_subdirectory(spec/driver)
 endif()

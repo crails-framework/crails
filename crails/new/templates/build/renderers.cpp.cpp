@@ -17,7 +17,7 @@ public:
   {
 ecpp_stream << "#include \"renderers.hpp\"\n";
  for (auto renderer : renderers){
-  ecpp_stream << "" << ( "#include \"lib/renderers/" + renderer.first + ".hpp\"\n" );
+  ecpp_stream << "" << ( "#include \"autogen/renderers/" + renderer.first + ".hpp\"\n" );
   ecpp_stream << "";
  };
   ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nApplicationRenderers::ApplicationRenderers()\n{\n  default_format = \"" << ( default_format );

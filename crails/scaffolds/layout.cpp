@@ -15,7 +15,7 @@ const std::map<std::string, LayoutScaffold::initializer> LayoutScaffold::initial
 void render_scaffolds_layout_bootstrap_html(const Crails::Renderer&, Crails::RenderTarget& target, Crails::SharedVars&)
 {
   target.set_body(string(
-    "#include \"lib/assets.hpp\"\n\n"
+    "#include \"autogen/assets.hpp\"\n\n"
     "const char* @yield = nullptr;\n"
     "// END LINKING\n"
     "<html>\n"

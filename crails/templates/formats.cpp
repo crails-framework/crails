@@ -27,7 +27,7 @@ public:
 
   std::string include_path(const std::string& name) const
   {
-    return "lib/renderers/" + app_renderer_filename(configuration, name) + ".hpp";
+    return "autogen/renderers/" + app_renderer_filename(configuration, name) + ".hpp";
   }
 
   void add_renderer(const std::string& name)

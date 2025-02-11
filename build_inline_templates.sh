@@ -96,6 +96,10 @@ $ECPP \
   -i $PROJECT_TPL/public/index.html.ecpp \
   >  $PROJECT_TPL/build/index.html.cpp
 $ECPP \
+  -n ProjectSpecCmakelistsTxt \
+  -i $PROJECT_TPL/spec/CMakeLists.txt.ecpp \
+  >  $PROJECT_TPL/build/spec_CMakeLists.txt.cpp
+$ECPP \
   -n ProjectSpecMainCpp \
   -i $PROJECT_TPL/spec/main.cpp.ecpp \
   >  $PROJECT_TPL/build/spec.cpp

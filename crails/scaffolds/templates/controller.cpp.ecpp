@@ -21,7 +21,7 @@ bool   @crud_scaffold     = false;
 #include <crails/odb/to_vector.hpp>
 #include <boost/lexical_cast.hpp>
 <%   if (database_backend == "odb") do %>
-#include "lib/odb/application-odb.hxx"
+#include "autogen/odb/application-odb.hxx"
 <%   end %>
 #include "<%= model_header %>"
 <% end %>

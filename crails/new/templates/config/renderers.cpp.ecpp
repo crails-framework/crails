@@ -6,7 +6,7 @@ vector<pair<string, string>>& @renderers;
 #include "renderers.hpp"
 
 <% for (auto renderer : renderers) do -%>
-<%= "#include \"lib/renderers/" + renderer.first + ".hpp\"\n" %>
+<%= "#include \"autogen/renderers/" + renderer.first + ".hpp\"\n" %>
 <% end %>
 
 using namespace std;

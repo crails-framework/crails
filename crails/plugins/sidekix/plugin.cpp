@@ -29,12 +29,12 @@ int SidekixPlugin::Installer::run()
   main_cpp.add_to_main_function("SingletonInstantiator<Sidekix::Process> sidekix(argc, argv);\n");
   main_cpp.save_file();
   renderer.vars["task_name"] = std::string("sidekix");
-  renderer.generate_file("config/sidekix.cpp");
-  renderer.generate_file("tasks/sidekix/main.cpp");
-  renderer.generate_file("tasks/sidekix/ctpl.h");
-  renderer.generate_file("tasks/sidekix/sidetasks.hpp");
-  renderer.generate_file("tasks/sidekix/sidetasks.cpp");
-  renderer.generate_file("scaffolds/task/CMakeLists.txt", "tasks/sidekix/CMakeLists.txt");
+  renderer.generate_file("config/sidekix.cpp",            "app/config/sidekix.cpp");
+  renderer.generate_file("tasks/sidekix/main.cpp",        "exe/sidekix/main.cpp");
+  renderer.generate_file("tasks/sidekix/ctpl.h",          "exe/sidekix/ctpl.h");
+  renderer.generate_file("tasks/sidekix/sidetasks.hpp",   "exe/sidekix/sidetasks.hpp");
+  renderer.generate_file("tasks/sidekix/sidetasks.cpp",   "exe/sidekix/sidetasks.cpp");
+  renderer.generate_file("scaffolds/task/CMakeLists.txt", "exe/sidekix/CMakeLists.txt");
   return 0;
 }
 
@@ -52,7 +52,7 @@ int SidekixPlugin::Disabler::run()
 int SidekixPlugin::AddTask::run()
 {
   FileRenderer renderer;
-  CppFileEditor sidetasks_cpp("tasks/sidekix/sidetasks.cpp");
+  CppFileEditor sidetasks_cpp("exe/sidekix/sidetasks.cpp");
   std::string task_name, task_key, task_function, task_filename;
 
   if (!options.count("name"))
@@ -71,6 +71,6 @@ int SidekixPlugin::AddTask::run()
   sidetasks_cpp.insert("  {\"" + task_key + "\", " + task_function + "},\n");
   sidetasks_cpp.save_file();
   renderer.vars["function_name"] = task_function;
-  renderer.generate_file("tasks/sidekix/sidetask.cpp", "tasks/sidekix/sidetasks/" + task_filename + ".cpp");
+  renderer.generate_file("tasks/sidekix/sidetask.cpp", "exe/sidekix/sidetasks/" + task_filename + ".cpp");
   return 0;
 }

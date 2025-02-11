@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.5)
+
+file(GLOB_RECURSE tests_files *.cpp *.cxx)
+
+add_executable(tests ${tests_files})
+
+if (CRAILS_TESTS_SELENIUM_FOUND)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTS_WITH_SELENIUM")
+endif()
+
+target_link_libraries(tests crails-app ${CRAILS_TESTS_LIBRARIES} ${CRAILS_TESTS_SELENIUM_LIBRARIES} ${dependencies} ${tests_dependencies})

@@ -36,8 +36,16 @@ void New::options_description(boost::program_options::options_description& desc)
     ("force,f", "overwrite existing files without asking");
 }
 
+void New::generate_cmake_files()
+{
+  generate_file("CMakeLists.txt");
+  generate_file(".gitignore");
+  renderer.generate_file("spec/CMakeLists.txt", "spec/driver/CMakeLists.txt");
+}
+
 void New::generate_build2_files()
 {
+  generate_file(".gitignore");
   generate_file("manifest");
   generate_file("buildfile");
   generate_file("app/buildfile");
@@ -52,23 +60,22 @@ bool New::generate_project_structure()
   if (build_system == "build2")
     generate_build2_files();
   else
-    generate_file("CMakeLists.txt");
-  generate_file(".gitignore");
-  generate_file("app/main.cpp");
-  generate_file("config/server.cpp");
-  generate_file("config/server.hpp");
-  generate_file("config/environment.cpp");
-  generate_file("config/renderers.hpp");
-  generate_file("config/renderers.cpp");
-  generate_file("config/request_pipe.cpp");
-  generate_file("config/session_store.hpp");
-  generate_file("config/session_store.cpp");
+    generate_cmake_files();
+  renderer.generate_file("app/main.cpp", "exe/server/main.cpp");
+  renderer.generate_file("config/server.cpp", "app/config/server.cpp");
+  renderer.generate_file("config/server.hpp", "app/config/server.hpp");
+  renderer.generate_file("config/environment.cpp", "app/config/environment.cpp");
+  renderer.generate_file("config/renderers.hpp", "app/config/renderers.hpp");
+  renderer.generate_file("config/renderers.cpp", "app/config/renderers.cpp");
+  renderer.generate_file("config/request_pipe.cpp", "app/config/request_pipe.cpp");
+  renderer.generate_file("config/session_store.hpp", "app/config/session_store.hpp");
+  renderer.generate_file("config/session_store.cpp", "app/config/session_store.cpp");
   generate_file("public/index.html");
-  generate_file("spec/main.cpp");
+  renderer.generate_file("spec/main.cpp", "spec/driver/main.cpp");
   if (configuration.has_plugin("libcrails-action"))
   {
     generate_file("app/routes.cpp");
-    generate_file("config/router.hpp");
+    renderer.generate_file("config/router.hpp", "app/config/router.hpp");
   }
   if (configuration.has_plugin("libcrails-controllers"))
     generate_file("app/controllers/application.hpp");
@@ -82,8 +89,8 @@ bool New::generate_project_structure()
 
 bool New::generate_database(const string& backend)
 {
-  generate_file("config/databases.hpp");
-  generate_file("config/databases.cpp");
+  renderer.generate_file("config/databases.hpp", "app/config/databases.hpp");
+  renderer.generate_file("config/databases.cpp", "app/config/databases.cpp");
   if (find(odb_backends.begin(), odb_backends.end(), backend) != odb_backends.end())
   {
     boost::process::child command(configuration.crails_bin_path() + "/crails plugins odb install -b " + backend);
@@ -123,7 +130,7 @@ int New::run()
     {
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
-      configuration.asset_roots({"app/assets", "lib/assets"});
+      configuration.asset_roots({"app/assets", "app/autogen/assets"});
       configuration.add_plugin("libcrails");
       configuration.add_plugin("libcrails-logger");
       configuration.variable("std", "c++17");
@@ -131,6 +138,7 @@ int New::run()
       vars["project_name"] = project_name;
       vars["crails_version"] = configuration.version();
       vars["configuration_type"] = configuration_type;
+      vars["build_system"] = build_system;
       vars["formats"] = &formats;
       vars["plugins"] = &plugins;
       vars["cpp_version"] = configuration.variable("std");

@@ -26,6 +26,7 @@ public:
   int              run() override;
 private:
   void             generate_build2_files();
+  void             generate_cmake_files();
   bool             generate_project_structure();
   bool             generate_file(std::string_view filepath) { return renderer.generate_file(filepath, filepath); }
   bool             generate_database(const std::string& backend);

@@ -28,8 +28,8 @@ bool BuildManager::prebuild_renderers()
 
     if (MetarecordPlugin::has_view_generator(configuration))
     {
-      inputs.push_back("lib/app");
-      inputs.push_back("lib/modules");
+      inputs.push_back("app/autogen/app");
+      inputs.push_back("app/autogen/modules"); // TODO should module view really be part of app/autogen ?
     }
     for (const string& module_ : configuration.modules())
       inputs.push_back("modules/" + module_ + "/views");
@@ -97,7 +97,7 @@ bool BuildManager::generate_database()
     BuildOdb odb_builder;
     std::vector<std::string> argv_array{
       "--input-dirs", model_input_dirs(configuration),
-      "--output-dir","lib/odb"
+      "--output-dir","app/autogen/odb"
     };
     if (options.count("verbose")) argv_array.push_back("--verbose");
     ArgvArray argv(argv_array);

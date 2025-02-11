@@ -8,9 +8,9 @@ std::map<std::string, std::string>& @properties;
 // END LINKING
 #include "<%= filename %>.hpp"
 <% if (odb_at_once) do %>
-#include "lib/odb/application-odb.hxx"
+#include "autogen/odb/application-odb.hxx"
 <% end else do %>
-#include "lib/odb/<%= filename %>-odb.hxx"
+#include "autogen/odb/<%= filename %>-odb.hxx"
 <% end %>
 
 <% if (!metarecord) do %>

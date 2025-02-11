@@ -30,7 +30,7 @@ ecpp_stream << "#include \"" << ( path );
  if (model_header.length() > 0){
   ecpp_stream << "\n#include <crails/odb/to_vector.hpp>\n#include <boost/lexical_cast.hpp>";
    if (database_backend == "odb"){
-  ecpp_stream << "\n#include \"lib/odb/application-odb.hxx\"";
+  ecpp_stream << "\n#include \"autogen/odb/application-odb.hxx\"";
  };
   ecpp_stream << "\n#include \"" << ( model_header );
   ecpp_stream << "\"";
