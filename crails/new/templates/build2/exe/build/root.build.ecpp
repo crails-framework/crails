@@ -1,0 +1,6 @@
+using cxx
+
+hxx{*}: extension = hpp
+ixx{*}: extension = ipp
+txx{*}: extension = tpp
+cxx{*}: extension = cpp

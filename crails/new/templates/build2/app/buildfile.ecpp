@@ -1,0 +1,40 @@
+#include <list>
+
+std::string @project_name;
+std::list<std::string>& @plugins;
+
+// END LINKING
+<% for (const std::string& plugin : plugins) do -%>
+import intf_libs += <%= plugin %>%lib{<%= plugin.substr(3) %>}
+<% end -%>
+
+lib{<%= project_name %>}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+
+hxx{export}@./: cxx.importable = false
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.poptions =+ "-Wall" "-Wno-unknown-pragmas"
+cxx.poptions =+ "-pedantic"
+
+{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_STATIC_BUILD
+{hbmia objs}{*}: cxx.poptions += -DLIBCRAILS_SHARED_BUILD
+
+lib{<%= project_name %>}:
+{
+  cxx.export.poptions = "-I$out_root/app" "-I$src_root/app"
+  cxx.export.libs = $intf_libs
+}
+
+liba{<%= project_name %>}: cxx.export.poptions += -DLIBCRAILS_STATIC
+libs{<%= project_name %>}: cxx.export.poptions += -DLIBCRAILS_SHARED
+
+if $version.pre_release
+  lib{<%= project_name %>}: bin.lib.version = "-$version.project_id"
+else
+  lib{<%= project_name %>}: bin.lib.version = "-$version.major.$version.minor"
+
+{hxx ixx txx}{*}:
+{
+  install         = include/
+  install.subdirs = true
+}

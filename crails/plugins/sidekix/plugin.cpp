@@ -34,7 +34,10 @@ int SidekixPlugin::Installer::run()
   renderer.generate_file("tasks/sidekix/ctpl.h",          "exe/sidekix/ctpl.h");
   renderer.generate_file("tasks/sidekix/sidetasks.hpp",   "exe/sidekix/sidetasks.hpp");
   renderer.generate_file("tasks/sidekix/sidetasks.cpp",   "exe/sidekix/sidetasks.cpp");
-  renderer.generate_file("scaffolds/task/CMakeLists.txt", "exe/sidekix/CMakeLists.txt");
+  if (configuration.toolchain() == "build2")
+    renderer.generate_file("scaffolds/task/buildfile", "exe/sidekix/buildfile");
+  else
+    renderer.generate_file("scaffolds/task/CMakeLists.txt", "exe/sidekix/CMakeLists.txt");
   return 0;
 }
 

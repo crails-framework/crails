@@ -1,0 +1,11 @@
+std::string @project_name;
+
+// END LINKING
+import libs += lib<%= project_name %>%lib{<%= project_name %>}
+import libs += libcrails-tests%lib{crails-tests}
+
+exe{tests}: {hxx ixx txx cxx}{**} $libs
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.poptions =+ "-Wall" "-Wno-unknown-pragmas"
+cxx.poptions =+ "-pedantic"

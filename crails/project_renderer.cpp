@@ -48,6 +48,7 @@ declare_renderer(scaffolds_view_form_html)
 declare_renderer(scaffolds_view_index_json)
 declare_renderer(scaffolds_view_show_json)
 declare_renderer(scaffolds_task_cmakelists_txt)
+declare_renderer(scaffolds_task_buildfile)
 declare_renderer(scaffolds_task_main_cpp)
 declare_renderer(scaffolds_layout_bare_html)
 declare_renderer(scaffolds_layout_bootstrap_html)
@@ -78,6 +79,21 @@ declare_renderer(sidekix_sidetask_cpp)
 declare_renderer(sentry_config_sentry_cpp)
 declare_renderer(package_start_sh)
 declare_renderer(package_stop_sh)
+
+declare_renderer(build2_buildfile)
+declare_renderer(build2_manifest)
+declare_renderer(build2_repositories_manifest)
+declare_renderer(build2_app_buildfile)
+declare_renderer(build2_build_bootstrap_build)
+declare_renderer(build2_build_export_build)
+declare_renderer(build2_build_root_build)
+declare_renderer(build2_exe_buildfile)
+declare_renderer(build2_exe_bootstrap_build)
+declare_renderer(build2_exe_root_build)
+declare_renderer(build2_server_buildfile)
+declare_renderer(build2_spec_bootstrap_build)
+declare_renderer(build2_spec_root_build)
+declare_renderer(build2_spec_buildfile)
 
 ProjectRenderer::ProjectRenderer()
 {
@@ -125,6 +141,7 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("scaffolds/view_index.json", scaffolds_view_index_json);
   add_renderer("scaffolds/view_show.json", scaffolds_view_show_json);
   add_renderer("scaffolds/task/CMakeLists.txt", scaffolds_task_cmakelists_txt);
+  add_renderer("scaffolds/task/buildfile", scaffolds_task_buildfile);
   add_renderer("scaffolds/task/main.cpp", scaffolds_task_main_cpp);
   add_renderer("scaffolds/layouts/bare.html", scaffolds_layout_bare_html);
   add_renderer("scaffolds/layouts/bootstrap.html", scaffolds_layout_bootstrap_html);
@@ -160,6 +177,21 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("tasks/sidekix/sidetasks.hpp", sidekix_sidetasks_hpp);
   add_renderer("tasks/sidekix/sidetasks.cpp", sidekix_sidetasks_cpp);
   add_renderer("tasks/sidekix/sidetask.cpp",  sidekix_sidetask_cpp);
+
+  add_renderer("build2/buildfile", build2_buildfile);
+  add_renderer("build2/manifest", build2_manifest);
+  add_renderer("build2/repositories.manifest", build2_repositories_manifest);
+  add_renderer("build2/app/buildfile", build2_app_buildfile);
+  add_renderer("build2/build/bootstrap.build", build2_build_bootstrap_build);
+  add_renderer("build2/build/export.build", build2_build_export_build);
+  add_renderer("build2/build/root.build", build2_build_root_build);
+  add_renderer("build2/exe/buildfile", build2_exe_buildfile);
+  add_renderer("build2/exe/bootstrap.build", build2_exe_bootstrap_build);
+  add_renderer("build2/exe/root.build", build2_exe_root_build);
+  add_renderer("build2/server/buildfile", build2_server_buildfile);
+  add_renderer("build2/spec/buildfile", build2_spec_buildfile);
+  add_renderer("build2/spec/bootstrap.build", build2_spec_bootstrap_build);
+  add_renderer("build2/spec/root.build", build2_spec_root_build);
 }
 
 const vector<string>& ProjectRenderer::get_mimetypes() const

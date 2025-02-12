@@ -1,0 +1,10 @@
+using cxx
+
+hxx{*}: extension = hpp
+ixx{*}: extension = ipp
+txx{*}: extension = tpp
+cxx{*}: extension = cpp
+
+exe{*}: test = true
+
+test.target = $cxx.target

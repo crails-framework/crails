@@ -42,7 +42,7 @@ string ProjectConfiguration::application_build_path() const
   if (toolchain() == "cmake")
     return project_directory() + "/build";
   else if (toolchain() == "build2")
-    return project_directory() + "/package";
+    return project_directory() + "/../build-" + project_name();
   return project_directory();
 }
 

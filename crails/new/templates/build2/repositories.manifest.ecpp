@@ -1,0 +1,21 @@
+#include <list>
+
+std::string @crails_version;
+std::string @project_name;
+std::list<std::string>& @plugins;
+std::string git_organization_url = "https://github.com/crails-framework";
+
+// END LINKING
+: 1
+summary: <%= project_name %> project repository
+
+:
+role: prerequisite
+location: <%= git_organization_url %>/libcrails-tests.git#<%= crails_version %>
+
+<% for (const std::string& plugin : plugins) do -%>
+:
+role: prerequisite
+location: <%= git_organization_url %>/<%= plugin %>.git#<%= crails_version %>
+
+<% end -%>

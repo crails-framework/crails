@@ -1,0 +1,5 @@
+./: {app/ exe/ spec/} doc{README.md} manifest
+
+# Don't install tests.
+#
+spec/: install = false

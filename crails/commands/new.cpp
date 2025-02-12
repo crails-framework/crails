@@ -3,6 +3,7 @@
 #include <boost/program_options.hpp>
 #include <crails/utils/string.hpp>
 #include <crails/cli/conventions.hpp>
+#include <crails/cli/process.hpp>
 #include <regex>
 #include <filesystem>
 #include <iostream>
@@ -45,12 +46,26 @@ void New::generate_cmake_files()
 
 void New::generate_build2_files()
 {
+  bool should_overwrite_backup = renderer.should_overwrite;
+
+  renderer.should_overwrite = true; // bdep-new will have generated the following files 
   generate_file(".gitignore");
-  generate_file("manifest");
-  generate_file("buildfile");
-  generate_file("app/buildfile");
-  generate_file("config/buildfile");
-  generate_file("repositories.manifest");
+  renderer.generate_file("build2/buildfile",              "buildfile");
+  renderer.generate_file("build2/manifest",               "manifest");
+  renderer.generate_file("build2/repositories.manifest",  "repositories.manifest");
+  renderer.generate_file("build2/build/bootstrap.build",  "build/bootstrap.build");
+  renderer.generate_file("build2/build/export.build",     "build/export.build");
+  renderer.generate_file("build2/build/root.build",       "build/root.build");
+  renderer.should_overwrite = should_overwrite_backup;
+  renderer.generate_file("build2/app/buildfile",          "app/buildfile");
+  renderer.generate_file("build2/exe/buildfile",          "exe/buildfile");
+  renderer.generate_file("build2/exe/bootstrap.build",    "exe/build/bootstrap.build");
+  renderer.generate_file("build2/exe/root.build",         "exe/build/root.build");
+  renderer.generate_file("build2/server/buildfile",       "exe/server/buildfile");
+  renderer.generate_file("build2/exe/buildfile",          "spec/buildfile");
+  renderer.generate_file("build2/spec/bootstrap.build",   "spec/build/bootstrap.build");
+  renderer.generate_file("build2/spec/root.build",        "spec/build/root.build");
+  renderer.generate_file("build2/spec/buildfile",         "spec/driver/buildfile");
 }
 
 bool New::generate_project_structure()
@@ -262,11 +277,25 @@ bool New::move_to_project_directory()
   {
     error_code ec;
 
-    filesystem::create_directories(path, ec);
-    if (ec)
+    if (build_system == "build2")
     {
-      cout << "Failed to reach project directory: " << ec.message() << endl;
-      return false;
+      ostringstream command;
+
+      command << "bdep new -l c++ -t bare " << quoted(project_name);
+      if (!Crails::run_command(command.str()))
+      {
+        cerr << "Command `" << command.str() << "` failed." << endl;
+        return false;
+      }
+    }
+    else
+    {
+      filesystem::create_directories(path, ec);
+      if (ec)
+      {
+        cout << "Failed to reach project directory: " << ec.message() << endl;
+        return false;
+      }
     }
   }
   filesystem::current_path(path);

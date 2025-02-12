@@ -1,0 +1,9 @@
+std::string @project_name;
+// END LINKING
+project = lib<%= project_name %>
+
+using version
+using config
+using test
+using install
+using dist

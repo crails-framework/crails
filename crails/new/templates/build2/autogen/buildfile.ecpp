@@ -1,0 +1,33 @@
+std::string @project_name;
+
+// END LINKING
+lib{<%= project_name %>-autogen}: {hxx ixx txx cxx} $impl_libs $intf_libs
+
+hxx{export}@./: cxx.importable = false
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.poptions =+ "-Wall" "-Wno-unknown-pragmas"
+cxx.poptions =+ "-pedantic"
+
+{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_STATIC_BUILD
+{hbmia objs}{*}: cxx.poptions += -DLIBCRAILS_SHARED_BUILD
+
+lib{<%= project_name %>-autogen}:
+{
+  cxx.export.poptions = "-I$out_root/app" "-I$src_root/app"
+  cxx.export.libs = $intf_libs
+}
+
+liba{<%= project_name %>-autogen}: cxx.export.poptions += -DLIBCRAILS_STATIC
+libs{<%= project_name %>-autogen}: cxx.export.poptions += -DLIBCRAILS_SHARED
+
+if $version.pre_release
+  lib{<%= project_name %>-autogen: bin.lib.version = "-$version.project_id"
+else
+  lib{<%= project_name %>-autogen: bin.lib.version = "-$version.major.$version.minor"
+
+{hxx ixx txx}{*}:
+{
+  install         = include/
+  install.subdirs = true
+}

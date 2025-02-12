@@ -4,6 +4,46 @@
 
 using namespace std;
 
+class Build2Editor
+{
+public:
+  Build2Editor(ProjectConfiguration& configuration);
+
+  void update_plugins();
+private:
+  ProjectConfiguration configuration;
+  CrailsFileEditor buildfile, manifest, repositories;
+};
+
+Build2Editor::Build2Editor(ProjectConfiguration& configuration) :
+  configuration(configuration),
+  buildfile("buildfile"),
+  manifest("manifest"),
+  repositories("repositories.manifest")
+{
+}
+
+void Build2Editor::update_plugins()
+{
+  for (const string& plugin : configuration.plugins())
+  {
+    string git_organization_url = "https://github.com/crails-framework";
+    string repository_block =
+      ":\n"
+      "role: prerequisite\n"
+      "location: " + git_organization_url + '/' + plugin + '#' + configuration.version();
+    string depends_line = "depends: " + plugin + " ^" + configuration.version();
+    string import_line = "import libs += " + plugin + '%' + "lib{" + plugin.substr(3) + '}';
+
+    if (repositories.find(repository_block) == std::string::npos)
+      repositories.append('\n' + repository_block);
+    if (manifest.find(depends_line) == std::string::npos)
+      manifest.append('\n' + depends_line);
+    if (plugin.substr(0, 3) == "lib" && buildfile.find(import_line) == std::string::npos)
+      buildfile.prepend(import_line + '\n');
+  }
+}
+
 CMakeFileEditor::CMakeFileEditor(ProjectConfiguration& configuration) : CrailsFileEditor("CMakeLists.txt"), configuration(configuration)
 {
   prefix_pattern = "#";

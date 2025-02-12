@@ -62,7 +62,10 @@ int OdbModule::OdbInstaller::run()
   }
   renderer.generate_file("config/odb.hpp",                "app/config/odb.hpp");
   renderer.generate_file("tasks/odb_migrate/main.cpp",    "exe/odb_migrate/main.cpp");
-  renderer.generate_file("scaffolds/task/CMakeLists.txt", "exe/odb_migrate/CMakeLists.txt");
+  if (configuration.toolchain() == "build2")
+    renderer.generate_file("scaffolds/task/buildfile", "exe/odb_migrate/buildfile");
+  else
+    renderer.generate_file("scaffolds/task/CMakeLists.txt", "exe/odb_migrate/CMakeLists.txt");
   configuration.remove_plugin("libcrails-databases"); // must be included after libcrails-odb
   configuration.add_plugin("libcrails-odb");
   configuration.add_plugin("libcrails-databases");

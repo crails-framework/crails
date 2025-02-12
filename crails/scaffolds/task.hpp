@@ -35,7 +35,10 @@ public:
     task_name = options["name"].as<std::string>();
     target_path = "exe/" + task_name;
     renderer.vars["task_name"] = task_name;
-    renderer.generate_file("scaffolds/task/CMakeLists.txt", target_path + "/CMakeLists.txt");
+    if (configuration.toolchain() == "build2")
+      renderer.generate_file("scaffolds/task/buildfile", target_path + "/buildfile");
+    else
+      renderer.generate_file("scaffolds/task/CMakeLists.txt", target_path + "/CMakeLists.txt");
     renderer.generate_file("scaffolds/task/main.cpp", target_path + "/main.cpp");
     cmakefile.load_file();
     cmakefile.add_task(task_name);

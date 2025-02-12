@@ -1,0 +1,30 @@
+#include <algorithm>
+#include <list>
+
+std::string @crails_version;
+std::string @project_name;
+std::string @configuration_type = "full";
+std::string @cpp_version = "c++17";
+std::list<std::string>& @formats;
+std::list<std::string>& @plugins;
+
+// END LINKING
+: 1
+name: <%= project_name %>
+version: 0.1.0
+language: c++
+summary: Crails Application
+license: other: proprietary ; Not free/open-source.
+description-file: README.md
+url: https://example.org/bpkgtest2
+email: example@mail.com
+#build-error-mail: example@mail.com
+depends: * build2 >= 0.16.0
+depends: * bpkg >= 0.16.0
+<% for (const std::string& plugin : plugins) do -%>
+depends: <%= plugin %> ^<%= crails_version %>
+<% end -%>
+
+depends: libcrails-tests ^<%= crails_version %>
+#depends: libcrails-selenium ^<%= crails_version %>
+# Custom dependencies (do not modify this line)

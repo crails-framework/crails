@@ -3,18 +3,15 @@ ECPP=ecpp
 PROJECT_TPL=crails/new/templates
 RENDERERS_TPL=crails/templates
 SCAFFOLDS_TPL=crails/scaffolds/templates
+mkdir -p $PROJECT_TPL/build
+
 ##
 ## AppTemplate
 ##
-mkdir -p $PROJECT_TPL/build
 $ECPP \
   -n ProjectGitignore \
   -i $PROJECT_TPL/.gitignore.ecpp \
   >  $PROJECT_TPL/build/gitignore.cpp
-$ECPP \
-  -n ProjectCmakelistsTxt \
-  -i $PROJECT_TPL/CMakeLists.txt.ecpp \
-  >  $PROJECT_TPL/build/CMakeLists.txt.cpp
 $ECPP \
   -n ProjectAppMainCpp \
   -i $PROJECT_TPL/app/main.cpp.ecpp \
@@ -96,13 +93,78 @@ $ECPP \
   -i $PROJECT_TPL/public/index.html.ecpp \
   >  $PROJECT_TPL/build/index.html.cpp
 $ECPP \
-  -n ProjectSpecCmakelistsTxt \
-  -i $PROJECT_TPL/spec/CMakeLists.txt.ecpp \
-  >  $PROJECT_TPL/build/spec_CMakeLists.txt.cpp
-$ECPP \
   -n ProjectSpecMainCpp \
   -i $PROJECT_TPL/spec/main.cpp.ecpp \
   >  $PROJECT_TPL/build/spec.cpp
+
+## AppTemplate/CMake
+$ECPP \
+  -n ProjectCmakelistsTxt \
+  -i $PROJECT_TPL/CMakeLists.txt.ecpp \
+  >  $PROJECT_TPL/build/CMakeLists.txt.cpp
+$ECPP \
+  -n ProjectSpecCmakelistsTxt \
+  -i $PROJECT_TPL/spec/CMakeLists.txt.ecpp \
+  >  $PROJECT_TPL/build/spec_CMakeLists.txt.cpp
+
+## AppTemplate/Build2
+PROJECT_BUILD2_TPL=crails/new/templates/build2
+$ECPP \
+  -n Build2Buildfile \
+  -i $PROJECT_BUILD2_TPL/buildfile.ecpp \
+  > $PROJECT_TPL/build/build2_buildfile.cpp
+$ECPP \
+  -n Build2Manifest \
+  -i $PROJECT_BUILD2_TPL/manifest.ecpp \
+  > $PROJECT_TPL/build/build2_manifest.cpp
+$ECPP \
+  -n Build2RepositoriesManifest \
+  -i $PROJECT_BUILD2_TPL/repositories.manifest.ecpp \
+  > $PROJECT_TPL/build/build2_repositories.cpp
+$ECPP \
+  -n Build2AppBuildfile \
+  -i $PROJECT_BUILD2_TPL/app/buildfile.ecpp \
+  > $PROJECT_TPL/build/build2_app_buildfile.cpp
+$ECPP \
+  -n Build2BuildBootstrapBuild \
+  -i $PROJECT_BUILD2_TPL/build/bootstrap.build.ecpp \
+  > $PROJECT_TPL/build/build2_bootstrap_build.cpp
+$ECPP \
+  -n Build2BuildExportBuild \
+  -i $PROJECT_BUILD2_TPL/build/export.build.ecpp \
+  > $PROJECT_TPL/build/build2_export_build.cpp
+$ECPP \
+  -n Build2BuildRootBuild \
+  -i $PROJECT_BUILD2_TPL/build/root.build.ecpp \
+  > $PROJECT_TPL/build/build2_root_build.cpp
+$ECPP \
+  -n Build2ExeBuildfile \
+  -i $PROJECT_BUILD2_TPL/exe/buildfile.ecpp \
+  > $PROJECT_TPL/build/build2_exe_buildfile.cpp
+$ECPP \
+  -n Build2ExeBootstrapBuild \
+  -i $PROJECT_BUILD2_TPL/exe/build/bootstrap.build.ecpp \
+  > $PROJECT_TPL/build/build2_exe_bootstrap_build.cpp
+$ECPP \
+  -n Build2ExeRootBuild \
+  -i $PROJECT_BUILD2_TPL/exe/build/root.build.ecpp \
+  > $PROJECT_TPL/build/build2_exe_root_build.cpp
+$ECPP \
+  -n Build2ServerBuildfile \
+  -i $PROJECT_BUILD2_TPL/exe/server/buildfile.ecpp \
+  > $PROJECT_TPL/build/build2_server_buildfile.cpp
+$ECPP \
+  -n Build2SpecBootstrapBuild \
+  -i $PROJECT_BUILD2_TPL/spec/build/bootstrap.build.ecpp \
+  > $PROJECT_TPL/build/build2_spec_bootstrap_build.cpp
+$ECPP \
+  -n Build2SpecRootBuild \
+  -i $PROJECT_BUILD2_TPL/spec/build/root.build.ecpp \
+  > $PROJECT_TPL/build/build2_spec_root_build.cpp
+$ECPP \
+  -n Build2SpecBuildfile \
+  -i $PROJECT_BUILD2_TPL/spec/driver/buildfile.ecpp \
+  > $PROJECT_TPL/build/build2_spec_buildfile.cpp
 
 ##
 ## Renderers
@@ -185,6 +247,10 @@ $ECPP \
   -n ScaffoldsTaskCmakelistsTxt \
   -i $SCAFFOLDS_TPL/task_CMakeLists.txt.ecpp \
   >  $SCAFFOLDS_TPL/build/task_CMakeLists.txt.cpp
+$ECPP \
+  -n ScaffoldsTaskBuildfile \
+  -i $SCAFFOLDS_TPL/task_buildfile.ecpp \
+  >  $SCAFFOLDS_TPL/build/task_buildfile.txt.cpp
 $ECPP \
   -n ScaffoldsTaskMainCpp \
   -i $SCAFFOLDS_TPL/task_main.cpp.ecpp \

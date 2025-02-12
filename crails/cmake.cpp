@@ -41,6 +41,7 @@ bool crails_cmake_builder(const ProjectConfiguration& configuration, const strin
 
 bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbose, bool clean)
 {
+  bool configured = false;
   int options = 0;
 
   if (verbose)
@@ -49,18 +50,31 @@ bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbo
     options += BuildClean;
   if (Build2Builder::installed())
   {
+    if (clean)
+      filesystem::remove_all(configuration.application_build_path());
+    if (!filesystem::is_directory(configuration.application_build_path()))
+      Build2Builder::create(configuration.application_build_path(), {{"config.cxx", "g++"}, {"config.bin.rpath", "/usr/local/lib"}}, verbose);
+    else
+      configured = true;
+
     Build2Builder build2(
-      configuration.variable_or("name", "application"),
+      "lib" + configuration.variable_or("name", "application"),
       configuration.project_directory(),
       configuration.application_build_path(),
       options
     );
 
-    if (clean)
+    if (configuration.variable("build-with-system-packages") == "1")
+    {
+      build2.use_system_packages(configuration.plugins());
+      build2.use_system_package("libcrails-tests");
+    }
+    if ((clean || !configured) && !build2.configure())
+    {
       filesystem::remove_all(configuration.application_build_path());
-    if (!filesystem::is_directory(configuration.application_build_path()))
-      Build2Builder::create(configuration.application_build_path(), {{"config.cxx", "g++"}, {"config.bin.rpath", "/usr/local/lib"}});
-    return build2.configure() && build2.build();
+      return false;
+    }
+    return build2.build();
   }
   else
     cerr << "bpkg does not appear to be installed." << endl;
