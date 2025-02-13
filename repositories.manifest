@@ -29,7 +29,7 @@ role: prerequisite
 location: https://github.com/crails-framework/ecpp.git#master
 :
 role: prerequisite
-location: https://github.com/crails-framework/crails-assets.git#master
+location: https://github.com/crails-framework/crails-assets.git#new_hierarchy
 
 :
 role: prerequisite
