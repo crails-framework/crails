@@ -73,14 +73,7 @@ int TemplateFormatsManager::run()
       configuration.add_plugin("libcrails-" + entry + "-views");
       config_renderers.add_renderer(entry);
     }
-    if (configuration.toolchain() == "cmake")
-    {
-      CMakeFileEditor cmakefile(configuration);
-
-      cmakefile.load_file();
-      cmakefile.update_plugins();
-      cmakefile.save_file();
-    }
+    configuration.update_plugins();
   }
   if (options.count("remove"))
   {

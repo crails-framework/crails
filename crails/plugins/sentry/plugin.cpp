@@ -14,14 +14,11 @@ SentryPlugin::SentryPlugin()
 int SentryPlugin::Installer::run()
 {
   FileRenderer         renderer;
-  CMakeFileEditor      cmakefile(configuration);
   RequestPipeCppEditor request_pipe_cpp;
 
   configuration.add_plugin("libcrails-sentry");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.save_file();
+  configuration.update_plugins();
   request_pipe_cpp.load_file();
   request_pipe_cpp.add_include("crails/sentry.hpp");
   request_pipe_cpp.add_include("crails/environment.hpp");
@@ -46,8 +43,6 @@ int SentryPlugin::Installer::run()
 
 int SentryPlugin::Disabler::run()
 {
-  CMakeFileEditor cmakefile(configuration);
-
   configuration.remove_plugin("libcrails-sentry");
   configuration.save();
   if (filesystem::remove("config/sentry.cpp"))

@@ -28,7 +28,6 @@ static void add_database(const ProjectConfiguration& configuration)
 
 int RedisPlugin::RedisInstaller::run()
 {
-  CMakeFileEditor cmakefile(configuration);
   FileRenderer renderer;
 
   if (!std::filesystem::exists("config/databases.cpp"))
@@ -37,9 +36,7 @@ int RedisPlugin::RedisInstaller::run()
   configuration.add_plugin("libcrails-redis");
   configuration.add_plugin("libcrails-databases");
   configuration.add_plugin("libcrails-database-url");
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.save_file();
+  configuration.update_plugins();
   add_database(configuration);
   return 0;
 }

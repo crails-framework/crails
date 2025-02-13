@@ -1,6 +1,8 @@
 #pragma once
 #include <crails/cli/project_variables.hpp>
 #include <list>
+#include <memory>
+#include "toolchain_editor.hpp"
 
 enum SourceExtension
 {
@@ -25,6 +27,7 @@ public:
 
   std::string            toolchain() const;
   void                   toolchain(const std::string&);
+  std::unique_ptr<ToolchainEditor> toolchain_editor() const;
 
   std::string            build_type() const;
   void                   build_type(const std::string&);

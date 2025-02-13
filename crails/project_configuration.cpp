@@ -1,6 +1,7 @@
 #include "project_configuration.hpp"
 #include "file_editor.hpp"
 #include "build2_editor.hpp"
+#include "cmake_editor.hpp"
 #include <crails/render_file.hpp>
 #include <crails/read_file.hpp>
 #include <crails/cli/process.hpp>
@@ -96,22 +97,24 @@ bool ProjectConfiguration::has_plugin(const std::string& name) const
   return find(list.begin(), list.end(), name) != list.end();
 }
 
-template<typename TOOLCHAIN_EDITOR>
-static void update_plugins_on_toolchain(const ProjectConfiguration& self)
-{
-  TOOLCHAIN_EDITOR editor(self);
-
-  editor.load_file();
-  editor.update_plugins();
-  editor.save_file();
-}
-
 void ProjectConfiguration::update_plugins() const
 {
+  auto editor = toolchain_editor();
+
+  editor->load_file();
+  editor->update_plugins();
+  editor->save_file();
+}
+
+unique_ptr<ToolchainEditor> ProjectConfiguration::toolchain_editor() const
+{
+  unique_ptr<ToolchainEditor> result;
+
   if (toolchain() == "build2")
-    update_plugins_on_toolchain<Build2Editor>(*this);
+    result.reset(new Build2Editor(*this));
   else
-    update_plugins_on_toolchain<CMakeFileEditor>(*this);
+    result.reset(new CmakeEditor(*this));
+  return move(result);
 }
 
 list<string> ProjectConfiguration::modules() const

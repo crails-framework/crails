@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <string_view>
 #include <set>
 
 class CrailsFileEditor
@@ -19,7 +20,9 @@ public:
   void prepend(const std::string& text) { contents.insert(0, text); }
   void save_file();
   void set_prefix_pattern(const std::string& prefix) { prefix_pattern = prefix; }
-  std::size_t find(const std::string& str) { return contents.find(str); }
+  std::size_t find(const std::string& str, std::size_t pos = 0) { return contents.find(str, pos); }
+  void erase(std::size_t begin, std::size_t end) { contents.erase(begin, end); }
+  std::string_view view() const { return std::string_view(contents); }
 };
 
 class CppFileEditor : public CrailsFileEditor
@@ -70,8 +73,7 @@ class CMakeFileEditor : public CrailsFileEditor
 public:
   CMakeFileEditor(const ProjectConfiguration&);
 
-  std::string plugins_config_line() const;
-  void update_plugins();
+  void update_plugins(const std::string& line);
   void add_dependency(const std::string& name, const std::string& category = "dependencies");
   void add_definitions(const std::set<std::string>&);
   void remove_definitions(const std::set<std::string>&);

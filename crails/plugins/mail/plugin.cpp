@@ -17,7 +17,6 @@ int MailPlugin::Installer::run()
 {
   FileRenderer    renderer;
   CppFileEditor   main_cpp("app/main.cpp");
-  CMakeFileEditor cmakefile(configuration);
 
   main_cpp.load_file();
   main_cpp.set_prefix_pattern("");
@@ -25,12 +24,10 @@ int MailPlugin::Installer::run()
   main_cpp.insert("  SingletonInstantiator<ApplicationMailServers> mail_servers;\n");
   main_cpp.add_include("config/mailers.hpp");
   configuration.add_plugin("libcrails-mail");
-  cmakefile.load_file();
-  cmakefile.update_plugins();
+  configuration.update_plugins();
   renderer.generate_file("config/mailers.hpp");
   renderer.generate_file("config/mailers.cpp");
   configuration.save();
-  cmakefile.save_file();
   main_cpp.save_file();
   return 0;
 }

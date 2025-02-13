@@ -1,18 +1,26 @@
 #pragma once
 #include "file_editor.hpp"
-#include "project_configuration.hpp"
-#include <set>
+#include "toolchain_editor.hpp"
 
-class Build2Editor
+class Build2Editor : public ToolchainEditor
 {
 public:
   Build2Editor(const ProjectConfiguration& configuration);
 
-  bool load_file();
-  void save_file();
-  void update_plugins();
-  void add_definitions(const std::set<std::string>&);
+  bool load_file() override;
+  void save_file() override;
+  void update_plugins() override;
+  void add_definitions(const std::set<std::string>&) override;
+  void add_dependency(const std::string& name, const std::string& category) override;
+  void remove_definitions(const std::set<std::string>& definitions) override;
 private:
-  const ProjectConfiguration& configuration;
+  std::string repository_entry_for(const std::string& plugin) const;
+  void require_repository_for(const std::string& plugin_);
+  void require_depends_for(const std::string& library, const std::string& version = "~$");
+  void import_library(const std::string& library, CrailsFileEditor&);
+  void append_definition_export(const std::string& definition);
+  void remove_definition_export(const std::string& definition);
+
   CrailsFileEditor buildfile, manifest, repositories;
+  CrailsFileEditor test_buildfile;
 };

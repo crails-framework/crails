@@ -1,7 +1,6 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
 #include "../file_renderer.hpp"
-#include "../file_editor.hpp"
 #include "../project_configuration.hpp"
 #include <crails/utils/string.hpp>
 
@@ -25,7 +24,7 @@ public:
 
   int create(boost::program_options::variables_map& options) override
   {
-    CMakeFileEditor cmakefile(configuration);
+    auto toolchain = configuration.toolchain_editor();
 
     if (!options.count("name"))
     {
@@ -41,9 +40,9 @@ public:
     else
       renderer.generate_file("scaffolds/task/CMakeLists.txt", target_path + "/CMakeLists.txt");
     renderer.generate_file("scaffolds/task/main.cpp", target_path + "/main.cpp");
-    cmakefile.load_file();
-    cmakefile.add_task(task_name);
-    cmakefile.save_file();
+    toolchain->load_file();
+    toolchain->add_task(task_name);
+    toolchain->save_file();
     return 0;
   }
 };

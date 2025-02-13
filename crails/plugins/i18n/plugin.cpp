@@ -16,7 +16,6 @@ I18nPlugin::I18nPlugin()
 int I18nPlugin::Installer::run()
 {
   FileRenderer renderer;
-  CMakeFileEditor cmakefile(configuration);
   MainCppEditor main_cpp("app/main.cpp");
 
   main_cpp.load_file();
@@ -25,11 +24,9 @@ int I18nPlugin::Installer::run()
   renderer.generate_file("config/i18n.hpp");
   renderer.generate_file("config/i18n.cpp");
   configuration.add_plugin("libcrails-i18n");
-  cmakefile.load_file();
-  cmakefile.update_plugins();
+  configuration.update_plugins();
   configuration.save();
   main_cpp.save_file();
-  cmakefile.save_file();
   return 0;
 }
 

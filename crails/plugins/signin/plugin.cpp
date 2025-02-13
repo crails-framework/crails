@@ -44,15 +44,12 @@ SigninPlugin::SigninPlugin()
 int SigninPlugin::Installer::run()
 {
   FileRenderer    renderer;
-  CMakeFileEditor cmakefile(configuration);
 
-  cmakefile.load_file();
   require_cookie_plugin(configuration);
   configuration.add_plugin("libcrails-cookies");
   configuration.add_plugin("libcrails-signin");
   configuration.save();
-  cmakefile.update_plugins();
-  cmakefile.save_file();
+  configuration.update_plugins();
   renderer.generate_file("config/signin.cpp");
   return 0;
 }

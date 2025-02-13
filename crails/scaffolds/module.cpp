@@ -92,10 +92,10 @@ void ModuleScaffold::update_router()
 
 void ModuleScaffold::update_cmake(ProjectConfiguration& configuration)
 {
-  CMakeFileEditor cmakefile(configuration);
+  auto toolchain = configuration.toolchain_editor();
 
   renderer.generate_file("scaffolds/modules/CMakeLists.txt", path.string() + "/CMakeLists.txt");
-  cmakefile.load_file();
-  cmakefile.add_module(name);
-  cmakefile.save_file();
+  toolchain->load_file();
+  toolchain->add_module(name);
+  toolchain->save_file();
 }

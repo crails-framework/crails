@@ -15,15 +15,15 @@ SidekixPlugin::SidekixPlugin()
 int SidekixPlugin::Installer::run()
 {
   FileRenderer    renderer;
-  CMakeFileEditor cmakefile(configuration);
+  auto            toolchain = configuration.toolchain_editor();
   MainCppEditor   main_cpp("app/main.cpp");
 
   configuration.add_plugin("libcrails-sidekix");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.add_task("sidekix");
-  cmakefile.save_file();
+  toolchain->load_file();
+  toolchain->update_plugins();
+  toolchain->add_task("sidekix");
+  toolchain->save_file();
   main_cpp.load_file();
   main_cpp.add_include("crails/sidekix/process.hpp");
   main_cpp.add_to_main_function("SingletonInstantiator<Sidekix::Process> sidekix(argc, argv);\n");
@@ -43,9 +43,8 @@ int SidekixPlugin::Installer::run()
 
 int SidekixPlugin::Disabler::run()
 {
-  CMakeFileEditor cmakefile(configuration);
-
   configuration.remove_plugin("libcrails-sidekix");
+  configuration.update_plugins();
   configuration.save();
   if (filesystem::remove("config/sidekix.cpp"))
     cout << "[FILE] Removed file config/sidekix.cpp" << endl;

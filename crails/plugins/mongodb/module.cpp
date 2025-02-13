@@ -31,8 +31,8 @@ static void add_database(const ProjectConfiguration& configuration)
 
 int MongodbModule::Installer::run()
 {
-  CMakeFileEditor cmakefile(configuration);
-  FileRenderer    renderer;
+  FileRenderer renderer;
+  auto         toolchain = configuration.toolchain_editor();
 
   if (!std::filesystem::exists("config/databases.cpp"))
   {
@@ -48,23 +48,23 @@ int MongodbModule::Installer::run()
   configuration.add_plugin("libcrails-databases");
   configuration.add_plugin("libcrails-database-url");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.add_definitions({"WITH_MONGODB"});
-  cmakefile.save_file();
+  toolchain->load_file();
+  toolchain->update_plugins();
+  toolchain->add_definitions({"WITH_MONGODB"});
+  toolchain->save_file();
   add_database(configuration);
   return 0;
 }
 
 int MongodbModule::Disabler::run()
 {
-  CMakeFileEditor cmakefile(configuration);
+  auto toolchain = configuration.toolchain_editor();
 
   configuration.remove_plugin("libcrails-mongodb");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.remove_definitions({"WITH_MONGODB"});
-  cmakefile.save_file();
+  toolchain->load_file();
+  toolchain->update_plugins();
+  toolchain->remove_definitions({"WITH_MONGODB"});
+  toolchain->save_file();
   return 0;
 }

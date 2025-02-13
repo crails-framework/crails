@@ -1,6 +1,5 @@
 #pragma once
 #include "../command.hpp"
-#include "../file_editor.hpp"
 #include <iostream>
 
 class OtherPlugins : public ::Command
@@ -18,7 +17,6 @@ public:
 
   int run() override
   {
-    CMakeFileEditor cmakefile(configuration);
     bool with_changes = false;
 
     if (options.count("add"))
@@ -35,10 +33,7 @@ public:
     }
     if (with_changes)
     {
-      cmakefile.load_file();
-      cmakefile.update_plugins();
-      cmakefile.save_file();
-      configuration.save();
+      configuration.update_plugins();
     }
     if (options.count("list"))
     {

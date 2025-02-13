@@ -15,17 +15,14 @@ int SyncPlugin::Installer::run()
 {
   FileRenderer    renderer;
   MainCppEditor   main_cpp("app/main.cpp");
-  CMakeFileEditor cmakefile(configuration);
 
   main_cpp.load_file();
   main_cpp.add_to_main_function("SingletonInstantiator<Sync::Channels> sync_channels;\n");
   main_cpp.add_include("crails/sync/channels.hpp");
   configuration.add_plugin("libcrails-sync");
-  cmakefile.load_file();
-  cmakefile.update_plugins();
+  configuration.update_plugins();
   renderer.generate_file("config/sync.cpp");
   configuration.save();
-  cmakefile.save_file();
   main_cpp.save_file();
   return 0;
 }

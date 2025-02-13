@@ -9,29 +9,13 @@ CMakeFileEditor::CMakeFileEditor(const ProjectConfiguration& configuration) : Cr
   prefix_pattern = "#";
 }
 
-string CMakeFileEditor::plugins_config_line() const
+void CMakeFileEditor::update_plugins(const std::string& plugins_config_line)
 {
-  stringstream stream;
-  list<string> plugins = configuration.plugins();
-  string       version = configuration.version();
-
-  stream << "pkg_check_modules(CRAILS REQUIRED";
-  for (const string& plugin : plugins)
-  {
-    if (plugin.substr(0, 3) == "lib")
-      stream << ' ' << plugin  << ">=" << version;
-  }
-  stream << ')' << endl;
-  return stream.str();
-}
-
-void CMakeFileEditor::update_plugins()
-{
-  size_t position = contents.find("pkg_check_modules(CRAILS");
+  size_t position = contents.find("pkg_check_modules(CRAILS REQUIRED");
   size_t end_position = contents.find("\n", position) + 1;
 
   contents.erase(position, end_position - position);
-  contents.insert(position, plugins_config_line());
+  contents.insert(position, plugins_config_line);
 }
 
 static const char* dependency_symbol = "Custom dependencies \\(do not modify this line\\)";

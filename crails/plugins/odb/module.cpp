@@ -42,8 +42,9 @@ static void add_database(const ProjectConfiguration& configuration, const std::s
 
 int OdbModule::OdbInstaller::run()
 {
-  list<string>    backends;
-  FileRenderer    renderer;
+  list<string> backends;
+  FileRenderer renderer;
+  auto         toolchain = configuration.toolchain_editor();
 
   if (options.count("backends"))
     backends = Crails::split(options["backends"].as<string>(), ',');
@@ -75,28 +76,14 @@ int OdbModule::OdbInstaller::run()
   configuration.variable("odb-at-once", "1");
   configuration.variable("odb-default-pointer", "std::shared_ptr");
   configuration.save();
-  if (configuration.toolchain() == "build2")
-  {
-    Build2Editor build2(configuration);
-
-    build2.load_file();
-    build2.update_plugins();
-    build2.add_definitions({"WITH_ODB"});
-    build2.save_file();
-  }
-  else
-  {
-    CMakeFileEditor cmakefile(configuration);
-
-    cmakefile.load_file();
-    cmakefile.update_plugins();
-    cmakefile.add_definitions({"WITH_ODB"});
-    cmakefile.add_dependency("odb");
-    for (const string& backend : backends)
-      cmakefile.add_dependency("odb-" + backend);
-    cmakefile.add_task("odb_migrate");
-    cmakefile.save_file();
-  }
+  toolchain->load_file();
+  toolchain->update_plugins();
+  toolchain->add_definitions({"WITH_ODB"});
+  toolchain->add_dependency("libodb");
+  for (const string& backend : backends)
+    toolchain->add_dependency("libodb-" + backend);
+  toolchain->add_task("odb_migrate");
+  toolchain->save_file();
   add_database(configuration, *backends.begin());
   cout << "(i) Don't forget to run `" << configuration.application_build_path() << "/exe/odb_migrate/task -c odb` to create or update your database." << endl;
   return 0;
@@ -104,20 +91,20 @@ int OdbModule::OdbInstaller::run()
 
 int OdbModule::OdbDisabler::run()
 {
-  CMakeFileEditor cmakefile(configuration);
+  auto toolchain = configuration.toolchain_editor();
 
   configuration.remove_plugin("libcrails-odb");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.remove_definitions({"WITH_ODB"});
-  cmakefile.save_file();
+  toolchain->load_file();
+  toolchain->update_plugins();
+  toolchain->remove_definitions({"WITH_ODB"});
+  toolchain->save_file();
   return 0;
 }
 
 int OdbModule::OdbBackendManager::run()
 {
-  CMakeFileEditor cmakefile(configuration);
+  auto toolchain = configuration.toolchain_editor();
   auto backends = Crails::split(configuration.variable("odb-backends"), ',');
 
   if (!options.count("add") && !options.count("remove"))
@@ -126,16 +113,16 @@ int OdbModule::OdbBackendManager::run()
   {
     auto new_backends = Crails::split(options["add"].as<string>(), ',');
 
-    cmakefile.load_file();
+    toolchain->load_file();
     for (const auto& new_backend : new_backends)
     {
       if (find(backends.begin(), backends.end(), new_backend) == backends.end())
       {
         backends.push_back(new_backend);
-        cmakefile.add_dependency("odb-" + new_backend);
+        toolchain->add_dependency("libodb-" + new_backend);
       }
     }
-    cmakefile.save_file();
+    toolchain->save_file();
   }
   if (options.count("remove"))
   {
