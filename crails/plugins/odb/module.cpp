@@ -5,6 +5,7 @@
 #include "../../commands/odb.hpp"
 #include "../../file_renderer.hpp"
 #include "../../file_editor.hpp"
+#include "../../build2_editor.hpp"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ OdbModule::OdbModule()
 
 static void add_database(const ProjectConfiguration& configuration, const std::string& backend)
 {
-  CppFileEditor databases("config/databases.cpp", "");
+  CppFileEditor databases("app/config/databases.cpp", "");
   stringstream  desc;
   const std::map<std::string, unsigned short> ports = {{"mysql", 3306}, {"pgsql", 5432}};
 
@@ -43,19 +44,19 @@ int OdbModule::OdbInstaller::run()
 {
   list<string>    backends;
   FileRenderer    renderer;
-  CMakeFileEditor cmakefile(configuration);
 
   if (options.count("backends"))
     backends = Crails::split(options["backends"].as<string>(), ',');
   if (!check_backends_validity(backends))
     return -1;
   renderer.vars["task_name"] = string("odb_migrate");
-  if (!std::filesystem::exists("config/databases.cpp"))
+  renderer.vars["project_name"] = configuration.project_name();
+  if (!std::filesystem::exists("app/config/databases.cpp"))
   {
-    MainCppEditor   main_cpp("app/main.cpp");
+    MainCppEditor   main_cpp("exe/server/main.cpp");
 
-    renderer.generate_file("config/databases.hpp");
-    renderer.generate_file("config/databases.cpp");
+    renderer.generate_file("config/databases.hpp", "app/config/databases.hpp");
+    renderer.generate_file("config/databases.cpp", "app/config/databases.cpp");
     main_cpp.add_include("config/databases.hpp");
     main_cpp.add_to_main_function("SingletonInstantiator<ApplicationDatabases> databases;\n");
     main_cpp.save_file();
@@ -74,16 +75,30 @@ int OdbModule::OdbInstaller::run()
   configuration.variable("odb-at-once", "1");
   configuration.variable("odb-default-pointer", "std::shared_ptr");
   configuration.save();
-  cmakefile.load_file();
-  cmakefile.update_plugins();
-  cmakefile.add_definitions({"WITH_ODB"});
-  cmakefile.add_dependency("odb");
-  for (const string& backend : backends)
-    cmakefile.add_dependency("odb-" + backend);
-  cmakefile.add_task("odb_migrate");
-  cmakefile.save_file();
+  if (configuration.toolchain() == "build2")
+  {
+    Build2Editor build2(configuration);
+
+    build2.load_file();
+    build2.update_plugins();
+    build2.add_definitions({"WITH_ODB"});
+    build2.save_file();
+  }
+  else
+  {
+    CMakeFileEditor cmakefile(configuration);
+
+    cmakefile.load_file();
+    cmakefile.update_plugins();
+    cmakefile.add_definitions({"WITH_ODB"});
+    cmakefile.add_dependency("odb");
+    for (const string& backend : backends)
+      cmakefile.add_dependency("odb-" + backend);
+    cmakefile.add_task("odb_migrate");
+    cmakefile.save_file();
+  }
   add_database(configuration, *backends.begin());
-  cout << "(i) Don't forget to run `build/tasks/odb_migrate/task -c odb` to create or update your database." << endl;
+  cout << "(i) Don't forget to run `" << configuration.application_build_path() << "/exe/odb_migrate/task -c odb` to create or update your database." << endl;
   return 0;
 }
 

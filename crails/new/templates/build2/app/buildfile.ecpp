@@ -12,7 +12,7 @@ lib{<%= project_name %>}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
 
 hxx{export}@./: cxx.importable = false
 
-cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.poptions =+ "-I$out_root" "-I$src_root" "-I$src_root/app"
 cxx.poptions =+ "-Wall" "-Wno-unknown-pragmas"
 cxx.poptions =+ "-pedantic"
 

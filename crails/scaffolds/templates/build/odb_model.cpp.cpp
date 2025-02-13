@@ -12,6 +12,7 @@ public:
     Crails::Template(renderer, target, vars), 
     filename(Crails::cast<std::string>(vars, "filename")), 
     classname(Crails::cast<std::string>(vars, "classname")), 
+    header_extension(Crails::cast<std::string>(vars, "header_extension")), 
     odb_at_once(Crails::cast<bool>(vars, "odb_at_once")), 
     metarecord(Crails::cast<bool>(vars, "metarecord",  false)), 
     properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
@@ -20,12 +21,15 @@ public:
   void render()
   {
 ecpp_stream << "#include \"" << ( filename );
-  ecpp_stream << ".hpp\"";
+  ecpp_stream << "." << ( header_extension );
+  ecpp_stream << "\"";
  if (odb_at_once){
-  ecpp_stream << "\n#include \"autogen/odb/application-odb.hxx\"";
+  ecpp_stream << "\n#include \"autogen/odb/application-odb." << ( header_extension );
+  ecpp_stream << "\"";
  }else{
   ecpp_stream << "\n#include \"autogen/odb/" << ( filename );
-  ecpp_stream << "-odb.hxx\"";
+  ecpp_stream << "-odb." << ( header_extension );
+  ecpp_stream << "\"";
  };
   ecpp_stream << "\n";
  if (!metarecord){
@@ -81,6 +85,7 @@ private:
   std::stringstream ecpp_stream;
   std::string filename;
   std::string classname;
+  std::string header_extension;
   bool odb_at_once;
   bool metarecord;
   std::map<std::string, std::string>& properties;

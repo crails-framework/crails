@@ -20,7 +20,7 @@ public:
 
   void render()
   {
-ecpp_stream << ": 1\nname: " << ( project_name );
+ecpp_stream << ": 1\nname: lib" << ( project_name );
   ecpp_stream << "\nversion: 0.1.0\nlanguage: c++\nsummary: Crails Application\nlicense: other: proprietary ; Not free/open-source.\ndescription-file: README.md\nurl: https://example.org/bpkgtest2\nemail: example@mail.com\n#build-error-mail: example@mail.com\ndepends: * build2 >= 0.16.0\ndepends: * bpkg >= 0.16.0";
  for (const std::string& plugin : plugins){
   ecpp_stream << "\ndepends: " << ( plugin );

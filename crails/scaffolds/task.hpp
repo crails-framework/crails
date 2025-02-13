@@ -35,6 +35,7 @@ public:
     task_name = options["name"].as<std::string>();
     target_path = "exe/" + task_name;
     renderer.vars["task_name"] = task_name;
+    renderer.vars["project_name"] = configuration.project_name();
     if (configuration.toolchain() == "build2")
       renderer.generate_file("scaffolds/task/buildfile", target_path + "/buildfile");
     else

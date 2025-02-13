@@ -6,5 +6,4 @@ import libs += lib<%= project_name %>%lib{<%= project_name %>}
 exe{task}: {hxx ixx txx cxx}{**} $libs
 
 cxx.poptions =+ "-I$out_root" "-I$src_root"
-cxx.poptions =+ "-Wall" "-Wno-unknown-pragmas"
-cxx.poptions =+ "-pedantic"
+cxx.poptions =+ "-Wall" "-pedantic"

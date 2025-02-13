@@ -2,15 +2,16 @@
 #include <crails/cli/conventions.hpp>
 std::string @filename;
 std::string @classname;
+std::string @header_extension;
 bool        @odb_at_once;
 bool        @metarecord = false;
 std::map<std::string, std::string>& @properties;
 // END LINKING
-#include "<%= filename %>.hpp"
+#include "<%= filename %>.<%= header_extension %>"
 <% if (odb_at_once) do %>
-#include "autogen/odb/application-odb.hxx"
+#include "autogen/odb/application-odb.<%= header_extension %>"
 <% end else do %>
-#include "autogen/odb/<%= filename %>-odb.hxx"
+#include "autogen/odb/<%= filename %>-odb.<%= header_extension %>"
 <% end %>
 
 <% if (!metarecord) do %>

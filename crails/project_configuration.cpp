@@ -1,4 +1,6 @@
 #include "project_configuration.hpp"
+#include "file_editor.hpp"
+#include "build2_editor.hpp"
 #include <crails/render_file.hpp>
 #include <crails/read_file.hpp>
 #include <crails/cli/process.hpp>
@@ -94,6 +96,24 @@ bool ProjectConfiguration::has_plugin(const std::string& name) const
   return find(list.begin(), list.end(), name) != list.end();
 }
 
+template<typename TOOLCHAIN_EDITOR>
+static void update_plugins_on_toolchain(const ProjectConfiguration& self)
+{
+  TOOLCHAIN_EDITOR editor(self);
+
+  editor.load_file();
+  editor.update_plugins();
+  editor.save_file();
+}
+
+void ProjectConfiguration::update_plugins() const
+{
+  if (toolchain() == "build2")
+    update_plugins_on_toolchain<Build2Editor>(*this);
+  else
+    update_plugins_on_toolchain<CMakeFileEditor>(*this);
+}
+
 list<string> ProjectConfiguration::modules() const
 {
   if (variables.find("modules") != variables.end())
@@ -170,4 +190,16 @@ string ProjectConfiguration::project_directory()
 void ProjectConfiguration::move_to_project_directory()
 {
   filesystem::current_path(project_directory());
+}
+
+std::string ProjectConfiguration::source_extension(SourceExtension type) const
+{
+  switch (type)
+  {
+  case HeaderExt: return variable_or("ext-header", "hpp");
+  case SourceExt: return variable_or("ext-source", "cpp");
+  case InlineExt: return variable_or("ext-inline", "ipp");
+  case TemplateExt: return variable_or("ext-template", "tpp");
+  }
+  return "hpp";
 }

@@ -21,6 +21,7 @@ New::New() : vars(renderer.vars)
   vars["renderers"] = &project_renderers;
   vars["parsers"]   = &project_parsers;
   vars["handlers"]  = &project_handlers;
+  vars["configuration"] = &configuration;
 }
 
 void New::options_description(boost::program_options::options_description& desc) const

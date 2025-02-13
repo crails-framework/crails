@@ -10,7 +10,7 @@ std::list<std::string>& @plugins;
 
 // END LINKING
 : 1
-name: <%= project_name %>
+name: lib<%= project_name %>
 version: 0.1.0
 language: c++
 summary: Crails Application

@@ -68,7 +68,7 @@ class ProjectConfiguration;
 class CMakeFileEditor : public CrailsFileEditor
 {
 public:
-  CMakeFileEditor(ProjectConfiguration&);
+  CMakeFileEditor(const ProjectConfiguration&);
 
   std::string plugins_config_line() const;
   void update_plugins();
@@ -80,5 +80,5 @@ public:
   void remove_module(const std::string& name);
 
 private:
-  ProjectConfiguration& configuration;
+  const ProjectConfiguration& configuration;
 };

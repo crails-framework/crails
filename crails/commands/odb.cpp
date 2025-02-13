@@ -42,7 +42,7 @@ static bool is_path_to_schema(const filesystem::path& path)
 
 std::string application_xml_path()
 {
-  return "config/odb.xml";
+  return "app/config/odb.xml";
 }
 
 void BuildOdb::clear_empty_changesets()
@@ -192,17 +192,18 @@ bool BuildOdb::compile_models_at_once(const FileList& files)
 bool BuildOdb::at_once_fix_include_paths(const FileList& files) const
 {
   Crails::RenderFile render_file;
+  string header_ext = configuration.source_extension(HeaderExt);
   filesystem::path project_dir = filesystem::canonical(configuration.project_directory());
   string source_path_base = temporary_dir + '/' + input_name;
   vector<string> targets;
-  string source_path = temporary_dir + '/' + input_name + "-odb.hxx";
+  string source_path = temporary_dir + '/' + input_name + "-odb." + header_ext;
   string source;
 
-  targets.push_back(source_path_base + "-odb.hxx");
+  targets.push_back(source_path_base + "-odb." + header_ext);
   if (backends.size() > 1)
   {
     for (const string& backend : backends)
-      targets.push_back(source_path_base + '-' + backend + "-odb.hxx");
+      targets.push_back(source_path_base + '-' + backend + "-odb." + header_ext);
   }
   for (const string& source_path : targets)
   {
@@ -274,7 +275,7 @@ bool BuildOdb::generate_schema(const FileList& files)
     filesystem::path config_odb_hpp = project_dir / "app" / "config" / "odb.hpp";
     stringstream command;
     bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
-    string schema_output_dir = embed_schema ? output_dir : string("tasks/odb_migrate");
+    string schema_output_dir = embed_schema ? output_dir : string("exe/odb_migrate");
 
     at_once = true;
     command << odb_command(schema_output_dir) << ' '
@@ -354,6 +355,9 @@ string BuildOdb::odb_command(const string& output_dir)
   stream << odb_compiler
          << " -I."
          << " --std " << configuration.variable("std")
+         << " --hxx-suffix ." << configuration.source_extension(HeaderExt)
+         << " --ixx-suffix ." << configuration.source_extension(InlineExt)
+         << " --cxx-suffix ." << configuration.source_extension(SourceExt)
          << " --schema-format separate"
          << " --hxx-prologue \"" << hxx_prologue() << '"'
          << " --output-dir " << output_dir;

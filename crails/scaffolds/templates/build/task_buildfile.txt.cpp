@@ -16,7 +16,7 @@ public:
   {
 ecpp_stream << "import libs += lib" << ( project_name );
   ecpp_stream << "%lib{" << ( project_name );
-  ecpp_stream << "}\n\nexe{task}: {hxx ixx txx cxx}{**} $libs\n\ncxx.poptions =+ \"-I$out_root\" \"-I$src_root\"\ncxx.poptions =+ \"-Wall\" \"-Wno-unknown-pragmas\"\ncxx.poptions =+ \"-pedantic\"\n";
+  ecpp_stream << "}\n\nexe{task}: {hxx ixx txx cxx}{**} $libs\n\ncxx.poptions =+ \"-I$out_root\" \"-I$src_root\"\ncxx.poptions =+ \"-Wall\" \"-pedantic\"\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);

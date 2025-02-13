@@ -2,6 +2,14 @@
 #include <crails/cli/project_variables.hpp>
 #include <list>
 
+enum SourceExtension
+{
+  HeaderExt,
+  SourceExt,
+  InlineExt,
+  TemplateExt
+};
+
 class ProjectConfiguration : public Crails::ProjectVariables
 {
 public:
@@ -26,6 +34,7 @@ public:
   void                   add_plugin(const std::string&);
   void                   remove_plugin(const std::string&);
   bool                   has_plugin(const std::string&) const;
+  void                   update_plugins() const;
 
   std::list<std::string> modules() const;
   void                   add_module(const std::string&);
@@ -38,6 +47,8 @@ public:
 
   std::list<std::string> asset_roots() const;
   void                   asset_roots(const std::list<std::string>&);
+
+  std::string            source_extension(SourceExtension) const;
 
   static std::string crails_bin_path();
   std::string application_build_path() const;

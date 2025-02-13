@@ -25,8 +25,11 @@ public:
   int create(boost::program_options::variables_map& options) override
   {
     ProjectConfiguration configuration;
+    string header_extension, source_extension;
 
     configuration.initialize();
+    header_extension = configuration.source_extension(HeaderExt);
+    source_extension = configuration.source_extension(SourceExt);
     if (!options.count("model"))
     {
       std::cerr << "Option --model required" << std::endl;
@@ -39,13 +42,14 @@ public:
     renderer.vars["properties"] = &properties;
     renderer.vars["filename"] = path_name;
     renderer.vars["odb_at_once"] = configuration.variable("odb-at-once") == "1";
+    renderer.vars["header_extension"] = header_extension;
     renderer.generate_file(
       "scaffolds/odb_model.hpp",
-      target_folder + '/' + path_name + ".hpp"
+      target_folder + '/' + path_name + '.' + header_extension
     );
     renderer.generate_file(
       "scaffolds/odb_model.cpp",
-      target_folder + '/' + path_name + ".cpp"
+      target_folder + '/' + path_name + '.' + source_extension
     );
     return 0;
   }

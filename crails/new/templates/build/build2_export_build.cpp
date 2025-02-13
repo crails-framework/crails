@@ -12,7 +12,7 @@ public:
 
   void render()
   {
-ecpp_stream << "$out_root/\n{\n  include app/\n}\n\nexport $out_root/app/$import.target\n";
+ecpp_stream << "$out_root/\n{\n  include app/\n  include ./\n}\n\nexport $out_root/app/$import.target\n";
     std::string _out_buffer = ecpp_stream.str();
     _out_buffer = this->apply_post_render_filters(_out_buffer);
     this->target.set_body(_out_buffer);

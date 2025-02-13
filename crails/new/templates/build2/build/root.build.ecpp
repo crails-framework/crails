@@ -1,4 +1,7 @@
+#include "../../../project_configuration.hpp"
+
 std::string @cpp_version = "latest";
+ProjectConfiguration& @configuration;
 
 // END LINKING
 # Uncomment to suppress warnings coming from external libraries
@@ -8,10 +11,10 @@ cxx.std = <%= cpp_version %>
 
 using cxx
 
-hxx{*}: extension = hpp
-ixx{*}: extension = ipp
-txx{*}: extension = tpp
-cxx{*}: extension = cpp
+hxx{*}: extension = <%= configuration.source_extension(HeaderExt) %>
+ixx{*}: extension = <%= configuration.source_extension(InlineExt) %>
+txx{*}: extension = <%= configuration.source_extension(TemplateExt) %>
+cxx{*}: extension = <%= configuration.source_extension(SourceExt) %>
 
 # The test target for cross-testing (running tests under Wine, etc).
 test.target = $cxx.target

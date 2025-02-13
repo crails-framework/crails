@@ -1,6 +1,7 @@
 $out_root/
 {
   include app/
+  include ./
 }
 
 export $out_root/app/$import.target

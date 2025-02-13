@@ -22,7 +22,7 @@ ecpp_stream << "";
   ecpp_stream << "}";
  };
   ecpp_stream << "\nlib{" << ( project_name );
-  ecpp_stream << "}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs\n\nhxx{export}@./: cxx.importable = false\n\ncxx.poptions =+ \"-I$out_root\" \"-I$src_root\"\ncxx.poptions =+ \"-Wall\" \"-Wno-unknown-pragmas\"\ncxx.poptions =+ \"-pedantic\"\n\n{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_STATIC_BUILD\n{hbmia objs}{*}: cxx.poptions += -DLIBCRAILS_SHARED_BUILD\n\nlib{" << ( project_name );
+  ecpp_stream << "}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs\n\nhxx{export}@./: cxx.importable = false\n\ncxx.poptions =+ \"-I$out_root\" \"-I$src_root\" \"-I$src_root/app\"\ncxx.poptions =+ \"-Wall\" \"-Wno-unknown-pragmas\"\ncxx.poptions =+ \"-pedantic\"\n\n{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_STATIC_BUILD\n{hbmia objs}{*}: cxx.poptions += -DLIBCRAILS_SHARED_BUILD\n\nlib{" << ( project_name );
   ecpp_stream << "}:\n{\n  cxx.export.poptions = \"-I$out_root/app\" \"-I$src_root/app\"\n  cxx.export.libs = $intf_libs\n}\n\nliba{" << ( project_name );
   ecpp_stream << "}: cxx.export.poptions += -DLIBCRAILS_STATIC\nlibs{" << ( project_name );
   ecpp_stream << "}: cxx.export.poptions += -DLIBCRAILS_SHARED\n\nif $version.pre_release\n  lib{" << ( project_name );
