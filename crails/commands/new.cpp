@@ -139,7 +139,7 @@ int New::run()
     {
       configuration.version(LIBCRAILS_VERSION_STR);
       configuration.toolchain(build_system);
-      configuration.asset_roots({"app/assets", "app/autogen/assets"});
+      configuration.asset_roots({"assets", "app/autogen/assets"});
       configuration.add_plugin("libcrails");
       configuration.add_plugin("libcrails-logger");
       configuration.variable("std", "c++17");
