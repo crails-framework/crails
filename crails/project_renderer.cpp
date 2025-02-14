@@ -98,29 +98,27 @@ declare_renderer(build2_spec_buildfile)
 ProjectRenderer::ProjectRenderer()
 {
   add_renderer(".gitignore",                      project_gitignore);
-  add_renderer("CMakeLists.txt",                  project_cmakelists_txt);
-  add_renderer("app/main.cpp",                    project_app_main_cpp);
+  add_renderer("exe/server/main.cpp",             project_app_main_cpp);
   add_renderer("app/routes.cpp",                  project_app_routes_cpp);
   add_renderer("app/controllers/application.hpp", project_app_controllers_application_hpp);
   add_renderer("app/views/exception.html",        project_app_views_exception_html);
   add_renderer("app/views/exception.json",        project_app_views_exception_json);
-  add_renderer("config/server.cpp",               project_config_server_cpp);
-  add_renderer("config/router.hpp",               project_config_router_hpp);
-  add_renderer("config/server.hpp",               project_config_server_hpp);
-  add_renderer("config/environment.cpp",          project_config_environment_cpp);
-  add_renderer("config/databases.hpp",            project_config_databases_hpp);
-  add_renderer("config/databases.cpp",            project_config_databases_cpp);
-  add_renderer("config/renderers.hpp",            project_config_renderers_hpp);
-  add_renderer("config/renderers.cpp",            project_config_renderers_cpp);
-  add_renderer("config/request_pipe.cpp",         project_config_request_pipe_cpp);
-  add_renderer("config/session_store.hpp",        project_config_session_store_hpp);
-  add_renderer("config/session_store.cpp",        project_config_session_store_cpp);
-  add_renderer("config/ssl.cpp",                  project_config_ssl_cpp);
-  add_renderer("config/i18n.hpp",                 project_config_i18n_hpp);
-  add_renderer("config/i18n.cpp",                 project_config_i18n_cpp);
+  add_renderer("app/config/server.cpp",           project_config_server_cpp);
+  add_renderer("app/config/router.hpp",           project_config_router_hpp);
+  add_renderer("app/config/server.hpp",           project_config_server_hpp);
+  add_renderer("app/config/environment.cpp",      project_config_environment_cpp);
+  add_renderer("app/config/databases.hpp",        project_config_databases_hpp);
+  add_renderer("app/config/databases.cpp",        project_config_databases_cpp);
+  add_renderer("app/config/renderers.hpp",        project_config_renderers_hpp);
+  add_renderer("app/config/renderers.cpp",        project_config_renderers_cpp);
+  add_renderer("app/config/request_pipe.cpp",     project_config_request_pipe_cpp);
+  add_renderer("app/config/session_store.hpp",    project_config_session_store_hpp);
+  add_renderer("app/config/session_store.cpp",    project_config_session_store_cpp);
+  add_renderer("app/config/ssl.cpp",              project_config_ssl_cpp);
+  add_renderer("app/config/i18n.hpp",             project_config_i18n_hpp);
+  add_renderer("app/config/i18n.cpp",             project_config_i18n_cpp);
   add_renderer("public/index.html",               project_public_index_html);
-  add_renderer("spec/CMakeLists.txt",             project_spec_cmakelists_txt);
-  add_renderer("spec/main.cpp",                   project_spec_main_cpp);
+  add_renderer("spec/driver/main.cpp",            project_spec_main_cpp);
 
   add_renderer("renderer.hpp", renderer_hpp);
   add_renderer("renderer.cpp", renderer_cpp);
@@ -155,14 +153,14 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("package/start.sh",        package_start_sh);
   add_renderer("package/stop.sh",         package_stop_sh);
 
-  add_renderer("config/odb.hpp", odb_hpp);
-  add_renderer("tasks/odb_migrate/main.cpp", odb_migrate_cpp);
+  add_renderer("app/config/odb.hpp", odb_hpp);
+  add_renderer("exe/odb_migrate/main.cpp", odb_migrate_cpp);
 
-  add_renderer("config/mailers.cpp", mail_config_mailers_cpp);
-  add_renderer("config/mailers.hpp", mail_config_mailers_hpp);
-  add_renderer("config/sync.cpp", sync_config_sync_cpp);
-  add_renderer("config/signin.cpp", signin_config_signin_cpp);
-  add_renderer("config/sentry.cpp", sentry_config_sentry_cpp);
+  add_renderer("app/config/mailers.cpp", mail_config_mailers_cpp);
+  add_renderer("app/config/mailers.hpp", mail_config_mailers_hpp);
+  add_renderer("app/config/sync.cpp", sync_config_sync_cpp);
+  add_renderer("app/config/signin.cpp", signin_config_signin_cpp);
+  add_renderer("app/config/sentry.cpp", sentry_config_sentry_cpp);
 
   add_renderer("docker/Dockerfile",            docker_dockerfile);
   add_renderer("docker/build-build2.sh",       docker_build_build2);
@@ -171,12 +169,15 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("docker/build-comet.sh",        docker_build_comet);
   add_renderer("docker/build-environment.sh",  docker_build_environment);
 
-  add_renderer("config/sidekix.cpp",          sidekix_config_sidekix_cpp);
-  add_renderer("tasks/sidekix/main.cpp",      sidekix_main_cpp);
-  add_renderer("tasks/sidekix/ctpl.h",        sidekix_ctpl_h);
-  add_renderer("tasks/sidekix/sidetasks.hpp", sidekix_sidetasks_hpp);
-  add_renderer("tasks/sidekix/sidetasks.cpp", sidekix_sidetasks_cpp);
-  add_renderer("tasks/sidekix/sidetask.cpp",  sidekix_sidetask_cpp);
+  add_renderer("app/config/sidekix.cpp",    sidekix_config_sidekix_cpp);
+  add_renderer("exe/sidekix/main.cpp",      sidekix_main_cpp);
+  add_renderer("exe/sidekix/ctpl.h",        sidekix_ctpl_h);
+  add_renderer("exe/sidekix/sidetasks.hpp", sidekix_sidetasks_hpp);
+  add_renderer("exe/sidekix/sidetasks.cpp", sidekix_sidetasks_cpp);
+  add_renderer("exe/sidekix/sidetask.cpp",  sidekix_sidetask_cpp);
+
+  add_renderer("cmake/CMakeLists.txt",      project_cmakelists_txt);
+  add_renderer("cmake/spec/CMakeLists.txt", project_spec_cmakelists_txt);
 
   add_renderer("build2/buildfile", build2_buildfile);
   add_renderer("build2/manifest", build2_manifest);

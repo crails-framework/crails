@@ -1,9 +1,10 @@
 #!/bin/bash -ex
 ECPP=ecpp
 PROJECT_TPL=crails/new/templates
+PROJECT_TPL_BUILD=$PROJECT_TPL/.build
 RENDERERS_TPL=crails/templates
 SCAFFOLDS_TPL=crails/scaffolds/templates
-mkdir -p $PROJECT_TPL/build
+mkdir -p $PROJECT_TPL_BUILD
 
 ##
 ## AppTemplate
@@ -11,160 +12,165 @@ mkdir -p $PROJECT_TPL/build
 $ECPP \
   -n ProjectGitignore \
   -i $PROJECT_TPL/.gitignore.ecpp \
-  >  $PROJECT_TPL/build/gitignore.cpp
+  >  $PROJECT_TPL_BUILD/gitignore.cpp
 $ECPP \
   -n ProjectAppMainCpp \
-  -i $PROJECT_TPL/app/main.cpp.ecpp \
-  >  $PROJECT_TPL/build/main.cpp.cpp
+  -i $PROJECT_TPL/exe/server/main.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/main.cpp.cpp
 $ECPP \
   -n ProjectAppRoutesCpp \
   -i $PROJECT_TPL/app/routes.cpp.ecpp \
-  >  $PROJECT_TPL/build/routes.cpp.cpp
+  >  $PROJECT_TPL_BUILD/routes.cpp.cpp
 $ECPP \
   -n ProjectConfigRouterHpp \
-  -i $PROJECT_TPL/config/router.hpp.ecpp \
-  >  $PROJECT_TPL/build/router.hpp.cpp
+  -i $PROJECT_TPL/app/config/router.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/router.hpp.cpp
 $ECPP \
   -n ProjectAppViewsExceptionHtml \
   -i $PROJECT_TPL/app/views/exception.html.ecpp \
-  >  $PROJECT_TPL/build/exception.html.cpp
+  >  $PROJECT_TPL_BUILD/exception.html.cpp
 $ECPP \
   -n ProjectAppViewsExceptionJson \
   -i $PROJECT_TPL/app/views/exception.json.ecpp \
-  >  $PROJECT_TPL/build/exception.json.cpp
+  >  $PROJECT_TPL_BUILD/exception.json.cpp
 $ECPP \
   -n ProjectAppControllersApplicationHpp \
   -i $PROJECT_TPL/app/controllers/application.hpp.ecpp \
-  >  $PROJECT_TPL/build/application.hpp.cpp
+  >  $PROJECT_TPL_BUILD/application.hpp.cpp
 $ECPP \
   -n ProjectConfigServerCpp \
-  -i $PROJECT_TPL/config/server.cpp.ecpp \
-  >  $PROJECT_TPL/build/server.cpp.cpp
+  -i $PROJECT_TPL/app/config/server.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/server.cpp.cpp
 $ECPP \
   -n ProjectConfigServerHpp \
-  -i $PROJECT_TPL/config/server.hpp.ecpp \
-  >  $PROJECT_TPL/build/server.hpp.cpp
+  -i $PROJECT_TPL/app/config/server.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/server.hpp.cpp
 $ECPP \
   -n ProjectConfigEnvironmentCpp \
-  -i $PROJECT_TPL/config/environment.cpp.ecpp \
-  >  $PROJECT_TPL/build/environment.cpp.cpp
+  -i $PROJECT_TPL/app/config/environment.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/environment.cpp.cpp
 $ECPP \
   -n ProjectConfigDatabasesHpp \
-  -i $PROJECT_TPL/config/databases.hpp.ecpp \
-  >  $PROJECT_TPL/build/databases.hpp.cpp
+  -i $PROJECT_TPL/app/config/databases.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/databases.hpp.cpp
 $ECPP \
   -n ProjectConfigDatabasesCpp \
-  -i $PROJECT_TPL/config/databases.cpp.ecpp \
-  >  $PROJECT_TPL/build/databases.cpp.cpp
+  -i $PROJECT_TPL/app/config/databases.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/databases.cpp.cpp
 $ECPP \
   -n ProjectConfigRenderersHpp \
-  -i $PROJECT_TPL/config/renderers.hpp.ecpp \
-  >  $PROJECT_TPL/build/renderers.hpp.cpp
+  -i $PROJECT_TPL/app/config/renderers.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/renderers.hpp.cpp
 $ECPP \
   -n ProjectConfigRenderersCpp \
-  -i $PROJECT_TPL/config/renderers.cpp.ecpp \
-  >  $PROJECT_TPL/build/renderers.cpp.cpp
+  -i $PROJECT_TPL/app/config/renderers.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/renderers.cpp.cpp
 $ECPP \
   -n ProjectConfigRequestPipeCpp \
-  -i $PROJECT_TPL/config/request_pipe.cpp.ecpp \
-  >  $PROJECT_TPL/build/request_pipe.cpp.cpp
+  -i $PROJECT_TPL/app/config/request_pipe.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/request_pipe.cpp.cpp
 $ECPP \
   -n ProjectConfigSessionStoreHpp \
-  -i $PROJECT_TPL/config/session_store.hpp.ecpp \
-  >  $PROJECT_TPL/build/session_store.hpp.cpp
+  -i $PROJECT_TPL/app/config/session_store.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/session_store.hpp.cpp
 $ECPP \
   -n ProjectConfigSessionStoreCpp \
-  -i $PROJECT_TPL/config/session_store.cpp.ecpp \
-  >  $PROJECT_TPL/build/session_store.cpp.cpp
+  -i $PROJECT_TPL/app/config/session_store.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/session_store.cpp.cpp
 $ECPP \
   -n ProjectConfigSslCpp \
-  -i $PROJECT_TPL/config/ssl.cpp.ecpp \
-  >  $PROJECT_TPL/build/ssl.cpp
+  -i $PROJECT_TPL/app/config/ssl.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/ssl.cpp
 $ECPP \
   -n ProjectConfigI18nHpp \
-  -i $PROJECT_TPL/config/i18n.hpp.ecpp \
-  >  $PROJECT_TPL/build/i18n.hpp.cpp
+  -i $PROJECT_TPL/app/config/i18n.hpp.ecpp \
+  >  $PROJECT_TPL_BUILD/i18n.hpp.cpp
 $ECPP \
   -n ProjectConfigI18nCpp \
-  -i $PROJECT_TPL/config/i18n.cpp.ecpp \
-  >  $PROJECT_TPL/build/i18n.cpp
+  -i $PROJECT_TPL/app/config/i18n.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/i18n.cpp
 $ECPP \
   -n ProjectPublicIndexHtml \
   -i $PROJECT_TPL/public/index.html.ecpp \
-  >  $PROJECT_TPL/build/index.html.cpp
+  >  $PROJECT_TPL_BUILD/index.html.cpp
 $ECPP \
   -n ProjectSpecMainCpp \
-  -i $PROJECT_TPL/spec/main.cpp.ecpp \
-  >  $PROJECT_TPL/build/spec.cpp
+  -i $PROJECT_TPL/spec/driver/main.cpp.ecpp \
+  >  $PROJECT_TPL_BUILD/spec.cpp
 
 ## AppTemplate/CMake
+PROJECT_CMAKE_TPL=crails/new/templates/cmake
+PROJECT_CMAKE_BUILD=$PROJECT_TPL_BUILD/cmake
+mkdir -p $PROJECT_CMAKE_BUILD
 $ECPP \
   -n ProjectCmakelistsTxt \
-  -i $PROJECT_TPL/CMakeLists.txt.ecpp \
-  >  $PROJECT_TPL/build/CMakeLists.txt.cpp
+  -i $PROJECT_CMAKE_TPL/CMakeLists.txt.ecpp \
+  >  $PROJECT_CMAKE_BUILD/CMakeLists.txt.cpp
 $ECPP \
   -n ProjectSpecCmakelistsTxt \
-  -i $PROJECT_TPL/spec/CMakeLists.txt.ecpp \
-  >  $PROJECT_TPL/build/spec_CMakeLists.txt.cpp
+  -i $PROJECT_CMAKE_TPL/spec/CMakeLists.txt.ecpp \
+  >  $PROJECT_CMAKE_BUILD/spec_CMakeLists.txt.cpp
 
 ## AppTemplate/Build2
 PROJECT_BUILD2_TPL=crails/new/templates/build2
+PROJECT_BUILD2_BUILD=$PROJECT_TPL_BUILD/build2
+mkdir -p $PROJECT_BUILD2_BUILD
 $ECPP \
   -n Build2Buildfile \
   -i $PROJECT_BUILD2_TPL/buildfile.ecpp \
-  > $PROJECT_TPL/build/build2_buildfile.cpp
+  > $PROJECT_BUILD2_BUILD/build2_buildfile.cpp
 $ECPP \
   -n Build2Manifest \
   -i $PROJECT_BUILD2_TPL/manifest.ecpp \
-  > $PROJECT_TPL/build/build2_manifest.cpp
+  > $PROJECT_BUILD2_BUILD/build2_manifest.cpp
 $ECPP \
   -n Build2RepositoriesManifest \
   -i $PROJECT_BUILD2_TPL/repositories.manifest.ecpp \
-  > $PROJECT_TPL/build/build2_repositories.cpp
+  > $PROJECT_BUILD2_BUILD/build2_repositories.cpp
 $ECPP \
   -n Build2AppBuildfile \
   -i $PROJECT_BUILD2_TPL/app/buildfile.ecpp \
-  > $PROJECT_TPL/build/build2_app_buildfile.cpp
+  > $PROJECT_BUILD2_BUILD/build2_app_buildfile.cpp
 $ECPP \
   -n Build2BuildBootstrapBuild \
   -i $PROJECT_BUILD2_TPL/build/bootstrap.build.ecpp \
-  > $PROJECT_TPL/build/build2_bootstrap_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_bootstrap_build.cpp
 $ECPP \
   -n Build2BuildExportBuild \
   -i $PROJECT_BUILD2_TPL/build/export.build.ecpp \
-  > $PROJECT_TPL/build/build2_export_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_export_build.cpp
 $ECPP \
   -n Build2BuildRootBuild \
   -i $PROJECT_BUILD2_TPL/build/root.build.ecpp \
-  > $PROJECT_TPL/build/build2_root_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_root_build.cpp
 $ECPP \
   -n Build2ExeBuildfile \
   -i $PROJECT_BUILD2_TPL/exe/buildfile.ecpp \
-  > $PROJECT_TPL/build/build2_exe_buildfile.cpp
+  > $PROJECT_BUILD2_BUILD/build2_exe_buildfile.cpp
 $ECPP \
   -n Build2ExeBootstrapBuild \
   -i $PROJECT_BUILD2_TPL/exe/build/bootstrap.build.ecpp \
-  > $PROJECT_TPL/build/build2_exe_bootstrap_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_exe_bootstrap_build.cpp
 $ECPP \
   -n Build2ExeRootBuild \
   -i $PROJECT_BUILD2_TPL/exe/build/root.build.ecpp \
-  > $PROJECT_TPL/build/build2_exe_root_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_exe_root_build.cpp
 $ECPP \
   -n Build2ServerBuildfile \
   -i $PROJECT_BUILD2_TPL/exe/server/buildfile.ecpp \
-  > $PROJECT_TPL/build/build2_server_buildfile.cpp
+  > $PROJECT_BUILD2_BUILD/build2_server_buildfile.cpp
 $ECPP \
   -n Build2SpecBootstrapBuild \
   -i $PROJECT_BUILD2_TPL/spec/build/bootstrap.build.ecpp \
-  > $PROJECT_TPL/build/build2_spec_bootstrap_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_spec_bootstrap_build.cpp
 $ECPP \
   -n Build2SpecRootBuild \
   -i $PROJECT_BUILD2_TPL/spec/build/root.build.ecpp \
-  > $PROJECT_TPL/build/build2_spec_root_build.cpp
+  > $PROJECT_BUILD2_BUILD/build2_spec_root_build.cpp
 $ECPP \
   -n Build2SpecBuildfile \
   -i $PROJECT_BUILD2_TPL/spec/driver/buildfile.ecpp \
-  > $PROJECT_TPL/build/build2_spec_buildfile.cpp
+  > $PROJECT_BUILD2_BUILD/build2_spec_buildfile.cpp
 
 ##
 ## Renderers
@@ -270,7 +276,7 @@ $ECPP \
 $ECPP \
   -n OdbMigrateCpp \
   -i crails/plugins/odb/migrate.cpp.ecpp \
-  >  $PROJECT_TPL/build/odb_migrate.cpp.cpp
+  >  $PROJECT_TPL_BUILD/odb_migrate.cpp.cpp
 
 ##
 ## Sentry plugin

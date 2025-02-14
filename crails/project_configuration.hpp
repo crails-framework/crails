@@ -1,6 +1,7 @@
 #pragma once
 #include <crails/cli/project_variables.hpp>
 #include <list>
+#include <string_view>
 #include <memory>
 #include "toolchain_editor.hpp"
 
@@ -53,6 +54,6 @@ public:
 
   std::string            source_extension(SourceExtension) const;
 
-  static std::string crails_bin_path();
+  static std::string crails_bin_path(const std::string_view = "");
   std::string application_build_path() const;
 };

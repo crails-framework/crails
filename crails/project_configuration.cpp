@@ -33,10 +33,12 @@ static std::string get_current_process_file()
   return filesystem::canonical(process_link);
 }
 
-string ProjectConfiguration::crails_bin_path()
+string ProjectConfiguration::crails_bin_path(const string_view command)
 {
   const static filesystem::path path = get_current_process_file();
 
+  if (command.length())
+    return (path.parent_path() / command).string();
   return path.parent_path().string();
 }
 
