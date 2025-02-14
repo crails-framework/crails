@@ -2,7 +2,7 @@
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
-#include "../../../project_configuration.hpp"
+#include "../../../../project_configuration.hpp"
 
 class render_Build2BuildRootBuild : public Crails::Template
 {

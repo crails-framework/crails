@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 ECPP=ecpp
 PROJECT_TPL=crails/new/templates
-PROJECT_TPL_BUILD=$PROJECT_TPL/.build
+PROJECT_TPL_BUILD=$PROJECT_TPL/_build
 RENDERERS_TPL=crails/templates
 SCAFFOLDS_TPL=crails/scaffolds/templates
 mkdir -p $PROJECT_TPL_BUILD

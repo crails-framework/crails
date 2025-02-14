@@ -1,4 +1,4 @@
-#include "../../../project_configuration.hpp"
+#include "../../../../project_configuration.hpp"
 
 std::string @cpp_version = "latest";
 ProjectConfiguration& @configuration;
