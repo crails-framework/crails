@@ -114,7 +114,12 @@ bool New::generate_database(const string& backend)
     command = Crails::ExecutableCommand{bin} << "plugins" << "odb" << "install" << "-b" << backend;
   else if (backend == "mongodb")
     command = Crails::ExecutableCommand{bin} << "plugins" << "mongodb" << "install";
-  return command ? Crails::run_command(*command) : true;
+  if (command)
+  {
+    std::cout << "+ " << *command << std::endl;
+    return Crails::run_command(*command);
+  }
+  return true;
 }
 
 int New::run()
