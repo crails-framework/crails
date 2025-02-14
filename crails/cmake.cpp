@@ -39,6 +39,8 @@ bool crails_cmake_builder(const ProjectConfiguration& configuration, const strin
   return false;
 }
 
+void build2_configure_libcrails_odb(Build2Builder&, const ProjectConfiguration& configuration);
+
 bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbose, bool clean)
 {
   bool configured = false;
@@ -53,7 +55,14 @@ bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbo
     if (clean)
       filesystem::remove_all(configuration.application_build_path());
     if (!filesystem::is_directory(configuration.application_build_path()))
-      Build2Builder::create(configuration.application_build_path(), {{"config.cxx", "g++"}, {"config.bin.rpath", "/usr/local/lib"}}, verbose);
+    {
+      map<string,string> options{
+        {"config.cxx", configuration.variable_or("compiler", "g++")},
+        {"config.bin.rpath", "/usr/local/lib"},
+      };
+
+      Build2Builder::create(configuration.application_build_path(), options, verbose);
+    }
     else
       configured = true;
 
@@ -69,10 +78,17 @@ bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbo
       build2.use_system_packages(configuration.plugins());
       build2.use_system_package("libcrails-tests");
     }
-    if ((clean || !configured) && !build2.configure())
+    if (clean || !configured)
     {
-      filesystem::remove_all(configuration.application_build_path());
-      return false;
+      if (build2.configure())
+      {
+        build2_configure_libcrails_odb(build2, configuration);
+      }
+      else
+      {
+        filesystem::remove_all(configuration.application_build_path());
+        return false;
+      }
     }
     return build2.build();
   }

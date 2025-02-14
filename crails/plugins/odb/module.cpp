@@ -6,6 +6,7 @@
 #include "../../file_renderer.hpp"
 #include "../../file_editor.hpp"
 #include "../../build2_editor.hpp"
+#include <crails/cli/build2_builder.hpp>
 
 using namespace std;
 
@@ -40,6 +41,34 @@ static void add_database(const ProjectConfiguration& configuration, const std::s
   databases.save_file();
 }
 
+void build2_configure_libcrails_odb(Build2Builder& build2, const ProjectConfiguration& configuration)
+{
+  filesystem::path build_path(configuration.application_build_path());
+  const list<string> backends = Crails::split(configuration.variable("odb-backends"), ',');
+
+  cout << "== build2_configure_libcrails_odb" << endl;
+  if (backends.size() > 0)
+  {
+    string package_name = "libcrails-odb-" + configuration.version();
+    CrailsFileEditor config_build(
+      build_path / package_name / "build" / "config.build"
+    );
+    ostringstream stream;
+
+    build2.build("libcrails-odb", true);
+    for (const string& backend : OdbModule::supported_backends)
+    {
+      auto included = find(backends.begin(), backends.end(), backend) != backends.end();
+
+      stream << "\nconfig.libcails_odb.with_" << backend << " = " << (included ? "true" : "false");
+    }
+    config_build.load_file();
+    config_build.append(stream.str());
+    config_build.save_file();
+    cout << "Supposedly updated " << (build_path / package_name / "build" / "config.build") << " with:\n" << stream.str() << endl << endl;
+  }
+}
+
 int OdbModule::OdbInstaller::run()
 {
   list<string> backends;
@@ -62,8 +91,8 @@ int OdbModule::OdbInstaller::run()
     main_cpp.add_to_main_function("SingletonInstantiator<ApplicationDatabases> databases;\n");
     main_cpp.save_file();
   }
-  renderer.generate_file("config/odb.hpp",                "app/config/odb.hpp");
-  renderer.generate_file("tasks/odb_migrate/main.cpp",    "exe/odb_migrate/main.cpp");
+  renderer.generate_file("app/config/odb.hpp");
+  renderer.generate_file("exe/odb_migrate/main.cpp");
   if (configuration.toolchain() == "build2")
     renderer.generate_file("scaffolds/task/buildfile", "exe/odb_migrate/buildfile");
   else
