@@ -84,8 +84,8 @@ void Build2Editor::update_plugins()
 
 void Build2Editor::append_definition_export(const string& definition)
 {
-  buildfile.use_symbol("cxx.export.poptions =", true);
-  buildfile.insert(definition + ' ');
+  buildfile.use_symbol("cxx.export.poptions =.*");
+  buildfile.insert(" \"-D" + definition + '"', -1);
 }
 
 void Build2Editor::remove_definition_export(const string& definition)

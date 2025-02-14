@@ -31,9 +31,9 @@ bool CrailsFileEditor::use_symbol(const std::string& symbol, bool whole_line)
   return false;
 }
 
-void CrailsFileEditor::insert(const std::string& text)
+void CrailsFileEditor::insert(const std::string& text, int offset)
 {
-  contents.insert(position, text);
+  contents.insert(position + offset, text);
 }
 
 void CrailsFileEditor::save_file()

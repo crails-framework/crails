@@ -15,7 +15,7 @@ public:
 
   bool load_file();
   bool use_symbol(const std::string& symbol, bool whole_line = true);
-  void insert(const std::string& text);
+  void insert(const std::string& text, int offset = 0);
   void append(const std::string& text) { contents += text; }
   void prepend(const std::string& text) { contents.insert(0, text); }
   void save_file();
