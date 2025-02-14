@@ -18,7 +18,7 @@ class RendererConfigEditor : public CppFileEditor
 {
   const ProjectConfiguration& configuration;
 public:
-  RendererConfigEditor(const ProjectConfiguration& configuration) : CppFileEditor("config/renderers.cpp"), configuration(configuration) {}
+  RendererConfigEditor(const ProjectConfiguration& configuration) : CppFileEditor("app/config/renderers.cpp"), configuration(configuration) {}
 
   std::string renderer_line(const std::string& name) const
   {
