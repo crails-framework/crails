@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include <string>
 #include <string_view>
 #include <set>
@@ -11,7 +12,7 @@ protected:
   unsigned int position;
   std::string  prefix_pattern;
 public:
-  CrailsFileEditor(const std::string& path);
+  CrailsFileEditor(const std::filesystem::path&);
 
   bool load_file();
   bool use_symbol(const std::string& symbol, bool whole_line = true);

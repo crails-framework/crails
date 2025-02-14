@@ -4,7 +4,7 @@
 #include <regex>
 #include <iostream>
 
-CrailsFileEditor::CrailsFileEditor(const std::string& path) : path(path)
+CrailsFileEditor::CrailsFileEditor(const std::filesystem::path& path) : path(path.string())
 {
 }
 
