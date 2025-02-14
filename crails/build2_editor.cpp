@@ -9,13 +9,14 @@ Build2Editor::Build2Editor(const ProjectConfiguration& configuration) :
   buildfile("app/buildfile"),
   manifest("manifest"),
   repositories("repositories.manifest"),
+  root("build/root.build"),
   test_buildfile("spec/driver/buildfile")
 {
 }
 
 bool Build2Editor::load_file()
 {
-  return buildfile.load_file() && manifest.load_file() && repositories.load_file() && test_buildfile.load_file();
+  return buildfile.load_file() && manifest.load_file() && repositories.load_file() && root.load_file() && test_buildfile.load_file();
 }
 
 void Build2Editor::save_file()
@@ -23,6 +24,7 @@ void Build2Editor::save_file()
   buildfile.save_file();
   manifest.save_file();
   repositories.save_file();
+  root.save_file();
   test_buildfile.save_file();
 }
 
@@ -45,10 +47,11 @@ void Build2Editor::require_repository_for(const string& plugin)
 
 void Build2Editor::require_depends_for(const string& library, const string& version)
 {
+  string version_token = version.length() ? ('^' + version) : ">=0.0.0";
   string depends_lookup = "depends: " + library + ' ';
-  string depends_line = depends_lookup + " ^" + version;
+  string depends_line = depends_lookup + version_token;
   auto index = manifest.find(depends_lookup);
-  auto end_index = manifest.find("\n", index);
+  auto end_index = manifest.find("\n", index) + 1;
 
   if (index != string::npos)
     manifest.erase(index, end_index - index);
@@ -150,4 +153,15 @@ void Build2Editor::add_dependency(const string& name, const string& category)
     require_depends_for(name); // only for tests ?
     import_library(name, test_buildfile);
   }
+}
+
+void Build2Editor::set_config_variable(const string& name, const string& type, const string& value)
+{
+  const string prefix = "config [" + type + "] " + name + " =";
+  auto position = root.find(prefix);
+  auto position_end = root.find("\n", position);
+
+  if (position != string::npos)
+    root.erase(position, position_end + 1);
+  root.prepend(prefix + ' ' + value + '\n');
 }
