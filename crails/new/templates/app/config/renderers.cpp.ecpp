@@ -1,7 +1,7 @@
 using namespace std;
 
-string                        @default_format = "text/html";
-vector<pair<string, string>>& @renderers;
+string                         @default_format = "text/html";
+vector<pair<string, string> >& @renderers;
 // END LINKING
 #include "renderers.hpp"
 

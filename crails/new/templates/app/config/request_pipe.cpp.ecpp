@@ -1,7 +1,7 @@
 using namespace std;
 
-vector<pair<string, string>>& @parsers;
-vector<pair<string, string>>& @handlers;
+vector<pair<string, string> >& @parsers;
+vector<pair<string, string> >& @handlers;
 // END LINKING
 <% for (auto parser : parsers) do -%>
 <%= "#include <crails/request_parsers/" + parser.first + ".hpp>\n" -%>
