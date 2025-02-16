@@ -40,9 +40,9 @@ void New::options_description(boost::program_options::options_description& desc)
 
 void New::generate_cmake_files()
 {
-  generate_file("CMakeLists.txt");
   generate_file(".gitignore");
-  renderer.generate_file("spec/CMakeLists.txt", "spec/driver/CMakeLists.txt");
+  renderer.generate_file("cmake/CMakeLists.txt", "CMakeLists.txt");
+  renderer.generate_file("cmake/spec/CMakeLists.txt", "spec/driver/CMakeLists.txt");
 }
 
 void New::generate_build2_files()

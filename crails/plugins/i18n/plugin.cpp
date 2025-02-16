@@ -20,9 +20,9 @@ int I18nPlugin::Installer::run()
 
   main_cpp.load_file();
   main_cpp.add_to_main_function("SingletonInstantiator<ApplicationI18n> translations;");
-  main_cpp.add_include("config/i18n.hpp");
-  renderer.generate_file("config/i18n.hpp");
-  renderer.generate_file("config/i18n.cpp");
+  main_cpp.add_include("app/config/i18n.hpp");
+  renderer.generate_file("app/config/i18n.hpp");
+  renderer.generate_file("app/config/i18n.cpp");
   configuration.add_plugin("libcrails-i18n");
   configuration.update_plugins();
   configuration.save();
@@ -34,8 +34,8 @@ int I18nPlugin::Disabler::run()
 {
   configuration.remove_plugin("libcrails-i18n");
   configuration.save();
-  if (std::filesystem::remove("config/i18n.cpp"))
-    cout << "[FILE] Removed file config/i18n.cpp" << endl;
+  if (std::filesystem::remove("app/config/i18n.cpp"))
+    cout << "[FILE] Removed file app/config/i18n.cpp" << endl;
   return 0;
 }
 
