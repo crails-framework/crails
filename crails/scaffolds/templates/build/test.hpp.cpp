@@ -8,7 +8,7 @@ class render_ScaffoldsSpecTestHpp : public Crails::Template
 public:
   render_ScaffoldsSpecTestHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<std::string>(vars, "classname"))
+    classname(Crails::cast< std::string >(vars, "classname"))
   {}
 
   void render()

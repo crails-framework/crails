@@ -9,8 +9,8 @@ class render_Build2BuildRootBuild : public Crails::Template
 public:
   render_Build2BuildRootBuild(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    cpp_version(Crails::cast<std::string>(vars, "cpp_version",  "latest")), 
-    configuration(reinterpret_cast<ProjectConfiguration&>(*Crails::cast<ProjectConfiguration*>(vars, "configuration")))
+    cpp_version(Crails::cast< std::string >(vars, "cpp_version",  "latest")), 
+    configuration(reinterpret_cast<ProjectConfiguration&>(*Crails::cast< ProjectConfiguration* >(vars, "configuration")))
   {}
 
   void render()

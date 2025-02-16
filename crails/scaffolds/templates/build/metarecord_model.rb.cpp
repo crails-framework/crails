@@ -9,10 +9,10 @@ class render_ScaffoldsMetarecordModelRb : public Crails::Template
 public:
   render_ScaffoldsMetarecordModelRb(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    resource_name(Crails::cast<string>(vars, "resource_name")), 
-    classname(Crails::cast<string>(vars, "classname")), 
-    include(Crails::cast<string>(vars, "include")), 
-    properties(reinterpret_cast<map<string, string>&>(*Crails::cast<map<string, string>*>(vars, "properties")))
+    resource_name(Crails::cast< string >(vars, "resource_name")), 
+    classname(Crails::cast< string >(vars, "classname")), 
+    include(Crails::cast< string >(vars, "include")), 
+    properties(reinterpret_cast<map<string, string>&>(*Crails::cast< map<string, string>* >(vars, "properties")))
   {}
 
   void render()

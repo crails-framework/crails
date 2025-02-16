@@ -8,7 +8,7 @@ class render_ProjectGitignore : public Crails::Template
 public:
   render_ProjectGitignore(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    build_system(Crails::cast<std::string>(vars, "build_system"))
+    build_system(Crails::cast< std::string >(vars, "build_system"))
   {}
 
   void render()

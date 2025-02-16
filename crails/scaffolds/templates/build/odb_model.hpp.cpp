@@ -11,11 +11,11 @@ class render_ScaffoldsOdbModelHpp : public Crails::Template
 public:
   render_ScaffoldsOdbModelHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    superclass(Crails::cast<std::string>(vars, "superclass",  "public Crails::Odb::Model")), 
-    include(Crails::cast<std::string>(vars, "include",  "")), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties"))), 
-    metarecord(Crails::cast<bool>(vars, "metarecord",  false))
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    superclass(Crails::cast< std::string >(vars, "superclass",  "public Crails::Odb::Model")), 
+    include(Crails::cast< std::string >(vars, "include",  "")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties"))), 
+    metarecord(Crails::cast< bool >(vars, "metarecord",  false))
   {}
 
   void render()

@@ -8,9 +8,9 @@ class render_ScaffoldsViewNewHtml : public Crails::Template
 public:
   render_ScaffoldsViewNewHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    header(Crails::cast<std::string>(vars, "header")), 
-    view_path(Crails::cast<std::string>(vars, "view_path"))
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    header(Crails::cast< std::string >(vars, "header")), 
+    view_path(Crails::cast< std::string >(vars, "view_path"))
   {}
 
   void render()

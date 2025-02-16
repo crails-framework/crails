@@ -10,10 +10,10 @@ class render_RendererCpp : public Crails::Template
 public:
   render_RendererCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    renderer_name(Crails::cast<string>(vars, "renderer_name")), 
-    renderer_filename(Crails::cast<string>(vars, "renderer_filename")), 
-    function_prefix(Crails::cast<string>(vars, "function_prefix",  "render")), 
-    targets(reinterpret_cast<map<string, string>&>(*Crails::cast<map<string, string>*>(vars, "targets")))
+    renderer_name(Crails::cast< string >(vars, "renderer_name")), 
+    renderer_filename(Crails::cast< string >(vars, "renderer_filename")), 
+    function_prefix(Crails::cast< string >(vars, "function_prefix",  "render")), 
+    targets(reinterpret_cast<map<string, string>&>(*Crails::cast< map<string, string>* >(vars, "targets")))
   {}
 
   void render()

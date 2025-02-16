@@ -9,9 +9,9 @@ class render_ScaffoldsViewShowJson : public Crails::Template
 public:
   render_ScaffoldsViewShowJson(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    header(Crails::cast<std::string>(vars, "header")), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    header(Crails::cast< std::string >(vars, "header")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties")))
   {}
 
   void render()

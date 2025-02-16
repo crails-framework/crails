@@ -8,7 +8,7 @@ class render_ProjectConfigEnvironmentCpp : public Crails::Template
 public:
   render_ProjectConfigEnvironmentCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    environment(Crails::cast<std::string>(vars, "environment",  "Development"))
+    environment(Crails::cast< std::string >(vars, "environment",  "Development"))
   {}
 
   void render()

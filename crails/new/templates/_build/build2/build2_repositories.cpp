@@ -9,9 +9,9 @@ class render_Build2RepositoriesManifest : public Crails::Template
 public:
   render_Build2RepositoriesManifest(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    crails_version(Crails::cast<std::string>(vars, "crails_version")), 
-    project_name(Crails::cast<std::string>(vars, "project_name")), 
-    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "plugins"))), 
+    crails_version(Crails::cast< std::string >(vars, "crails_version")), 
+    project_name(Crails::cast< std::string >(vars, "project_name")), 
+    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast< std::list<std::string>* >(vars, "plugins"))), 
     git_organization_url( "https://github.com/crails-framework")
   {}
 

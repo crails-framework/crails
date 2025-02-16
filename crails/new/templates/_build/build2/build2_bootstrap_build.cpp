@@ -8,7 +8,7 @@ class render_Build2BuildBootstrapBuild : public Crails::Template
 public:
   render_Build2BuildBootstrapBuild(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    project_name(Crails::cast<std::string>(vars, "project_name"))
+    project_name(Crails::cast< std::string >(vars, "project_name"))
   {}
 
   void render()

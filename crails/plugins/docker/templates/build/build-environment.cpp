@@ -10,11 +10,11 @@ class render_DockerBuildEnvironment : public Crails::Template
 public:
   render_DockerBuildEnvironment(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
-    with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
-    with_imagemagick(Crails::cast<bool>(vars, "with_imagemagick",  false)), 
-    packages(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "packages"))), 
-    sql_backends(reinterpret_cast<list<string>&>(*Crails::cast<list<string>*>(vars, "sql_backends")))
+    with_odb(Crails::cast< bool >(vars, "with_odb",  false)), 
+    with_comet(Crails::cast< bool >(vars, "with_comet",  false)), 
+    with_imagemagick(Crails::cast< bool >(vars, "with_imagemagick",  false)), 
+    packages(reinterpret_cast<list<string>&>(*Crails::cast< list<string>* >(vars, "packages"))), 
+    sql_backends(reinterpret_cast<list<string>&>(*Crails::cast< list<string>* >(vars, "sql_backends")))
   {}
 
   void render()

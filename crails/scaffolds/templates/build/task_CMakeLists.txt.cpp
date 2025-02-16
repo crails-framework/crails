@@ -8,7 +8,7 @@ class render_ScaffoldsTaskCmakelistsTxt : public Crails::Template
 public:
   render_ScaffoldsTaskCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    task_name(Crails::cast<std::string>(vars, "task_name"))
+    task_name(Crails::cast< std::string >(vars, "task_name"))
   {}
 
   void render()

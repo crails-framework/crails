@@ -8,7 +8,7 @@ class render_DockerBuildOdbCompiler : public Crails::Template
 public:
   render_DockerBuildOdbCompiler(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    build2_fingerprint(Crails::cast<std::string>(vars, "build2_fingerprint",  "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43"))
+    build2_fingerprint(Crails::cast< std::string >(vars, "build2_fingerprint",  "70:64:FE:E4:E0:F3:60:F1:B4:51:E1:FA:12:5C:E0:B3:DB:DF:96:33:39:B9:2E:E5:C2:68:63:4C:A6:47:39:43"))
   {}
 
   void render()

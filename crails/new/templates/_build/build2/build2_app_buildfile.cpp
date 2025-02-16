@@ -9,8 +9,8 @@ class render_Build2AppBuildfile : public Crails::Template
 public:
   render_Build2AppBuildfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    project_name(Crails::cast<std::string>(vars, "project_name")), 
-    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "plugins")))
+    project_name(Crails::cast< std::string >(vars, "project_name")), 
+    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast< std::list<std::string>* >(vars, "plugins")))
   {}
 
   void render()

@@ -8,9 +8,9 @@ class render_ProjectSpecMainCpp : public Crails::Template
 public:
   render_ProjectSpecMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    configuration_type(Crails::cast<std::string>(vars, "configuration_type")), 
-    with_action(Crails::cast<bool>(vars, "with_action",  true)), 
-    with_databases(Crails::cast<bool>(vars, "with_databases",  false))
+    configuration_type(Crails::cast< std::string >(vars, "configuration_type")), 
+    with_action(Crails::cast< bool >(vars, "with_action",  true)), 
+    with_databases(Crails::cast< bool >(vars, "with_databases",  false))
   {}
 
   void render()

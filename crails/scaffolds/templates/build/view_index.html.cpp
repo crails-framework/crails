@@ -9,11 +9,11 @@ class render_ScaffoldsViewIndexHtml : public Crails::Template
 public:
   render_ScaffoldsViewIndexHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
-    header(Crails::cast<std::string>(vars, "header")), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties"))), 
-    name_property(Crails::cast<std::string>(vars, "name_property",  "name")), 
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    resource_name(Crails::cast< std::string >(vars, "resource_name",  Crails::underscore(classname))), 
+    header(Crails::cast< std::string >(vars, "header")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties"))), 
+    name_property(Crails::cast< std::string >(vars, "name_property",  "name")), 
     has_name( properties.find(name_property) != properties.end())
   {}
 

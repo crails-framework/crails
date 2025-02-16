@@ -9,15 +9,15 @@ class render_ScaffoldsControllerHpp : public Crails::Template
 public:
   render_ScaffoldsControllerHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<string>(vars, "classname")), 
-    parent_class(Crails::cast<string>(vars, "parent_class",  "ApplicationController")), 
-    parent_header(Crails::cast<string>(vars, "parent_header",  "app/controllers/application.hpp")), 
-    model_class(Crails::cast<string>(vars, "model_class",  "")), 
-    model_header(Crails::cast<string>(vars, "model_header",  "")), 
-    id_type(Crails::cast<string>(vars, "id_type",  "")), 
-    database_backend(Crails::cast<string>(vars, "database_backend",  "")), 
-    resource_scaffold(Crails::cast<bool>(vars, "resource_scaffold",  false)), 
-    crud_scaffold(Crails::cast<bool>(vars, "crud_scaffold",  false))
+    classname(Crails::cast< string >(vars, "classname")), 
+    parent_class(Crails::cast< string >(vars, "parent_class",  "ApplicationController")), 
+    parent_header(Crails::cast< string >(vars, "parent_header",  "app/controllers/application.hpp")), 
+    model_class(Crails::cast< string >(vars, "model_class",  "")), 
+    model_header(Crails::cast< string >(vars, "model_header",  "")), 
+    id_type(Crails::cast< string >(vars, "id_type",  "")), 
+    database_backend(Crails::cast< string >(vars, "database_backend",  "")), 
+    resource_scaffold(Crails::cast< bool >(vars, "resource_scaffold",  false)), 
+    crud_scaffold(Crails::cast< bool >(vars, "crud_scaffold",  false))
   {}
 
   void render()

@@ -9,16 +9,16 @@ class render_DockerDockerfile : public Crails::Template
 public:
   render_DockerDockerfile(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    image(Crails::cast<string>(vars, "image",  "debian:sid")), 
-    include_assets(Crails::cast<bool>(vars, "include_assets",  true)), 
-    with_comet(Crails::cast<bool>(vars, "with_comet",  false)), 
-    with_odb(Crails::cast<bool>(vars, "with_odb",  false)), 
-    with_metarecord(Crails::cast<bool>(vars, "with_metarecord",  false)), 
-    with_ssh(Crails::cast<bool>(vars, "with_ssh",  false)), 
-    with_imagemagick(Crails::cast<bool>(vars, "with_imagemagick",  false)), 
+    image(Crails::cast< string >(vars, "image",  "debian:sid")), 
+    include_assets(Crails::cast< bool >(vars, "include_assets",  true)), 
+    with_comet(Crails::cast< bool >(vars, "with_comet",  false)), 
+    with_odb(Crails::cast< bool >(vars, "with_odb",  false)), 
+    with_metarecord(Crails::cast< bool >(vars, "with_metarecord",  false)), 
+    with_ssh(Crails::cast< bool >(vars, "with_ssh",  false)), 
+    with_imagemagick(Crails::cast< bool >(vars, "with_imagemagick",  false)), 
     sass_backend( with_metarecord ? "ruby" : "nodejs"), 
-    cheerp_repository(Crails::cast<string>(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
-    script_path(Crails::cast<string>(vars, "script_path",  "base/"))
+    cheerp_repository(Crails::cast< string >(vars, "cheerp_repository",  "cheerp-nightly-ppa/ubuntu focal main")), 
+    script_path(Crails::cast< string >(vars, "script_path",  "base/"))
   {}
 
   void render()

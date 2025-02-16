@@ -11,7 +11,7 @@ class render_ProjectConfigSessionStoreHpp : public Crails::Template
 public:
   render_ProjectConfigSessionStoreHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    session_store(Crails::cast<string>(vars, "session_store",  "NoSessionStore")), 
+    session_store(Crails::cast< string >(vars, "session_store",  "NoSessionStore")), 
     is_cookie_store( Crails::camelize(session_store) == "CookieStore")
   {}
 

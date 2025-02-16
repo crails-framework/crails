@@ -10,8 +10,8 @@ class render_RendererHpp : public Crails::Template
 public:
   render_RendererHpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    renderer_name(Crails::cast<string>(vars, "renderer_name")), 
-    renderer_type(Crails::cast<string>(vars, "renderer_type"))
+    renderer_name(Crails::cast< string >(vars, "renderer_name")), 
+    renderer_type(Crails::cast< string >(vars, "renderer_type"))
   {}
 
   void render()

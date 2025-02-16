@@ -8,7 +8,7 @@ class render_PackageStopSh : public Crails::Template
 public:
   render_PackageStopSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    application_name(Crails::cast<std::string>(vars, "application_name"))
+    application_name(Crails::cast< std::string >(vars, "application_name"))
   {}
 
   void render()

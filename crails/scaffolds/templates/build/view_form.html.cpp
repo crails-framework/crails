@@ -11,11 +11,11 @@ public:
   render_ScaffoldsViewFormHtml(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     numerical_types( {"int","unsigned int","short","unsigned short","long","long long","unsigned long","unsigned long long","float","double"}), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    resource_name(Crails::cast<std::string>(vars, "resource_name",  Crails::underscore(classname))), 
-    header(Crails::cast<std::string>(vars, "header")), 
-    route(Crails::cast<std::string>(vars, "route")), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    resource_name(Crails::cast< std::string >(vars, "resource_name",  Crails::underscore(classname))), 
+    header(Crails::cast< std::string >(vars, "header")), 
+    route(Crails::cast< std::string >(vars, "route")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties")))
   {}
 
   void render()

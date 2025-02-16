@@ -10,12 +10,12 @@ class render_ScaffoldsOdbModelCpp : public Crails::Template
 public:
   render_ScaffoldsOdbModelCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    filename(Crails::cast<std::string>(vars, "filename")), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    header_extension(Crails::cast<std::string>(vars, "header_extension")), 
-    odb_at_once(Crails::cast<bool>(vars, "odb_at_once")), 
-    metarecord(Crails::cast<bool>(vars, "metarecord",  false)), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
+    filename(Crails::cast< std::string >(vars, "filename")), 
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    header_extension(Crails::cast< std::string >(vars, "header_extension")), 
+    odb_at_once(Crails::cast< bool >(vars, "odb_at_once")), 
+    metarecord(Crails::cast< bool >(vars, "metarecord",  false)), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties")))
   {}
 
   void render()

@@ -8,9 +8,9 @@ class render_ProjectAppMainCpp : public Crails::Template
 public:
   render_ProjectAppMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    with_action(Crails::cast<bool>(vars, "with_action",  true)), 
-    with_cookies(Crails::cast<bool>(vars, "with_cookies",  false)), 
-    with_databases(Crails::cast<bool>(vars, "with_databases",  false))
+    with_action(Crails::cast< bool >(vars, "with_action",  true)), 
+    with_cookies(Crails::cast< bool >(vars, "with_cookies",  false)), 
+    with_databases(Crails::cast< bool >(vars, "with_databases",  false))
   {}
 
   void render()

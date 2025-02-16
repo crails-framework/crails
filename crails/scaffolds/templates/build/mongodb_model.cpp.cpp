@@ -10,9 +10,9 @@ class render_ScaffoldsMongodbModelCpp : public Crails::Template
 public:
   render_ScaffoldsMongodbModelCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    filename(Crails::cast<std::string>(vars, "filename")), 
-    classname(Crails::cast<std::string>(vars, "classname")), 
-    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast<std::map<std::string, std::string>*>(vars, "properties")))
+    filename(Crails::cast< std::string >(vars, "filename")), 
+    classname(Crails::cast< std::string >(vars, "classname")), 
+    properties(reinterpret_cast<std::map<std::string, std::string>&>(*Crails::cast< std::map<std::string, std::string>* >(vars, "properties")))
   {}
 
   void render()

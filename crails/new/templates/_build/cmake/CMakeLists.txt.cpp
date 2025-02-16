@@ -10,12 +10,12 @@ class render_ProjectCmakelistsTxt : public Crails::Template
 public:
   render_ProjectCmakelistsTxt(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    crails_version(Crails::cast<std::string>(vars, "crails_version")), 
-    project_name(Crails::cast<std::string>(vars, "project_name")), 
-    configuration_type(Crails::cast<std::string>(vars, "configuration_type",  "full")), 
-    cpp_version(Crails::cast<std::string>(vars, "cpp_version",  "c++17")), 
-    formats(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "formats"))), 
-    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast<std::list<std::string>*>(vars, "plugins")))
+    crails_version(Crails::cast< std::string >(vars, "crails_version")), 
+    project_name(Crails::cast< std::string >(vars, "project_name")), 
+    configuration_type(Crails::cast< std::string >(vars, "configuration_type",  "full")), 
+    cpp_version(Crails::cast< std::string >(vars, "cpp_version",  "c++17")), 
+    formats(reinterpret_cast<std::list<std::string>&>(*Crails::cast< std::list<std::string>* >(vars, "formats"))), 
+    plugins(reinterpret_cast<std::list<std::string>&>(*Crails::cast< std::list<std::string>* >(vars, "plugins")))
   {}
 
   void render()

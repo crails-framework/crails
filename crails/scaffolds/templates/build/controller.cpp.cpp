@@ -10,17 +10,17 @@ class render_ScaffoldsControllerCpp : public Crails::Template
 public:
   render_ScaffoldsControllerCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    classname(Crails::cast<string>(vars, "classname")), 
-    router_path(Crails::cast<string>(vars, "router_path")), 
-    path(Crails::cast<string>(vars, "path")), 
-    view_path(Crails::cast<string>(vars, "view_path")), 
-    parent_class(Crails::cast<string>(vars, "parent_class",  "ApplicationController")), 
-    model_class(Crails::cast<string>(vars, "model_class",  "")), 
-    model_header(Crails::cast<string>(vars, "model_header",  "")), 
-    id_type(Crails::cast<string>(vars, "id_type",  "")), 
-    database_backend(Crails::cast<string>(vars, "database_backend",  "")), 
-    resource_scaffold(Crails::cast<bool>(vars, "resource_scaffold",  false)), 
-    crud_scaffold(Crails::cast<bool>(vars, "crud_scaffold",  false))
+    classname(Crails::cast< string >(vars, "classname")), 
+    router_path(Crails::cast< string >(vars, "router_path")), 
+    path(Crails::cast< string >(vars, "path")), 
+    view_path(Crails::cast< string >(vars, "view_path")), 
+    parent_class(Crails::cast< string >(vars, "parent_class",  "ApplicationController")), 
+    model_class(Crails::cast< string >(vars, "model_class",  "")), 
+    model_header(Crails::cast< string >(vars, "model_header",  "")), 
+    id_type(Crails::cast< string >(vars, "id_type",  "")), 
+    database_backend(Crails::cast< string >(vars, "database_backend",  "")), 
+    resource_scaffold(Crails::cast< bool >(vars, "resource_scaffold",  false)), 
+    crud_scaffold(Crails::cast< bool >(vars, "crud_scaffold",  false))
   {}
 
   void render()

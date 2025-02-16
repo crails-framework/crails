@@ -9,8 +9,8 @@ class render_ProjectConfigRenderersCpp : public Crails::Template
 public:
   render_ProjectConfigRenderersCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    default_format(Crails::cast<string>(vars, "default_format",  "text/html")), 
-    renderers(reinterpret_cast<vector<pair<string, string>>&>(*Crails::cast<vector<pair<string, string>>*>(vars, "renderers")))
+    default_format(Crails::cast< string >(vars, "default_format",  "text/html")), 
+    renderers(reinterpret_cast<vector<pair<string, string> >&>(*Crails::cast< vector<pair<string, string> >* >(vars, "renderers")))
   {}
 
   void render()
@@ -34,7 +34,7 @@ ecpp_stream << "#include \"renderers.hpp\"\n";
 private:
   std::stringstream ecpp_stream;
   string default_format;
-  vector<pair<string, string>>& renderers;
+  vector<pair<string, string> >& renderers;
 };
 
 void render_project_config_renderers_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)

@@ -8,13 +8,13 @@ class render_PackageStartSh : public Crails::Template
 public:
   render_PackageStartSh(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    application_port(Crails::cast<unsigned short>(vars, "application_port",  80)), 
-    application_host(Crails::cast<std::string>(vars, "application_host",  "0.0.0.0")), 
-    application_name(Crails::cast<std::string>(vars, "application_name")), 
-    bin_directory(Crails::cast<std::string>(vars, "bin_directory")), 
-    lib_directory(Crails::cast<std::string>(vars, "lib_directory")), 
-    share_directory(Crails::cast<std::string>(vars, "share_directory")), 
-    runtime_path(Crails::cast<std::string>(vars, "runtime_path",  "/var/lib/" + application_name))
+    application_port(Crails::cast< unsigned short >(vars, "application_port",  80)), 
+    application_host(Crails::cast< std::string >(vars, "application_host",  "0.0.0.0")), 
+    application_name(Crails::cast< std::string >(vars, "application_name")), 
+    bin_directory(Crails::cast< std::string >(vars, "bin_directory")), 
+    lib_directory(Crails::cast< std::string >(vars, "lib_directory")), 
+    share_directory(Crails::cast< std::string >(vars, "share_directory")), 
+    runtime_path(Crails::cast< std::string >(vars, "runtime_path",  "/var/lib/" + application_name))
   {}
 
   void render()
