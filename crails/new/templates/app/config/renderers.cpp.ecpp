@@ -1,3 +1,5 @@
+#include <vector>
+
 using namespace std;
 
 string                         @default_format = "text/html";

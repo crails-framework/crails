@@ -8,7 +8,7 @@ class render_SidekixSidetaskCpp : public Crails::Template
 public:
   render_SidekixSidetaskCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
-    function_name(Crails::cast<std::string>(vars, "function_name"))
+    function_name(Crails::cast< std::string >(vars, "function_name"))
   {}
 
   void render()

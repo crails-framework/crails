@@ -1,3 +1,5 @@
+#include <vector>
+
 std::string @crails_version = "master";
 std::string @build2_fingerprint;
 bool @with_odb = false;
