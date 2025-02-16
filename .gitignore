@@ -1,4 +1,6 @@
 .bdep/
+.*.swo
+.*.swp
 
 # Local default options files.
 #
