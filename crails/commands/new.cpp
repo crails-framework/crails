@@ -80,7 +80,6 @@ bool New::generate_project_structure()
   generate_file("exe/server/main.cpp");
   generate_file("app/config/server.cpp");
   generate_file("app/config/server.hpp");
-  generate_file("app/config/environment.cpp");
   generate_file("app/config/renderers.hpp");
   generate_file("app/config/renderers.cpp");
   generate_file("app/config/request_pipe.cpp");

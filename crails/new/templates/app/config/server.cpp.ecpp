@@ -3,8 +3,11 @@
 
 using namespace Crails;
 
+std::string @environment = "Development";
+
 ApplicationServer::ApplicationServer()
 {
+  set_environment(<%= environment %>);
   logger.set_log_level(Logger::Info);
   temporary_path = "/tmp";
   initialize_request_pipe();

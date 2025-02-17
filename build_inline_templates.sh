@@ -46,10 +46,6 @@ $ECPP \
   -i $PROJECT_TPL/app/config/server.hpp.ecpp \
   >  $PROJECT_TPL_BUILD/server.hpp.cpp
 $ECPP \
-  -n ProjectConfigEnvironmentCpp \
-  -i $PROJECT_TPL/app/config/environment.cpp.ecpp \
-  >  $PROJECT_TPL_BUILD/environment.cpp.cpp
-$ECPP \
   -n ProjectConfigDatabasesHpp \
   -i $PROJECT_TPL/app/config/databases.hpp.ecpp \
   >  $PROJECT_TPL_BUILD/databases.hpp.cpp

@@ -16,7 +16,6 @@ declare_renderer(project_app_views_exception_json)
 declare_renderer(project_config_router_hpp)
 declare_renderer(project_config_server_cpp)
 declare_renderer(project_config_server_hpp)
-declare_renderer(project_config_environment_cpp)
 declare_renderer(project_config_databases_cpp)
 declare_renderer(project_config_databases_hpp)
 declare_renderer(project_config_renderers_hpp)
@@ -106,7 +105,6 @@ ProjectRenderer::ProjectRenderer()
   add_renderer("app/config/server.cpp",           project_config_server_cpp);
   add_renderer("app/config/router.hpp",           project_config_router_hpp);
   add_renderer("app/config/server.hpp",           project_config_server_hpp);
-  add_renderer("app/config/environment.cpp",      project_config_environment_cpp);
   add_renderer("app/config/databases.hpp",        project_config_databases_hpp);
   add_renderer("app/config/databases.cpp",        project_config_databases_cpp);
   add_renderer("app/config/renderers.hpp",        project_config_renderers_hpp);
