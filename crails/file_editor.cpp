@@ -17,7 +17,11 @@ bool CrailsFileEditor::use_symbol(const std::string& symbol, bool whole_line)
 {
   std::string pattern_str = "^\\s*" + prefix_pattern + "\\s*" + symbol;
   if (whole_line) pattern_str += "\\s*$";
+#ifdef _MSC_VER
+  std::regex pattern(pattern_str.c_str(), std::regex_constants::icase);
+#else
   std::regex pattern(pattern_str.c_str(), std::regex_constants::multiline | std::regex_constants::icase);
+#endif
   auto match = std::sregex_iterator(contents.begin(), contents.end(), pattern);
   std::cout << "pattern= " << ("^\\s*" + prefix_pattern + "\\s*" + symbol + "\\s*$") << std::endl;
 

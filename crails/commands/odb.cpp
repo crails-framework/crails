@@ -47,6 +47,7 @@ std::string application_xml_path()
 
 void BuildOdb::clear_empty_changesets()
 {
+#ifndef _MSC_VER
   string application_xml;
   Crails::RenderFile application_xml_output;
 
@@ -74,10 +75,14 @@ void BuildOdb::clear_empty_changesets()
   }
   else
     cerr << "[crails-odb] /!\\ WARNING: cannot open " << application_xml_path() << endl;
+#else
+  cerr << "[crails-odb] /!\\ crails cli was built with MSVC and cannot clear empty changesets from " << application_xml_path() << endl;
+#endif
 }
 
 bool BuildOdb::increment_schema_version()
 {
+#ifndef _MSC_VER
   string odb_hpp;
   string application_xml;
   Crails::RenderFile odb_hpp_output;
@@ -116,6 +121,10 @@ bool BuildOdb::increment_schema_version()
   else
     cerr << "Cannot open app/config/odb.hpp" << endl;
   return false;
+#else
+  cerr << "[crails-odb] /!\\ crails cli was built with MSVC and cannot increment schema version in `app/config/odb.hpp`. Please perform the update yourself." << endl;
+  return true;
+#endif
 }
 
 static list<string> default_input_directories(const ProjectConfiguration& configuration)
