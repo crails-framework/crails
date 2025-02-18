@@ -16,6 +16,12 @@ ProjectConfiguration::ProjectConfiguration() : Crails::ProjectVariables(".crails
 {
 }
 
+void ProjectConfiguration::initialize()
+{
+  _project_directory = lookup_variable_path();
+  ProjectVariables::initialize();
+}
+
 static std::string get_current_process_file()
 {
   string process_link;
@@ -45,10 +51,10 @@ string ProjectConfiguration::crails_bin_path(const string_view command)
 string ProjectConfiguration::application_build_path() const
 {
   if (toolchain() == "cmake")
-    return project_directory() + "/build";
+    return _project_directory + "/build";
   else if (toolchain() == "build2")
-    return project_directory() + "/../build-" + project_name();
-  return project_directory();
+    return _project_directory + "/../build-" + project_name();
+  return _project_directory;
 }
 
 string ProjectConfiguration::project_name() const { return variable_or("name", "MyApplication"); }
@@ -189,7 +195,9 @@ void ProjectConfiguration::asset_roots(const std::list<std::string>& value)
 
 string ProjectConfiguration::project_directory()
 {
-  return ProjectConfiguration().lookup_variable_path();
+  ProjectConfiguration tmp;
+  tmp.initialize();
+  return tmp._project_directory;
 }
 
 void ProjectConfiguration::move_to_project_directory()

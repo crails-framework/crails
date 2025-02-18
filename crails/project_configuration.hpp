@@ -15,11 +15,14 @@ enum SourceExtension
 
 class ProjectConfiguration : public Crails::ProjectVariables
 {
+  std::string _project_directory;
 public:
   ProjectConfiguration();
 
   static std::string project_directory();
   static void        move_to_project_directory();
+
+  void                   initialize();
 
   std::string            project_name() const;
 
