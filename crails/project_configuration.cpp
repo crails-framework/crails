@@ -35,8 +35,8 @@ static std::string get_current_process_file()
       process_link = Crails::which("crails");
   }
   if (!process_link.length())
-    return filesystem::path();
-  return filesystem::canonical(process_link);
+    return filesystem::path().string();
+  return filesystem::canonical(process_link).string();
 }
 
 string ProjectConfiguration::crails_bin_path(const string_view command)
@@ -61,7 +61,6 @@ string ProjectConfiguration::project_name() const { return variable_or("name", "
 
 string ProjectConfiguration::version() const { return variable_or("crails-version", LIBCRAILS_VERSION_STR); }
 void ProjectConfiguration::version(const string& version) { variables["crails-version"] = version; }
-
 
 string ProjectConfiguration::toolchain() const { return variable_or("build-system", "cmake"); }
 void ProjectConfiguration::toolchain(const string& value) { variables["build-system"] = value; }
