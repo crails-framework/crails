@@ -34,6 +34,7 @@ public:
     if (with_changes)
     {
       configuration.update_plugins();
+      configuration.save();
     }
     if (options.count("list"))
     {
