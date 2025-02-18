@@ -160,7 +160,7 @@ int BuildManager::run()
   else if (configuration.toolchain() == "build2")
     result = crails_build2_builder(configuration, verbose, clean) ? 0 : 4;
   else
-    cerr << "Build command not supported for " << configuration.toolchain() << endl;
+    cerr << "Build command not supported for `" << configuration.toolchain() << '`' << endl;
   if (result == 0)
   {
     restart_server();

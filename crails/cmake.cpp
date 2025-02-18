@@ -57,10 +57,12 @@ bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbo
     if (!filesystem::is_directory(configuration.application_build_path()))
     {
       map<string,string> options{
-        {"config.cxx", configuration.variable_or("compiler", "g++")},
-        {"config.bin.rpath", "/usr/local/lib"},
+        {"config.cxx", configuration.variable_or("compiler", "g++")}
       };
 
+#ifndef _WIN32
+      options.emplace("config.bin.rpath", "/usr/local/lib");
+#endif
       Build2Builder::create(configuration.application_build_path(), options, verbose);
     }
     else

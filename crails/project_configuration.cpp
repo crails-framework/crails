@@ -51,10 +51,10 @@ string ProjectConfiguration::crails_bin_path(const string_view command)
 string ProjectConfiguration::application_build_path() const
 {
   if (toolchain() == "cmake")
-    return _project_directory + "/build";
+    return (_project_directory / "build").string();
   else if (toolchain() == "build2")
-    return _project_directory + "/../build-" + project_name();
-  return _project_directory;
+    return (_project_directory / ".." / ("build-" + project_name())).string();
+  return _project_directory.string();
 }
 
 string ProjectConfiguration::project_name() const { return variable_or("name", "MyApplication"); }
@@ -196,7 +196,7 @@ string ProjectConfiguration::project_directory()
 {
   ProjectConfiguration tmp;
   tmp.initialize();
-  return tmp._project_directory;
+  return tmp._project_directory.string();
 }
 
 void ProjectConfiguration::move_to_project_directory()

@@ -3,6 +3,7 @@
 #include <list>
 #include <string_view>
 #include <memory>
+#include <filesystem>
 #include "toolchain_editor.hpp"
 
 enum SourceExtension
@@ -15,7 +16,7 @@ enum SourceExtension
 
 class ProjectConfiguration : public Crails::ProjectVariables
 {
-  std::string _project_directory;
+  std::filesystem::path _project_directory;
 public:
   ProjectConfiguration();
 
