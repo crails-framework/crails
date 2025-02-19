@@ -14,6 +14,7 @@ if [ -z "$CPP_COMPILER" ] ; then
 fi
 
 CRAILS_VERSION=<%= crails_version %>
+CRAILS_VERSION_NUMBER=<%= crails_version == "master" ? "2.0.0" : crails_version %>
 CPPGET_FINGERPRINT="<%= build2_fingerprint %>"
 INSTALL_ROOT=/usr/local
 BUILD_DIR="build-$CPP_COMPILER"
@@ -36,7 +37,7 @@ cd "$BUILD_DIR"
 
 echo "+ fetching dependencies"
 bpkg add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
-for package in crails comet.cpp libcrails ${crails_packages[@]} ; do
+for package in crails comet.cpp libcrails libdatatree ${crails_packages[@]} ; do
   bpkg add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
 done
 bpkg fetch --trust "$CPPGET_FINGERPRINT"
@@ -47,6 +48,13 @@ echo "+ applying patches"
 sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/<%= patch %>.sh")
 <%   end %>
 <% end %>
+
+echo "+ enabling alt_build2_import"
+for package in libcrails libcrails-cli libdatatree ; do
+  config_file="libcrails-odb-$CRAILS_VERSION_NUMBER/build/root.build"
+  bpkg build $package $BPKG_OPTS --configure-only || echo "- $package successfully failed to configure"
+  echo config.`echo "$package" | tr '-' '_'`.alt_build2_imports = true >> $config_file
+done
 
 echo "+ building core components"
 bpkg build crails    $BPKG_OPTS ${system_packages[@]}
@@ -60,7 +68,7 @@ if [ -z ${sql_backends[@]} ] ; then
   echo "+ no sql backend selected, skipping libcrails-odb"
 else
   echo "+ building libcrails-odb"
-  config_file="libcrails-odb-2.0.0/build/config.build"
+  config_file="libcrails-odb-$CRAILS_VERSION_NUMBER/build/config.build"
   bpkg build libodb $BPKG_OPTS
   bpkg install libodb
   for backend in ${sql_backends[@]} ; do

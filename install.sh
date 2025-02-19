@@ -22,6 +22,11 @@ if [ -z "$CRAILS_VERSION" ] ; then
   if [ -z "$CRAILS_VERSION" ] ; then CRAILS_VERSION="$DEFAULT_CRAILS_VERSION" ; fi
 fi
 
+CRAILS_VERSION_NUMBER=$CRAILS_VERSION
+if [ "$CRAILS_VERSION" = "master" ] ; then
+  CRAILS_VERSION_NUMBER="2.0.0"
+fi
+
 if [ -z "$COMPILER" ] ; then
   if   which clang++ > /dev/null 2>&1 ; then export DEFAULT_COMPILER=clang++
   elif which g++     > /dev/null 2>&1 ; then export DEFAULT_COMPILER=g++
@@ -119,7 +124,7 @@ crails_packages=(
   libcrails-signin
   libcrails-sync
   libcrails-xmlrpc
-# libcrails-proxy # Disabled because it won't work with the new buffer base requests
+  libcrails-proxy
 # libcrails-redis # Disabled because it won't work with new compilers until cppget updates to version >= 1.3.8
   libcrails-tests
   libcrails-templates
@@ -200,7 +205,7 @@ fi
 ##
 if ! which $BPKG ; then
   echo "+ $BPKG does not appear to be installed. Installing build2:"
-  BUILD2_VERSION="0.16.0"
+  BUILD2_VERSION="0.17.0"
   curl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh
   chmod +x build2-install-$BUILD2_VERSION.sh
   sh build2-install-$BUILD2_VERSION.sh
@@ -228,6 +233,7 @@ cd "$BUILD_DIR"
 if [ ! "$SKIP_BPKG_FETCH" = "y" ] ; then
   echo "+ fetching dependencies"
   $BPKG add https://pkg.cppget.org/1/beta --trust "$CPPGET_FINGERPRINT"
+  $BPKG add "https://github.com/crails-framework/libdatatree.git#master"
   for package in crails crails-deploy comet.cpp libcrails ${crails_packages[@]} ; do
     $BPKG add "https://github.com/crails-framework/$package.git#$CRAILS_VERSION"
   done
@@ -236,19 +242,7 @@ fi
 
 if [ ! "$use_system_libraries" = "y" ] ; then
   echo "+ applying patches"
-  sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-boost-property-tree.sh")
   sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/fix-broken-build2-packages.sh")
-fi
-
-if [ "$use_system_libraries" = "y" ] ; then
-  echo "+ fixing libboost-process not being properly imported when using system libraries"
-  if ! $BPKG build libcrails-cli $BPKG_BUILD_OPTS --configure-only ${system_packages[@]} ; then
-    echo "(i) libcrails-cli failed to configure (just according to keikaku)"
-    tail -n +2 libcrails-cli-2.0.0/libcrails-cli/buildfile > /tmp/tmpfile
-    mv /tmp/tmpfile libcrails-cli-2.0.0/libcrails-cli/buildfile
-  else
-    echo "(!) libcrails-cli configuration was supposed to fail, but it didn't."
-  fi
 fi
 
 if [ ! "$use_system_libraries" = "y" ] ; then
@@ -260,6 +254,18 @@ if [ ! "$use_system_libraries" = "y" ] ; then
     sed '156s/len + 1/static_cast<int>(len + 1)/' "$monkeypatch_target" > monkeypatch
     mv monkeypatch "$monkeypatch_target"
   fi
+fi
+
+if [ "$use_system_libraries" = "y" ] ; then
+  alt_build2_packages="libcrails libcrails-cli libdatatree"
+  echo "+ enabling alt_build2_imports"
+  for package in libcrails libcrails-cli libdatatree ; do
+    config_file="$package-$CRAILS_VERSION_NUMBER/build/root.build"
+    alt_package_name=`echo "$package" | tr '-' '_'`
+    $BPKG build $package $BPKG_BUILD_OPTS --configure-only ${system_packages[@]} || echo "failed with success"
+    echo "config.${alt_package_name}.alt_build2_imports = true" >> $config_file
+    echo "- enabled alt_build2_imports for $package"
+  done
 fi
 
 echo "+ building core components"
@@ -327,6 +333,7 @@ fi
 ##
 if [ "$WITH_ODB_COMPILER" = "y" ] ; then
   cd ..
+  rm -rf odb-gcc
   $BPKG create -d odb-gcc cc \
     config.cxx=g++ \
     config.cc.coptions=-O3 \
