@@ -1,9 +1,10 @@
+std::string @environment = "Development";
+
+// END LINKING
 #include "server.hpp"
 #include <crails/logger.hpp>
 
 using namespace Crails;
-
-std::string @environment = "Development";
 
 ApplicationServer::ApplicationServer()
 {
