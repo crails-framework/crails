@@ -17,8 +17,8 @@ class TemplateBuilder : public ::Command
   std::string renderer_filename;
   std::string function_prefix;
   std::string pattern = "\\.ecpp$";
-  std::string output_directory = "app/autogen/renderers";
   Targets     targets, all_targets;
+  std::filesystem::path output_directory() const;
 public:
   int              run() override;
   std::string_view description() const override { return "compile templates to C++ for a given renderer"; }

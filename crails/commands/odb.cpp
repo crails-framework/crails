@@ -154,7 +154,7 @@ int BuildOdb::run()
     use_session = options["use-session"].as<bool>();
   if (options.count("includes"))
     custom_includes = Crails::split(options["includes"].as<string>(), ',');
-  output_dir = options.count("output-dir") ? options["output-dir"].as<string>() : string("app/autogen/odb");
+  output_dir = options.count("output-dir") ? options["output-dir"].as<string>() : (configuration.autogen_path() / "odb").string();
   input_dirs = options.count("input-dirs") ? Crails::split(options["input-dirs"].as<string>(), ',') : default_input_directories(configuration);
   files = collect_files();
   if (files.size() > 0)

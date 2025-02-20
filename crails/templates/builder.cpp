@@ -154,7 +154,7 @@ bool TemplateBuilder::run_ecpp(const pair<string, Target>& target, Crails::Rende
 
 void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, filesystem::path template_path)
 {
-  filesystem::path directory(output_directory + '/' + renderer);
+  filesystem::path directory(output_directory() / renderer);
   filesystem::path existing_template_path(it->first);
 
   if (filesystem::last_write_time(existing_template_path) < filesystem::last_write_time(template_path))
@@ -167,7 +167,7 @@ void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, filesystem
 
 void TemplateBuilder::clear_dropped_templates()
 {
-  filesystem::path directory(output_directory + '/' + renderer);
+  filesystem::path directory(output_directory() / renderer);
   filesystem::recursive_directory_iterator dir(directory);
   list<filesystem::path> marked_for_deletion;
 
@@ -195,7 +195,7 @@ void TemplateBuilder::clear_dropped_templates()
 
 bool TemplateBuilder::generate_templates()
 {
-  string renderer_output_directory = output_directory + '/' + renderer;
+  filesystem::path renderer_output_directory = output_directory() / renderer;
 
   collect_files();
   if (filesystem::is_directory(renderer_output_directory))
@@ -205,7 +205,7 @@ bool TemplateBuilder::generate_templates()
     string             generated_template;
     auto               target = pair{it->first, it->second};
     Crails::RenderFile render_target;
-    string             output_path = renderer_output_directory + '/' + target.second.function + ".cpp";
+    filesystem::path   output_path = renderer_output_directory / (target.second.function + ".cpp");
 
     cout << "[TEMPLATE] Generating template " << target.second.alias << " at " << output_path << endl;
     filesystem::create_directories(renderer_output_directory);
@@ -214,7 +214,7 @@ bool TemplateBuilder::generate_templates()
       cerr << "[TEMPLATE] Could not create directory " << renderer_output_directory << endl;
       return false;
     }
-    render_target.open(output_path);
+    render_target.open(output_path.string());
     if (!run_ecpp(target, render_target))
     {
       cerr << "[TEMPLATE] Could not generate " << target.second.alias << endl;
@@ -233,7 +233,7 @@ bool TemplateBuilder::generate_renderer_header()
   renderer.vars["renderer_type"] = this->renderer;
   renderer.generate_file(
     "renderer.hpp",
-    output_directory + '/' + renderer_filename + ".hpp"
+    (output_directory() / (renderer_filename + ".hpp")).string()
   );
   return true;
 }
@@ -252,7 +252,12 @@ bool TemplateBuilder::generate_renderer_ctor()
   renderer.vars["targets"] = &target_var;
   renderer.generate_file(
     "renderer.cpp",
-    output_directory + '/' + renderer_filename + ".cpp"
+    (output_directory() / (renderer_filename + ".cpp")).string()
   );
   return true;
+}
+
+std::filesystem::path TemplateBuilder::output_directory() const
+{
+  return ProjectConfiguration::autogen_path() / "renderers";
 }

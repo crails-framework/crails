@@ -8,6 +8,7 @@
 #include <crails/utils/string.hpp>
 #include <filesystem>
 #include <algorithm>
+#include <cstdlib>
 #include "version.hpp"
 
 using namespace std;
@@ -214,4 +215,10 @@ std::string ProjectConfiguration::source_extension(SourceExtension type) const
   case TemplateExt: return variable_or("ext-template", "tpp");
   }
   return "hpp";
+}
+
+std::filesystem::path ProjectConfiguration::autogen_path()
+{
+  const char* autogen_folder_var = std::getenv("CRAILS_AUTOGEN_DIR");
+  return filesystem::path(autogen_folder_var ? autogen_folder_var : "app/autogen");
 }

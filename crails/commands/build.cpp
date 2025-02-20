@@ -97,7 +97,7 @@ bool BuildManager::generate_database()
     BuildOdb odb_builder;
     std::vector<std::string> argv_array{
       "--input-dirs", model_input_dirs(configuration),
-      "--output-dir","app/autogen/odb"
+      "--output-dir", (configuration.autogen_path() / "odb").string()
     };
     if (options.count("verbose")) argv_array.push_back("--verbose");
     ArgvArray argv(argv_array);

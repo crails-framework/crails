@@ -58,6 +58,7 @@ public:
 
   std::string            source_extension(SourceExtension) const;
 
+  static std::filesystem::path autogen_path();
   static std::string crails_bin_path(const std::string_view = "");
   std::string application_build_path() const;
 };
