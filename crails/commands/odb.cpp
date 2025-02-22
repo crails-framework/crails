@@ -362,7 +362,7 @@ string BuildOdb::odb_command(const string& output_dir)
   stringstream stream;
 
   stream << odb_compiler
-         << " -I."
+         << " -I." << " -I./app"
          << " --std " << configuration.variable("std")
          << " --hxx-suffix ." << configuration.source_extension(HeaderExt)
          << " --ixx-suffix ." << configuration.source_extension(InlineExt)
