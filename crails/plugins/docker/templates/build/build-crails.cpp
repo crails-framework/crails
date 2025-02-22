@@ -31,9 +31,9 @@ ecpp_stream << "#!/bin/bash -e\n\nif [ -z \"$CPP_COMPILER\" ] ; then\n  CPP_COMP
  };
   ecpp_stream << "";
  };
-  ecpp_stream << "\n\necho \"+ enabling alt_build2_import\"\nfor package in libcrails libcrails-cli libdatatree ; do\n  config_file=\"libcrails-odb-$CRAILS_VERSION_NUMBER/build/root.build\"\n  bpkg build $package $BPKG_OPTS --configure-only || echo \"- $package successfully failed to configure\"\n  echo config.`echo \"$package\" | tr '-' '_'`.alt_build2_imports = true >> $config_file\ndone\n\necho \"+ building core components\"\nbpkg build crails    $BPKG_OPTS ${system_packages[@]}\nbpkg build libcrails $BPKG_OPTS ${system_packages[@]}";
+  ecpp_stream << "\n\necho \"+ enabling alt_build2_import\"\nif [ ! -f \"build/config.build\" ] ; then\n  mkdir -p build\n  echo \"config.version = 1\" > build/config.build\nfi\nfor package in libcrails libcrails-cli libdatatree ; do\n  echo config.`echo \"$package\" | tr '-' '_'`.alt_build2_imports = true >> build/config.build\ndone\n\necho \"+ building core components\"\nbpkg build libdatatree   $BPKG_OPTS ${system_packages[@]}\nbpkg build libcrails-cli $BPKG_OPTS ${system_packages[@]}\nbpkg build crails        $BPKG_OPTS ${system_packages[@]}\nbpkg build libcrails     $BPKG_OPTS ${system_packages[@]}";
  if (with_comet){
-  ecpp_stream << "\nbpkg build comet     $BPKG_OPTS ${system_packages[@]}";
+  ecpp_stream << "\nbpkg build comet         $BPKG_OPTS ${system_packages[@]}";
  };
   ecpp_stream << "\n";
  if (with_odb){

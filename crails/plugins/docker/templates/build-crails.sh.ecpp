@@ -50,17 +50,21 @@ sh <(curl -s "https://raw.githubusercontent.com/crails-framework/crails/master/<
 <% end %>
 
 echo "+ enabling alt_build2_import"
+if [ ! -f "build/config.build" ] ; then
+  mkdir -p build
+  echo "config.version = 1" > build/config.build
+fi
 for package in libcrails libcrails-cli libdatatree ; do
-  config_file="libcrails-odb-$CRAILS_VERSION_NUMBER/build/root.build"
-  bpkg build $package $BPKG_OPTS --configure-only || echo "- $package successfully failed to configure"
-  echo config.`echo "$package" | tr '-' '_'`.alt_build2_imports = true >> $config_file
+  echo config.`echo "$package" | tr '-' '_'`.alt_build2_imports = true >> build/config.build
 done
 
 echo "+ building core components"
-bpkg build crails    $BPKG_OPTS ${system_packages[@]}
-bpkg build libcrails $BPKG_OPTS ${system_packages[@]}
+bpkg build libdatatree   $BPKG_OPTS ${system_packages[@]}
+bpkg build libcrails-cli $BPKG_OPTS ${system_packages[@]}
+bpkg build crails        $BPKG_OPTS ${system_packages[@]}
+bpkg build libcrails     $BPKG_OPTS ${system_packages[@]}
 <% if (with_comet) do %>
-bpkg build comet     $BPKG_OPTS ${system_packages[@]}
+bpkg build comet         $BPKG_OPTS ${system_packages[@]}
 <% end %>
 
 <% if (with_odb) do %>

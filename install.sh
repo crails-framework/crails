@@ -289,6 +289,9 @@ else
   $BPKG build libodb $BPKG_BUILD_OPTS
   $BPKG build libcrails-odb $BPKG_BUILD_OPTS --configure-only ${system_packages[@]}
   for backend in sqlite pgsql mysql oracle ; do
+    if [ ! -f "$config_file" ] ; then
+      echo "config.version = 1" > $config_file
+    fi
     if echo ${sql_backends} | grep $backend ; then
       echo "config.libcrails_odb.with_$backend = true"  >> $config_file
       awk '!'"/with_$backend/" "$build_file" > .tmpfile
