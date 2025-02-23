@@ -10,7 +10,7 @@ public:
 
   BuildOdb()
   {
-    custom_includes = {"crails/safe_ptr.hpp", "crails/odb/traits.hpp", "config/odb.hpp"};
+    custom_includes = {"crails/safe_ptr.hpp", "crails/odb/traits.hpp", "app/config/odb.hpp"};
   }
 
   int              run() override;

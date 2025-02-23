@@ -391,7 +391,6 @@ string BuildOdb::hxx_prologue()
 {
   stringstream prologue;
 
-  prologue << "#include <crails/safe_ptr.hpp>\n";
   for (const string& include : custom_includes)
     prologue << "#include \\\"" << include << "\\\"\n";
   prologue << hxx_prologue_;
