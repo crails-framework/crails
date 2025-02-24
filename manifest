@@ -10,5 +10,5 @@ depends: * build2 >= 0.15.0
 depends: * bpkg >= 0.15.0
 depends: { libboost-lexical-cast libboost-program-options } >= 1.74.0
 depends: { libcrails-cli libcrails-renderer libcrails-templates libcrails-semantics libcrails-random libcrails-readfile libdatatree } ^2.0.0
-depends: ecpp ^1.0.0
-depends: crails-assets ^1.0.0
+depends: ecpp ^2.0.0
+depends: crails-assets ^2.0.0
