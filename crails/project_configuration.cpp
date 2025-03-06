@@ -4,12 +4,16 @@
 #include "cmake_editor.hpp"
 #include <crails/render_file.hpp>
 #include <crails/read_file.hpp>
-#include <crails/cli/process.hpp>
 #include <crails/utils/string.hpp>
 #include <filesystem>
 #include <algorithm>
 #include <cstdlib>
 #include "version.hpp"
+#ifndef _WIN32
+# include <crails/cli/process.hpp>
+#else
+# include <libloaderapi.h>
+#endif
 
 using namespace std;
 
@@ -25,6 +29,7 @@ void ProjectConfiguration::initialize()
 
 static std::string get_current_process_file()
 {
+#ifndef _WIN32
   string process_link;
   string uname;
 
@@ -38,6 +43,13 @@ static std::string get_current_process_file()
   if (!process_link.length())
     return filesystem::path().string();
   return filesystem::canonical(process_link).string();
+#else
+  WCHAR path[MAX_PATH];
+  DWORD length = GetModuleFileNameW(NULL, path, MAX_PATH);
+  wstring wideString(path, length);
+
+  return string(wideString.begin(), wideString.end());
+#endif
 }
 
 string ProjectConfiguration::crails_bin_path(const string_view command)
