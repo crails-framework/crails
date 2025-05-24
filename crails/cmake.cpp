@@ -57,7 +57,7 @@ bool crails_build2_builder(const ProjectConfiguration& configuration, bool verbo
     if (!filesystem::is_directory(configuration.application_build_path()))
     {
       map<string,string> options{
-        {"config.cxx", configuration.variable_or("compiler", "g++")}
+        {"config.cxx", configuration.variable_or("compiler", "g++")},
         {"config.cxx.std", configuration.variable_or("std", "latest")}
       };
 
