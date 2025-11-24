@@ -129,6 +129,8 @@ bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose,
       cerr << "comet does not seem to be installed on your system" << endl;
       return false;
     }
+    if (verbose)
+      cout << "+ " << command << endl;
     if (!Crails::run_command(command))
       return false;
   }
