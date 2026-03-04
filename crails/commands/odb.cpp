@@ -4,7 +4,6 @@
 #include <crails/utils/string.hpp>
 #include <crails/render_file.hpp>
 #include <crails/cli/process.hpp>
-#include <boost/process.hpp>
 #include <iostream>
 #include <filesystem>
 
@@ -191,11 +190,9 @@ bool BuildOdb::compile_models_at_once(const FileList& files)
     command << filesystem::relative(file, project_dir) << ' ';
   if (options.count("verbose"))
     cout << "+ " << command.str() << endl;
-  boost::process::child odb(command.str());
-  odb.wait();
-  if (odb.exit_code() != 0)
-    return false;
-  return at_once_fix_include_paths(files);
+  if (Crails::run_command(command.str()))
+    return at_once_fix_include_paths(files);
+  return false;
 }
 
 bool BuildOdb::at_once_fix_include_paths(const FileList& files) const
@@ -267,10 +264,7 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
       + ' ' + file.string();
     if (options.count("verbose"))
       cout << "+ " << command << endl;
-    boost::process::child odb(command);
-
-    odb.wait();
-    if (odb.exit_code() != 0)
+    if (!Crails::run_command(command))
       return false;
   }
   return true;
@@ -297,9 +291,7 @@ bool BuildOdb::generate_schema(const FileList& files)
       command << filesystem::relative(file, project_dir) << ' ';
     if (options.count("verbose"))
       cout << "+ " << command.str() << endl;
-    boost::process::child odb(command.str());
-    odb.wait();
-    if (odb.exit_code() == 0)
+    if (Crails::run_command(command.str()))
       return true;
   }
   return false;

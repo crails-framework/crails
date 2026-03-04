@@ -1,5 +1,4 @@
 #include "plugin.hpp"
-#include <boost/process.hpp>
 #include <crails/cli/process.hpp>
 #include <crails/utils/join.hpp>
 #include <crails/utils/split.hpp>
@@ -118,10 +117,7 @@ int DockerPlugin::DockerShell::run()
     cerr << "cannot find docker. Maybe it's not installed ?" << endl;
   else
   {
-    boost::process::child build_process(make_build_command(machine_name, options));
-
-    build_process.wait();
-    if (build_process.exit_code() == 0)
+    if (Crails::run_command(make_build_command(machine_name, options)))
       return Crails::execve(docker_path, make_shell_command(machine_name, options, configuration));
   }
   return -1;

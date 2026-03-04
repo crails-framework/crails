@@ -1,7 +1,6 @@
 #include "package.hpp"
 #include <crails/cli/process.hpp>
 #include <crails/utils/split.hpp>
-#include <boost/process.hpp>
 #include <algorithm>
 #include <iostream>
 #include "../file_renderer.hpp"
@@ -51,21 +50,19 @@ static bool run_tests(const ProjectConfiguration& configuration, boost::program_
 
 static vector<filesystem::path> find_imported_libraries(const filesystem::path& binary)
 {
-  boost::process::ipstream stream;
-  boost::process::child process("ldd \"" + binary.string() + '"', boost::process::std_out > stream);
+  string output;
   vector<filesystem::path> results;
 
-  process.wait();
-  if (process.exit_code() == 0)
+  if (Crails::run_command({"ldd", {binary.string()}}, output))
   {
-    string line;
+    auto lines = Crails::split<string_view, vector<string_view>>(output, '\n');
 
-    while (getline(stream, line))
+    for (const string_view line : lines)
     {
-      auto list = Crails::split<string, vector<string>>(line, ' ');
+      auto list = Crails::split<string_view, vector<string_view>>(line, ' ');
 
       if (list.size() > 2)
-        results.push_back(list.at(2));
+        results.push_back(filesystem::path(list.at(2)));
     }
   }
   return results;

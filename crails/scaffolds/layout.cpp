@@ -108,16 +108,13 @@ static bool download_archive(const std::string& url, std::function<void()> callb
 {
   char tmp_filename[L_tmpnam];
   filesystem::path tmp_file = std::tmpnam(tmp_filename);
-  boost::process::child download_process("curl -o \"" + tmp_file.string() + "\" -L  \"" + url + '"');
 
-  download_process.wait();
-  if (download_process.exit_code() == 0)
+  if (Crails::run_command("curl -o \"" + tmp_file.string() + "\" -L  \"" + url + '"'))
   {
-    boost::process::child extract_process("unzip \"" + tmp_file.string() + '"');
+    bool success = Crails::run_command("unzip \"" + tmp_file.string() + '"');
 
-    extract_process.wait();
     std::remove(tmp_file.string().c_str());
-    if (extract_process.exit_code() == 0)
+    if (success)
     {
       callback();
       return true;

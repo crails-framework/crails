@@ -1,6 +1,5 @@
 #include "builder.hpp"
 #include <filesystem>
-#include <boost/process.hpp>
 #include <iostream>
 #include <regex>
 #include <crails/render_file.hpp>
@@ -135,21 +134,14 @@ string TemplateBuilder::command_for_target(const pair<string, Target>& target) c
 
 bool TemplateBuilder::run_ecpp(const pair<string, Target>& target, Crails::RenderFile& output) const
 {
-  boost::process::ipstream pipe_stream;
-  boost::process::child    ecpp(
-    command_for_target(target),
-    boost::process::std_out > pipe_stream
-  );
-  string       line;
-  stringstream generated_template;
+  string generated_template;
 
-  while (pipe_stream && std::getline(pipe_stream, line))
-    generated_template << line << '\n';
-  ecpp.wait();
-  if (ecpp.exit_code() != 0)
-    return false;
-  output.set_body(generated_template.str().c_str(), generated_template.str().length());
-  return true;
+  if (Crails::run_command(command_for_target(target), generated_template))
+  {
+    output.set_body(generated_template.c_str(), generated_template.length());
+    return true;
+  }
+  return false;
 }
 
 void TemplateBuilder::prune_up_to_date_template(Targets::iterator it, filesystem::path template_path)

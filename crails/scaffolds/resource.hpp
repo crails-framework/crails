@@ -1,6 +1,6 @@
 #pragma once
 #include <crails/cli/scaffold_model.hpp>
-#include <boost/process.hpp>
+#include <crails/cli/process.hpp>
 #include "../project_configuration.hpp"
 #include <algorithm>
 #include <iostream>
@@ -33,41 +33,33 @@ public:
       target_folder = options["target"].as<std::string>();
     if (options.count("format"))
       formats = options["format"].as<std::vector<std::string>>();
-    return scaffold_model(options) == 0
-        && scaffold_views(options) == 0
-        && scaffold_controller(options) == 0
+    return scaffold_model(options)
+        && scaffold_views(options)
+        && scaffold_controller(options)
       ? 0 : -1;
   }
 
 private:
-  int scaffold_model(boost::program_options::variables_map& options)
+  bool scaffold_model(boost::program_options::variables_map& options)
   {
-    boost::process::child process(scaffold_command("model", options, true));
-
-    process.wait();
-    return process.exit_code();
+    return Crails::run_command(scaffold_command("model", options, true));
   }
 
-  int scaffold_views(boost::program_options::variables_map& options)
+  bool scaffold_views(boost::program_options::variables_map& options)
   {
     for (const std::string& format : formats)
     {
-      boost::process::child process(scaffold_command("view", options, true) + "  --format " + format);
-
-      process.wait();
-      if (process.exit_code() != 0)
-        return process.exit_code();
+      if (!Crails::run_command(scaffold_command("view", options, true) + "  --format " + format))
+        return false;
     }
-    return 0;
+    return true;
   }
 
-  int scaffold_controller(boost::program_options::variables_map& options)
+  bool scaffold_controller(boost::program_options::variables_map& options)
   {
     std::string mode = std::find(formats.begin(), formats.end(), std::string("html")) != formats.end() ? "resource" : "crud";
-    boost::process::child process(scaffold_command("controller", options, false) + "  --mode " + mode);
 
-    process.wait();
-    return process.exit_code();
+    return Crails::run_command(scaffold_command("controller", options, false) + "  --mode " + mode);
   }
 
   std::string scaffold_command(const std::string& type, boost::program_options::variables_map& options, bool with_properties = false)

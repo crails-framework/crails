@@ -5,7 +5,6 @@
 #include <crails/cli/conventions.hpp>
 #include <crails/read_file.hpp>
 #include <crails/utils/join.hpp>
-#include <boost/process.hpp>
 #include "odb.hpp"
 #include "../plugins/comet/plugin.hpp"
 #include "../plugins/metarecord/plugin.hpp"
@@ -23,7 +22,7 @@ bool BuildManager::prebuild_renderers()
 {
   for (const auto& renderer : configuration.renderers())
   {
-    stringstream command;
+    Crails::ExecutableCommand command;
     vector<string> inputs{"app/views"};
 
     if (MetarecordPlugin::has_view_generator(configuration))
@@ -34,21 +33,22 @@ bool BuildManager::prebuild_renderers()
     for (const string& module_ : configuration.modules())
       inputs.push_back("modules/" + module_ + "/views");
     cout << "[renderers] generate " << renderer << "..." << endl;
-    command << configuration.crails_bin_path() + "/crails"
-      << " templates build -r " << renderer
-      << " -i " << Crails::join(inputs, ',')
-      << " -t Crails::" << Crails::camelize(renderer) << "Template"
-      << " -z crails/" << renderer << "_template.hpp"
-      << " -n " << app_renderer_classname(configuration, renderer)
-      << " -p \\." << renderer << "$";
+    command.path = configuration.crails_bin_path() + "/crails";
+    command
+      << "templates" << "build" << "-r" << renderer
+      << "-i" << Crails::join(inputs, ',')
+      << "-t" << ("Crails::" + Crails::camelize(renderer) + "Template")
+      << "-z" << ("crails/" + renderer + "_template.hpp")
+      << "-n" << app_renderer_classname(configuration, renderer)
+      << "-p" << ("\\." + renderer + "$");
     if (renderer == "json")
-      command << " -m raw -s stream";
+      command << "-m" << "raw" << "-s" << "stream";
     if (options.count("verbose"))
     {
-      command << " -v";
-      cout << "+ " << command.str() << endl;
+      command << "-v";
+      cout << "+ " << command << endl;
     }
-    if (!Crails::run_command(command.str()))
+    if (!Crails::run_command(command))
       return false;
   }
   return true;
@@ -127,11 +127,7 @@ static void restart_server()
   std::string pid_string;
 
   if (Crails::read_file("crails.pid", pid_string))
-  {
-    boost::process::child kill("kill -USR2 " + pid_string);
-
-    kill.wait();
-  }
+    Crails::run_command({"kill", {"-USR2", pid_string}});
 }
 
 int BuildManager::run()
