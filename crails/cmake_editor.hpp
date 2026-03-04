@@ -2,7 +2,7 @@
 #include "toolchain_editor.hpp"
 #include "file_editor.hpp"
 
-class CmakeEditor : public ToolchainEditor
+class CmakeEditor final : public ToolchainEditor
 {
 public:
   CmakeEditor(const ProjectConfiguration&);

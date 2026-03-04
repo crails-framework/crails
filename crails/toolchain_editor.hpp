@@ -12,6 +12,7 @@ public:
   {
   }
 
+  virtual ~ToolchainEditor() {}
   virtual bool load_file() = 0;
   virtual void save_file() = 0;
   virtual void update_plugins() {}

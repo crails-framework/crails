@@ -2,7 +2,7 @@
 #include "file_editor.hpp"
 #include "toolchain_editor.hpp"
 
-class Build2Editor : public ToolchainEditor
+class Build2Editor final : public ToolchainEditor
 {
 public:
   Build2Editor(const ProjectConfiguration& configuration);
