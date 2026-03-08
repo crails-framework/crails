@@ -152,8 +152,11 @@ int BuildManager::run()
   if (configuration.has_plugin("metarecord") && !MetarecordPlugin::build(configuration, verbose)) return 11;
   if (!prebuild_renderers()) return 1;
   if (!generate_database()) return 2;
+  cout << "[debug] gen database done" << endl << "[debug] assets start" << endl;
   if (!generate_assets()) return 3;
+  cout << "[debug] assets done" << endl << "[debug] comet start" << endl;
   if (configuration.has_plugin("comet") && !(CometPlugin::build(configuration, verbose, clean))) return 10;
+  cout << "[debug] comet done" << endl << "[debug] cmake start" << endl;
   if (configuration.toolchain() == "cmake")
     result = crails_cmake_builder(configuration, mode, cxx_flags, verbose, clean) ? 0 : 4;
   else if (configuration.toolchain() == "build2")

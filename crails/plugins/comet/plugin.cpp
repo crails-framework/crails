@@ -23,23 +23,24 @@ int CometPlugin::CometInstaller::run()
     cerr << "comet does not seem to be installed on your system" << endl;
   else
   {
-    stringstream command;
+    Crails::ExecutableCommand command;
     string asset_cpp_path = filesystem::relative("app/autogen/assets.cpp", filesystem::canonical(output_path)).string();
 
     if (options.count("client-path"))
       output_path = options["client-path"].as<string>();
-    command << comet << " new "
-      << " -n " << configuration.variable("name")
-      << " -o " << output_path
-      << " -t " << configuration.toolchain()
-      << " -b \"" << configuration.application_build_path() + "/client" << '"'
-      << " --html-config ../config/comet.json"
-      << " --html-output ../lib-client"
-      << " --include-src \"" << asset_cpp_path << "\"";
+    command.path = comet;
+    command << "new"
+      << "-n" << configuration.variable("name")
+      << "-o" << output_path
+      << "-t" << configuration.toolchain()
+      << "-b" << (configuration.application_build_path() + "/client")
+      << "--html-config" << "../config/comet.json"
+      << "--html-output" << "../lib-client"
+      << "--include-src" << asset_cpp_path;
     if (options.count("cheerp-path"))
-      command << " --cheerp-path " << options["cheerp-path"].as<string>();
-    cout << "+ " << command.str() << endl;
-    if (Crails::run_command(command.str()))
+      command << "--cheerp-path" << options["cheerp-path"].as<string>();
+    cout << "+ " << command << endl;
+    if (Crails::run_command(command))
     {
       configuration.add_plugin("comet");
       configuration.variable("comet-client-path", output_path);
@@ -113,13 +114,16 @@ bool CometPlugin::build(const ProjectConfiguration& configuration, bool verbose,
 {
   string comet = find_comet_command(configuration);
   string source = configuration.variable("comet-client-path");
-  string command = comet + " build";
+  Crails::ExecutableCommand command;
+
+  command.path = comet;
+  command << "build";
 
   if (verbose)
-    command += " -v";
+    command << "-v";
   if (clean)
-    command += " --clean";
-  command += " -m " + configuration.variable_or("build-type", "Release");
+    command << "--clean";
+  command << "-m" << configuration.variable_or("build-type", "Release");
   {
     Crails::WithPath with_path(source);
 
