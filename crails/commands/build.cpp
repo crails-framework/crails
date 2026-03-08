@@ -67,7 +67,10 @@ bool BuildManager::generate_assets()
     for (const string& module_ : configuration.modules())
       command << ' ' << module_ << ':' << "modules/" << module_ << "/assets";
     if (options.count("verbose"))
+    {
+      command << " -v";
       cout << "+ " << command.str() << endl;
+    }
     return Crails::run_command(command.str());
   }
   return true;
