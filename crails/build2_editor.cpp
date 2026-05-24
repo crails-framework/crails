@@ -1,6 +1,7 @@
 #include "project_configuration.hpp"
 #include "build2_editor.hpp"
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
