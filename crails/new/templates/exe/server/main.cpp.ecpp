@@ -20,7 +20,7 @@ bool @with_databases = false;
 using namespace std;
 using namespace Crails;
 
-int main(int argc, const char **argv)
+static int application_main()
 {
   SingletonInstantiator<ApplicationServer> server;
   SingletonInstantiator<ApplicationRenderers> renderers;
@@ -48,4 +48,12 @@ int main(int argc, const char **argv)
     return -1;
   }
   return 0;
+}
+
+int main(int argc, const char **argv)
+{
+  int result = application_main();
+
+  Logger::cleanup();
+  return result;
 }
