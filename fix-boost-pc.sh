@@ -79,6 +79,13 @@ for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/"*.pc` ; do
   done
 done
 
+for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/"*.pc || echo ""` ; do
+  echo "boost-pc monkeypatch: checking $pc_file"
+  awk '{ if ($0 ~ /^Libs:/) { gsub(" -lbacktrace", " "); print $0 } else { print $0 } }' \
+    "$pc_file" > tmpfile
+  mv tmpfile "$pc_file"
+done
+
 # ImageMagick fix
 for pc_file in `ls "$INSTALL_ROOT/lib/pkgconfig/libcrails-image"*.pc || echo ""` ; do
   echo "boost-pc monkeypatch: checking $pc_file"
