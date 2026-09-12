@@ -99,6 +99,7 @@ crails_packages=(
   libcrails-cli
   libcrails-controllers
   libcrails-crud
+  libcrails-crontab
   libcrails-cookies
   libcrails-design-patterns
   libcrails-encrypt
@@ -144,6 +145,7 @@ boost_packages=(
   ?sys:libboost-program-options
   ?sys:libboost-property-tree
   ?sys:libboost-process
+  ?sys:libboost-stacktrace
 )
 
 if [ "$use_system_libraries" = "y" ] ; then
@@ -205,7 +207,7 @@ fi
 ##
 if ! which $BPKG ; then
   echo "+ $BPKG does not appear to be installed. Installing build2:"
-  BUILD2_VERSION="0.17.0"
+  BUILD2_VERSION="0.18.1"
   curl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh
   chmod +x build2-install-$BUILD2_VERSION.sh
   sh build2-install-$BUILD2_VERSION.sh
@@ -257,13 +259,14 @@ if [ ! "$use_system_libraries" = "y" ] ; then
 fi
 
 if [ "$use_system_libraries" = "y" ] ; then
-  alt_build2_packages="libcrails libcrails-cli libdatatree"
+  alt_build2_packages="libcrails libcrails-cli libcrails-crontab libcrails-multimedia libdatatree libbacktrace"
   echo "+ enabling alt_build2_imports"
-  for package in libcrails libcrails-cli libdatatree ; do
+  for package in $alt_build2_packages ; do
     config_file="$package-$CRAILS_VERSION_NUMBER/build/root.build"
     alt_package_name=`echo "$package" | tr '-' '_'`
     $BPKG build $package $BPKG_BUILD_OPTS --configure-only ${system_packages[@]} || echo "failed with success"
     echo "config.${alt_package_name}.alt_build2_imports = true" >> $config_file
+    echo "config.${alt_package_name}.alt_build2_imports = true" >> build/config.build
     echo "- enabled alt_build2_imports for $package"
   done
 fi
