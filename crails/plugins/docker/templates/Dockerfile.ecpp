@@ -14,7 +14,7 @@ string @script_path = "base/";
 FROM <%= image %>
 
 WORKDIR /tmp
-ENV LD_LIBRARY_PATH=/usr/local/lib
+ENV LD_LIBRARY_PATH=/usr/local/lib:/opt/application/build
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV TZ="Europe/London"
 
