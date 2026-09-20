@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -18,6 +18,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(1728);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#include \"" << ( renderer_filename );
   ecpp_stream << ".hpp\"\n#define declare_renderer(name) void " << ( function_prefix );
   ecpp_stream << "_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)\n#define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, " << ( function_prefix );
@@ -35,12 +37,12 @@ ecpp_stream << "#include \"" << ( renderer_filename );
   ecpp_stream << ");";
  };
   ecpp_stream << "\n}\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   string renderer_name;
   string renderer_filename;
   string function_prefix;

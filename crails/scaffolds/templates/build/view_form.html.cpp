@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -20,6 +20,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(3934);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\"\n#include <crails/html_form_builder.hpp>\n\nusing namespace std;\n" << ( classname );
   ecpp_stream << "& @model;\nCrails::FormBuilder<" << ( classname );
@@ -60,12 +62,12 @@ ecpp_stream << "#include \"" << ( header );
   ecpp_stream << "\n  </div>";
  };
   ecpp_stream << "\n  <button type=\"submit\" class=\"btn btn-primary\">Save</button>\n<% yields-end %>\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   std::vector<std::string> numerical_types;
   std::string classname;
   std::string resource_name;

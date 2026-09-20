@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -12,13 +12,15 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(210);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "$out_root/\n{\n  include app/\n  include ./\n}\n\nexport $out_root/app/$import.target\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
 };
 
 void render_build2_build_export_build(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)

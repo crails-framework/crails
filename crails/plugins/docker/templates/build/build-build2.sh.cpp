@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -15,15 +15,17 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(802);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#!/bin/sh -ex\n\nexport BUILD2_VERSION=\"" << ( build2_version );
   ecpp_stream << "\"\nexport BUILD2_FINGERPRINT=\"" << ( build2_fingerprint );
   ecpp_stream << "\"\n\ncurl -sSfO https://download.build2.org/$BUILD2_VERSION/build2-install-$BUILD2_VERSION.sh\nchmod +x build2-install-$BUILD2_VERSION.sh\nsh build2-install-$BUILD2_VERSION.sh --yes --trust \"$BUILD2_FINGERPRINT\"\n\n\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   string build2_version;
   string build2_fingerprint;
 };

@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -19,6 +19,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(2252);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0\" )\" && pwd)\"\n\nif [ -z \"$VAR_DIRECTORY\" ]    ; then export VAR_DIRECTORY=\"" << ( runtime_path );
   ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_HOST\" ] ; then export APPLICATION_HOST=\"" << ( application_host );
   ecpp_stream << "\" ; fi\nif [ -z \"$APPLICATION_PORT\" ] ; then export APPLICATION_PORT=\"" << ( application_port );
@@ -28,12 +30,12 @@ ecpp_stream << "#!/bin/sh -ex\n\nexport APPLICATION_BIN=\"$(cd \"$( dirname \"$0
   ecpp_stream << "\"\nexport PUBLIC_PATH=\"" << ( share_directory );
   ecpp_stream << "/public\"\n\nexec \"" << ( bin_directory );
   ecpp_stream << "/server\" \\\n  --hostname \"$APPLICATION_HOST\" \\\n  --port     \"$APPLICATION_PORT\" \\\n  --pidfile  \"$PID_FILE\" \\\n  --log      \"/var/log/$APPLICATION_NAME/event.log\"\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   unsigned short application_port;
   std::string application_host;
   std::string application_name;

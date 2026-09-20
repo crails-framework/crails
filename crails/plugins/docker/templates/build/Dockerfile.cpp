@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -23,6 +23,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(4362);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "FROM " << ( image );
   ecpp_stream << "\n\nWORKDIR /tmp\nENV LD_LIBRARY_PATH=/usr/local/lib:/opt/application/build\nENV DEBIAN_FRONTEND=\"noninteractive\"\nENV TZ=\"Europe/London\"\n\nRUN apt-get -y --allow-unauthenticated update && \\\n    apt-get -y --allow-unauthenticated upgrade && \\\n    apt-get -y install curl \\\n  cmake \\\n  pkg-config \\\n  build-essential \\\n  libbz2-dev \\\n  libssl-dev \\\n  git\n\nCOPY " << ( script_path );
   ecpp_stream << "build-build2.sh build-build2.sh\nRUN bash build-build2.sh\n";
@@ -65,12 +67,12 @@ ecpp_stream << "FROM " << ( image );
   ecpp_stream << "build-comet.sh build-comet.sh\nRUN bash build-comet.sh";
  };
   ecpp_stream << "\n\nRUN mkdir -p /opt/application\nWORKDIR /opt/application\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   string image;
   bool include_assets;
   bool with_comet;

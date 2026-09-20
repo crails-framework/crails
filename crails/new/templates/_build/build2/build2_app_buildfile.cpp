@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -15,6 +15,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(2562);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "";
  for (const std::string& plugin : plugins){
   ecpp_stream << "\nimport intf_libs += " << ( plugin );
@@ -28,12 +30,12 @@ ecpp_stream << "";
   ecpp_stream << "}: cxx.export.poptions += -DLIBCRAILS_SHARED\n\nif $version.pre_release\n  lib{" << ( project_name );
   ecpp_stream << "}: bin.lib.version = \"-$version.project_id\"\nelse\n  lib{" << ( project_name );
   ecpp_stream << "}: bin.lib.version = \"-$version.major.$version.minor\"\n\n{hxx ixx txx}{*}:\n{\n  install         = include/\n  install.subdirs = true\n}\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   std::string project_name;
   std::list<std::string>& plugins;
 };

@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -20,6 +20,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(1494);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << ": 1\nname: lib" << ( project_name );
   ecpp_stream << "\nversion: 0.1.0\nlanguage: c++\nsummary: Crails Application\nlicense: other: proprietary ; Not free/open-source.\ndescription-file: README.md\nurl: https://example.org/bpkgtest2\nemail: example@mail.com\n#build-error-mail: example@mail.com\ndepends: * build2 >= 0.16.0\ndepends: * bpkg >= 0.16.0";
  for (const std::string& plugin : plugins){
@@ -30,12 +32,12 @@ ecpp_stream << ": 1\nname: lib" << ( project_name );
   ecpp_stream << "\ndepends: libcrails-tests ^" << ( crails_version );
   ecpp_stream << "\n#depends: libcrails-selenium ^" << ( crails_version );
   ecpp_stream << "\n# Custom dependencies (do not modify this line)\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   std::string crails_version;
   std::string project_name;
   std::string configuration_type;

@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -17,6 +17,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(1516);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::underscore(session_store) );
   ecpp_stream << ".hpp>\n\nclass SessionStoreImpl : public Crails::" << ( camelize(session_store) );
   ecpp_stream << "\n{\n  SESSION_STORE_IMPLEMENTATION(SessionStoreImpl)\n";
@@ -31,12 +33,12 @@ ecpp_stream << "#pragma once\n#include <crails/session_store/" << ( Crails::unde
   ecpp_stream << "\n  SessionStoreImpl() {}";
  };
   ecpp_stream << "\n};\n\ntypedef SingletonInstantiator<SessionStoreImpl::Factory> ApplicationSessionStore;\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   string session_store;
   bool is_cookie_store;
 };

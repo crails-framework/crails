@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -19,6 +19,8 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(7184);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#!/bin/bash -e\n\nif [ -z \"$CPP_COMPILER\" ] ; then\n  CPP_COMPILER=\"g++\"\nfi\n\nCRAILS_VERSION=" << ( crails_version );
   ecpp_stream << "\nCRAILS_VERSION_NUMBER=" << ( crails_version == "master" ? "2.0.0" : crails_version );
   ecpp_stream << "\nCPPGET_FINGERPRINT=\"" << ( build2_fingerprint );
@@ -49,12 +51,12 @@ ecpp_stream << "#!/bin/bash -e\n\nif [ -z \"$CPP_COMPILER\" ] ; then\n  CPP_COMP
   ecpp_stream << "";
  };
   ecpp_stream << "\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   std::string crails_version;
   std::string build2_fingerprint;
   bool with_odb;

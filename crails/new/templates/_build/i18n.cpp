@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -12,13 +12,15 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(824);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "#include \"i18n.hpp\"\n#include <filesystem>\n\nusing namespace std;\nusing namespace i18n;\n\nApplicationI18n::ApplicationI18n()\n{\n  directory = filesystem::current_path().string();\n  default_locale = \"en\";\n  locales = {\"en\", \"es\", \"fr\"};\n  t.add_locale(\"en\", \"locales/en.json\");\n  t.add_locale(\"es\", \"locales/es.json\");\n  t.add_locale(\"fr\", \"locales/fr.json\");\n}\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
 };
 
 void render_project_config_i18n_cpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars)

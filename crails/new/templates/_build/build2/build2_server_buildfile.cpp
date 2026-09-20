@@ -1,4 +1,4 @@
-#include <sstream>
+#include <crails/template_stream.hpp>
 #include "crails/render_target.hpp"
 #include "crails/shared_vars.hpp"
 #include "crails/template.hpp"
@@ -13,15 +13,17 @@ public:
 
   void render()
   {
+    ecpp_stream.reserve(608);
+    // BEGIN TEMPLATE BODY
 ecpp_stream << "import libs += lib" << ( project_name );
   ecpp_stream << "%lib{" << ( project_name );
   ecpp_stream << "}\n\nexe{server}: {hxx ixx txx cxx}{**} $libs\n\ncxx.poptions =+ \"-I$out_root\" \"-I$src_root\"\ncxx.poptions =+ \"-Wall\" \"-Wno-unknown-pragmas\"\ncxx.poptions =+ \"-pedantic\"\n";
-    std::string _out_buffer = ecpp_stream.str();
-    _out_buffer = this->apply_post_render_filters(_out_buffer);
-    this->target.set_body(_out_buffer);
+    // END TEMPLATE BODY
+    std::string _out_buffer = std::move(ecpp_stream).extract();
+    this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
   }
 private:
-  std::stringstream ecpp_stream;
+  Crails::TemplateStream ecpp_stream;
   std::string project_name;
 };
 
