@@ -9,7 +9,7 @@ map<string, string>& @targets;
 // END LINKING
 #include "<%= renderer_filename %>.hpp"
 #define declare_renderer(name) void <%= function_prefix %>_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)
-#define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, <%= function_prefix %>_##name))
+#define add_renderer(path, name) templates.insert(std::pair<std::string_view, Generator>(path, <%= function_prefix %>_##name))
 
 <% for (auto it = targets.begin() ; it != targets.end() ; ++it) do -%>
 declare_renderer(<%= it->second %>);

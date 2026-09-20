@@ -2,7 +2,7 @@
 #define declare_renderer(name) \
   void render_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&);
 #define add_renderer(path, name) \
-  templates.insert(pair<string, Generator>(path, render_##name))
+  templates.insert(pair<string_view, Generator>(path, render_##name))
 
 using namespace std;
 

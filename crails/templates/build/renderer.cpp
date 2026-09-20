@@ -18,11 +18,11 @@ public:
 
   void render()
   {
-    ecpp_stream.reserve(1728);
+    ecpp_stream.reserve(1738);
     // BEGIN TEMPLATE BODY
 ecpp_stream << "#include \"" << ( renderer_filename );
   ecpp_stream << ".hpp\"\n#define declare_renderer(name) void " << ( function_prefix );
-  ecpp_stream << "_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)\n#define add_renderer(path, name) templates.insert(std::pair<std::string, Generator>(path, " << ( function_prefix );
+  ecpp_stream << "_##name(const Crails::Renderer&, Crails::RenderTarget&, Crails::SharedVars&)\n#define add_renderer(path, name) templates.insert(std::pair<std::string_view, Generator>(path, " << ( function_prefix );
   ecpp_stream << "_##name))\n";
  for (auto it = targets.begin() ; it != targets.end() ; ++it){
   ecpp_stream << "\ndeclare_renderer(" << ( it->second );
