@@ -54,6 +54,6 @@ int main(int argc, const char **argv)
 {
   int result = application_main(argc, argv);
 
-  Logger::cleanup();
+  Server::cleanup();
   return result;
 }
