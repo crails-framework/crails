@@ -21,7 +21,7 @@ int SyncPlugin::Installer::run()
   main_cpp.add_include("crails/sync/channels.hpp");
   configuration.add_plugin("libcrails-sync");
   configuration.update_plugins();
-  renderer.generate_file("config/sync.cpp");
+  renderer.generate_file("app/config/sync.cpp");
   configuration.save();
   main_cpp.save_file();
   return 0;
@@ -31,8 +31,8 @@ int SyncPlugin::Disabler::run()
 {
   configuration.remove_plugin("libcrails-sync");
   configuration.save();
-  if (filesystem::remove("config/sync.cpp"))
-    cout << "[FILE] Removed file config/sync.cpp" << endl;
+  if (filesystem::remove("app/config/sync.cpp"))
+    cout << "[FILE] Removed file app/config/sync.cpp" << endl;
   cout << "(i) Don't forget to remove the SingletonInstantiator<Sync::MailServers> in app/main.cpp" << endl;
   return 0;
 }
