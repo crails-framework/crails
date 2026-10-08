@@ -76,8 +76,9 @@ public:
     {
       ShellCommand::options_description(desc);
       desc.add_options()
-        ("mode,m", boost::program_options::value<std::string>(), "Release or Debug, defaults to build-type value in .crails file")
-        ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preprocessor defines (such as --defines MY_DEFINE ...)");
+        ("mode,m", boost::program_options::value<std::string>(), "Release or Debug, defaults to Release")
+        ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preprocessor defines (such as --defines MY_DEFINE ...)")
+        ("clean,c", "cleanup before building");
     }
   };
 
@@ -103,6 +104,7 @@ public:
       desc.add_options()
         ("mode,m",        boost::program_options::value<std::string>(), "build mode (Release or Debug)")
         ("defines", boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preprocessor defines (such as --defines MY_DEFINE ...)")
+        ("clean,c", "cleanup before building")
         ("output,o",      boost::program_options::value<std::string>(), "output path for the package")
         ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
         ("name,n",        boost::program_options::value<std::string>(), "alternative application name to use for the deployed application")

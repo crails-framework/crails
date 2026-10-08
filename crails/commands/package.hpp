@@ -13,6 +13,7 @@ public:
       ("verbose,v", "enable verbose mode")
       ("mode,m",        boost::program_options::value<std::string>(),  "Debug or Release: defaults to the build-type value set in the .crails file")
       ("defines,d",     boost::program_options::value<std::vector<std::string>>()->multitoken(), "custom preproessor defines (such as --defines MY_DEFINE ...)")
+      ("clean,c",  "cleanup before building")
       ("output,o",      boost::program_options::value<std::string>(), "output file (defaults to application.tar.gz)")
       ("port,p",        boost::program_options::value<unsigned short>(), "network port the application service will bind to")
       ("name,n",        boost::program_options::value<std::string>(), "alternative application name to use for the deployed application")

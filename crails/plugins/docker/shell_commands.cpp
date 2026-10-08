@@ -69,6 +69,8 @@ int DockerPlugin::DockerBuild::run()
     crails_command << " -v";
   if (options.count("mode"))
     crails_command << " -m " << options["mode"].as<string>();
+  if (options.count("clean"))
+    crails_command << " -c";
   add_docker_defines(crails_command);
   return call_docker_shell_with(crails_command.str());
 }
@@ -87,11 +89,13 @@ int DockerPlugin::DockerPackage::run()
 {
   stringstream crails_command;
   string output = "package.tar.gz";
+  string mode = "Release"; 
   int result;
 
   crails_command << "crails package";
-  if (!options.count("mode"))
-    crails_command << " -m Release";
+  if (options.count("mode"))
+    mode = options["mode"].as<string>();
+  crails_command << " -m " << mode;
   add_docker_defines(crails_command);
   forward_command(crails_command, options, {"dockerfile","defines","output"});
   crails_command << " -o " << temporary_package_file;
