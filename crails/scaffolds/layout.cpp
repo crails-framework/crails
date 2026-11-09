@@ -96,7 +96,7 @@ int LayoutScaffold::create_materialize_layout()
 
 int LayoutScaffold::create_bootstrap_layout()
 {
-  const std::string asset_dir = "app/assets";
+  const std::string asset_dir = "assets";
 
   renderer.generate_file("scaffolds/layouts/bootstrap.html", target_folder + "/views/layouts/" + name + ".html");
   if (!filesystem::exists(asset_dir + "/stylesheets/bootstrap/bootstrap.scss"))
@@ -125,14 +125,14 @@ static bool download_archive(const std::string& url, std::function<void()> callb
 
 int LayoutScaffold::download_bootstrap()
 {
-  filesystem::path css_output_dir = "app/assets/stylesheets/bootstrap";
-  filesystem::path font_output_dir = "app/assets/fonts";
+  filesystem::path css_output_dir = "assets/stylesheets/bootstrap";
+  filesystem::path font_output_dir = "assets/fonts";
 
   if (Crails::require_command("curl") && Crails::require_command("unzip"))
   {
-    const std::string css_version = "5.0.2";
+    const std::string css_version = "5.3.8";
     const std::string css_url = "https://github.com/twbs/bootstrap/archive/v" + css_version + ".zip";
-    const std::string icon_version = "1.9.1";
+    const std::string icon_version = "1.11.0";
     const std::string icon_url = "https://github.com/twbs/icons/releases/download/v" + icon_version + "/bootstrap-icons-" + icon_version + ".zip";
     bool success;
 
