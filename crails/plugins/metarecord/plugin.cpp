@@ -149,7 +149,7 @@ bool MetarecordPlugin::build(const ProjectConfiguration& configuration, bool ver
   if (bin.length() > 0)
   {
     command << bin
-      << " -o lib"
+      << " -o app/autogen"
       << " -i " << Crails::join(get_input_paths(configuration), ',')
       << " -g " << Crails::join(get_generators(configuration), ',')
       << " -z .tmp";
