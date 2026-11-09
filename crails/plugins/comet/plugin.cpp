@@ -34,8 +34,8 @@ int CometPlugin::CometInstaller::run()
       << "-o" << output_path
       << "-t" << configuration.toolchain()
       << "-b" << (configuration.application_build_path() + "/client")
-      << "--html-config" << "../config/comet.json"
-      << "--html-output" << "../lib-client"
+      << "--html-config" << "./config/comet.json"
+      << "--html-output" << "./autogen"
       << "--include-src" << asset_cpp_path;
     if (options.count("cheerp-path"))
       command << "--cheerp-path" << options["cheerp-path"].as<string>();
