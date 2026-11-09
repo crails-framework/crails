@@ -126,7 +126,7 @@ crails_packages=(
   libcrails-sync
   libcrails-xmlrpc
   libcrails-proxy
-# libcrails-redis # Disabled because it won't work with new compilers until cppget updates to version >= 1.3.8
+  libcrails-redis # We have a fix, but shouldn't work with new compilers until cppget updates to version >= 1.3.8
   libcrails-tests
   libcrails-templates
 )
@@ -146,6 +146,13 @@ boost_packages=(
   ?sys:libboost-property-tree
   ?sys:libboost-process
   ?sys:libboost-stacktrace
+  ?sys:libboost-mp11
+  ?sys:libboost-assert
+  ?sys:libboost-throw-exception
+  ?sys:libboost-compat
+  ?sys:libboost-variant2
+  ?sys:libboost-winapi
+  ?sys:libboost-system
 )
 
 if [ "$use_system_libraries" = "y" ] ; then
@@ -157,13 +164,13 @@ if [ "$use_system_libraries" = "y" ] ; then
   for backend in $sql_backends ; do
     case $backend in
       sqlite)
-        system_packages+=(?sys:libsqlite3)
+        system_packages+=('?sys:libsqlite3/*')
         ;;
       pgsql)
-        #system_packages+=(?sys:libpq)
+        system_packages+=('?sys:libpq/*')
         ;;
       mysql)
-        system_packages+=(?sys:libmysqlclient)
+        system_packages+=('?sys:libmysqlclient/*')
         ;;
     esac
   done
@@ -225,6 +232,7 @@ fi
 
 $BPKG create -d "$BUILD_DIR" cc \
   config.cxx=$COMPILER \
+  config.cxxstd=20 \
   config.cc.coptions=-O3 \
   config.bin.rpath="$INSTALL_ROOT/lib" \
   config.install.root="$INSTALL_ROOT"  \
