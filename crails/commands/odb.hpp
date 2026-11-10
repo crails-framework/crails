@@ -2,6 +2,7 @@
 #include "../command.hpp"
 #include <filesystem>
 #include <list>
+#include <crails/cli/process.hpp>
 
 class BuildOdb : public ::Command
 {
@@ -24,11 +25,11 @@ private:
   bool        compile_models(const FileList& files);
   bool        generate_schema(const FileList& files);
   FileList    collect_files();
-  std::string odb_command(const std::string& output_dir = "");
   std::string hxx_prologue();
   void        apply_new_version();
   void        clear_empty_changesets();
 
+  Crails::ExecutableCommand odb_command(const std::string& output_dir = "");
   bool at_once_fix_include_paths(const FileList& files) const;
 
 private:

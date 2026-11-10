@@ -183,14 +183,13 @@ bool BuildOdb::compile_models(const FileList& files)
 bool BuildOdb::compile_models_at_once(const FileList& files)
 {
   std::filesystem::path project_dir = filesystem::canonical(configuration.project_directory());
-  stringstream command;
+  Crails::ExecutableCommand command = odb_command(temporary_dir);
 
-  command << odb_command(temporary_dir) << ' ';
   for (auto file : files)
-    command << filesystem::relative(file, project_dir) << ' ';
+    command << filesystem::relative(file, project_dir).string();
   if (options.count("verbose"))
-    cout << "+ " << command.str() << endl;
-  if (Crails::run_command(command.str()))
+    cout << "+ " << command << endl;
+  if (Crails::run_command(command))
     return at_once_fix_include_paths(files);
   return false;
 }
@@ -259,9 +258,10 @@ bool BuildOdb::compile_models_one_by_one(const FileList& files)
   for (auto file : files)
   {
     filesystem::path include_path = filesystem::relative(file, project_dir).parent_path();
-    string command = odb_command(temporary_dir)
-      + ' ' + "--include-prefix \"" + include_path.string() + '"'
-      + ' ' + file.string();
+    Crails::ExecutableCommand command = odb_command(temporary_dir);
+
+    command << "--include-prefix" << include_path.string()
+            << file.string();
     if (options.count("verbose"))
       cout << "+ " << command << endl;
     if (!Crails::run_command(command))
@@ -276,22 +276,22 @@ bool BuildOdb::generate_schema(const FileList& files)
   {
     filesystem::path project_dir = filesystem::canonical(configuration.project_directory());
     filesystem::path config_odb_hpp = project_dir / "app" / "config" / "odb.hpp";
-    stringstream command;
+    Crails::ExecutableCommand command;
     bool   embed_schema      = configuration.variable("odb-embed-schema") == "1";
     string schema_output_dir = embed_schema ? output_dir : string("exe/odb_migrate");
 
     at_once = true;
-    command << odb_command(schema_output_dir) << ' '
-            << "--generate-schema-only" << ' ';
+    command = odb_command(schema_output_dir);
+    command << "--generate-schema-only";
     if (filesystem::exists(config_odb_hpp))
-      command << filesystem::relative(config_odb_hpp, project_dir) << ' ';
+      command << filesystem::relative(config_odb_hpp, project_dir).string();
     else
       cerr << "Could not find default ODB configuration file at " << config_odb_hpp << ". The database schema likely won't be versioned and the odb_migrate task will only be able to create databases from scratch." << endl; 
     for (auto file : files)
-      command << filesystem::relative(file, project_dir) << ' ';
+      command << filesystem::relative(file, project_dir).string();
     if (options.count("verbose"))
-      cout << "+ " << command.str() << endl;
-    if (Crails::run_command(command.str()))
+      cout << "+ " << command << endl;
+    if (Crails::run_command(command))
       return true;
   }
   return false;
@@ -349,34 +349,34 @@ void BuildOdb::apply_new_version()
   });
 }
 
-string BuildOdb::odb_command(const string& output_dir)
+Crails::ExecutableCommand BuildOdb::odb_command(const string& output_dir)
 {
-  stringstream stream;
+  Crails::ExecutableCommand stream;
 
-  stream << odb_compiler
-         << " -I." << " -I./app"
-         << " --std " << configuration.variable("std")
-         << " --hxx-suffix ." << configuration.source_extension(HeaderExt)
-         << " --ixx-suffix ." << configuration.source_extension(InlineExt)
-         << " --cxx-suffix ." << configuration.source_extension(SourceExt)
-         << " --schema-format separate"
-         << " --hxx-prologue \"" << hxx_prologue() << '"'
-         << " --output-dir " << output_dir;
-  stream << " --changelog \"" << application_xml_path() << '"';
+  stream.path = odb_compiler;
+  stream << "-I." << "-I./app"
+         << "--std" << configuration.variable("std")
+         << "--hxx-suffix" << ('.' + configuration.source_extension(HeaderExt))
+         << "--ixx-suffix" << ('.' + configuration.source_extension(InlineExt))
+         << "--cxx-suffix" << ('.' + configuration.source_extension(SourceExt))
+         << "--schema-format" << "separate"
+         << "--hxx-prologue" << hxx_prologue()
+         << "--output-dir" << output_dir;
+  stream << "--changelog" << application_xml_path();
   if (default_pointer.length() > 0)
-    stream << " --default-pointer " << default_pointer;
+    stream << "--default-pointer" << default_pointer;
   if (table_prefix.length() > 0)
-    stream << " --table-prefix '" << table_prefix << '\'';
+    stream << "--table-prefix" << table_prefix;
   if (at_once)
-    stream << " --at-once --input-name " << input_name;
+    stream << "--at-once" << "--input-name" << input_name;
   for (const string& backend : backends)
-    stream << " -d " << backend;
+    stream << "-d" << backend;
   if (backends.size() > 1)
-    stream << " --multi-database dynamic -d common";
+    stream << "--multi-database" << "dynamic" << "-d" << "common";
   if (use_session)
-    stream << " --generate-session";
-  stream << " --generate-query";
-  return stream.str();
+    stream << "--generate-session";
+  stream << "--generate-query";
+  return stream;
 }
 
 string BuildOdb::hxx_prologue()
