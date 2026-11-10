@@ -24,6 +24,7 @@ private:
   bool        compile_models_one_by_one(const FileList& files);
   bool        compile_models(const FileList& files);
   bool        generate_schema(const FileList& files);
+  bool        is_path_to_schema(const std::filesystem::path&) const;
   FileList    collect_files();
   std::string hxx_prologue();
   void        apply_new_version();

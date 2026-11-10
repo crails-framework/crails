@@ -32,16 +32,17 @@ static bool create_directory(filesystem::path path)
   return true;
 }
 
-static bool is_path_to_schema(const filesystem::path& path)
-{
-  string filename = path.filename().string();
-
-  return filename.compare(filename.length() - 11, 11, "-schema.cxx") == 0;
-}
-
 std::string application_xml_path()
 {
   return "app/config/odb.xml";
+}
+
+bool BuildOdb::is_path_to_schema(const filesystem::path& path) const
+{
+  string filename = path.filename().string();
+  string schema_suffix = "-schema." + configuration.source_extension(SourceExt);
+
+  return filename.compare(filename.length() - 11, 11, schema_suffix) == 0;
 }
 
 void BuildOdb::clear_empty_changesets()
@@ -340,7 +341,7 @@ void BuildOdb::apply_new_version()
     if (new_contents != old_contents)
       filesystem::copy(path, old_path, filesystem::copy_options::overwrite_existing);
   });
-  clearer.collect_files([&existing_files](const filesystem::path& path)
+  clearer.collect_files([&existing_files, this](const filesystem::path& path)
   {
     if (is_path_to_schema(path))
       return ;
@@ -384,7 +385,7 @@ string BuildOdb::hxx_prologue()
   stringstream prologue;
 
   for (const string& include : custom_includes)
-    prologue << "#include \\\"" << include << "\\\"\n";
+    prologue << "#include \"" << include << "\"\n";
   prologue << hxx_prologue_;
   return prologue.str();
 }

@@ -98,14 +98,14 @@ bool BuildManager::generate_database()
   if (configuration.has_plugin("libcrails-odb"))
   {
     BuildOdb odb_builder;
-    std::vector<std::string> argv_array{
+    vector<string> argv_array{
       "--input-dirs", model_input_dirs(configuration),
       "--output-dir", (configuration.autogen_path() / "odb").string()
     };
     if (options.count("verbose")) argv_array.push_back("--verbose");
     ArgvArray argv(argv_array);
 
-    std::cout << "[crails-odb] generate database queries and schema..." << std::endl;
+    cout << "[crails-odb] generate database queries and schema..." << endl;
     argv.data[argv_array.size()] = 0;
     for (int i = 0 ; i < argv_array.size() ; ++i)
       argv.data[i] = argv_array[i].c_str();
