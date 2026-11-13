@@ -13,12 +13,14 @@ public:
 
   void render()
   {
-    ecpp_stream.reserve(712);
+    ecpp_stream.reserve(1052);
     // BEGIN TEMPLATE BODY
 ecpp_stream << "cmake_minimum_required(VERSION 3.5)\n\nfile(GLOB_RECURSE task_files\n     *.cpp *.cxx)\n\nadd_executable(" << ( task_name );
   ecpp_stream << " ${task_files})\n\ntarget_link_libraries(" << ( task_name );
   ecpp_stream << " ${dependencies})\n\nset_target_properties(" << ( task_name );
-  ecpp_stream << " PROPERTIES OUTPUT_NAME \"task\")\n";
+  ecpp_stream << " PROPERTIES OUTPUT_NAME \"task\")\n\nset_target_properties(" << ( task_name );
+  ecpp_stream << " PROPERTIES RUNTIME_OUTPUT_DIRECTORY \"${CMAKE_BINARY_DIR}/tasks/" << ( task_name );
+  ecpp_stream << "\")\n";
     // END TEMPLATE BODY
     std::string _out_buffer = std::move(ecpp_stream).extract();
     this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));

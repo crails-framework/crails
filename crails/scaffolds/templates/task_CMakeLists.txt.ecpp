@@ -10,3 +10,5 @@ add_executable(<%= task_name %> ${task_files})
 target_link_libraries(<%= task_name %> ${dependencies})
 
 set_target_properties(<%= task_name %> PROPERTIES OUTPUT_NAME "task")
+
+set_target_properties(<%= task_name %> PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/tasks/<%= task_name %>")
