@@ -156,7 +156,6 @@ int New::run()
       vars["plugins"] = &plugins;
       vars["cpp_version"] = configuration.variable("std");
       use_actions(configuration_type == "full" || configuration_type == "webservice");
-      use_cookies(Crails::cast<string>(vars, "session_store", "NoCookieStore") != "NoCookieStore");
       use_databases(options.count("database"));
       prepare_renderers();
       prepare_request_pipeline();

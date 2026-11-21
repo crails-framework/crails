@@ -9,13 +9,12 @@ public:
   render_ProjectAppMainCpp(const Crails::Renderer& renderer, Crails::RenderTarget& target, Crails::SharedVars& vars) :
     Crails::Template(renderer, target, vars), 
     with_action(Crails::cast< bool >(vars, "with_action",  true)), 
-    with_cookies(Crails::cast< bool >(vars, "with_cookies",  false)), 
     with_databases(Crails::cast< bool >(vars, "with_databases",  false))
   {}
 
   void render()
   {
-    ecpp_stream.reserve(2726);
+    ecpp_stream.reserve(2352);
     // BEGIN TEMPLATE BODY
 ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\n#include \"config/server.hpp\"";
  if (with_databases){
@@ -25,11 +24,7 @@ ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\
  if (with_action){
   ecpp_stream << "\n#include \"config/router.hpp\"";
  };
-  ecpp_stream << "";
- if (with_cookies){
-  ecpp_stream << "\n#include <crails/cipher.hpp>";
- };
-  ecpp_stream << "\n\nusing namespace std;\nusing namespace Crails;\n\nstatic int application_main(int argc, const char **argv)\n{\n  SingletonInstantiator<ApplicationServer> server;\n  SingletonInstantiator<ApplicationRenderers> renderers;";
+  ecpp_stream << "\nusing namespace std;\nusing namespace Crails;\n\nstatic int application_main(int argc, const char **argv)\n{\n  SingletonInstantiator<ApplicationServer> server;\n  SingletonInstantiator<ApplicationRenderers> renderers;";
  if (with_databases){
   ecpp_stream << "\n  SingletonInstantiator<ApplicationDatabases> databases;\n";
  };
@@ -37,11 +32,7 @@ ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\
  if (with_action){
   ecpp_stream << "\n  SingletonInstantiator<ApplicationRouter> router;\n";
  };
-  ecpp_stream << "\n  // Initializers";
- if (with_cookies){
-  ecpp_stream << "\n  Cipher::initialize();";
- };
-  ecpp_stream << "\n  // Application loop\n  try\n  {\n    server->launch(argc, argv);\n  }\n  catch (const exception& error)\n  {\n    logger << Logger::Error << \">> Server crashed: \" << error.what() << Logger::endl;\n    return -1;\n  }\n  return 0;\n}\n\nint main(int argc, const char **argv)\n{\n  int result = application_main(argc, argv);\n\n  Server::cleanup();\n  return result;\n}\n";
+  ecpp_stream << "\n  // Initializers\n\n  // Application loop\n  try\n  {\n    server->launch(argc, argv);\n  }\n  catch (const exception& error)\n  {\n    logger << Logger::Error << \">> Server crashed: \" << error.what() << Logger::endl;\n    return -1;\n  }\n  return 0;\n}\n\nint main(int argc, const char **argv)\n{\n  int result = application_main(argc, argv);\n\n  Server::cleanup();\n  return result;\n}\n";
     // END TEMPLATE BODY
     std::string _out_buffer = std::move(ecpp_stream).extract();
     this->target.set_body(this->apply_post_render_filters(std::move(_out_buffer)));
@@ -49,7 +40,6 @@ ecpp_stream << "#include <crails/logger.hpp>\n#include \"config/renderers.hpp\"\
 private:
   Crails::TemplateStream ecpp_stream;
   bool with_action;
-  bool with_cookies;
   bool with_databases;
 };
 

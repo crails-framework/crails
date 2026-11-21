@@ -35,7 +35,6 @@ private:
   void             prepare_request_pipeline();
   bool             validate_options();
   void             use_actions(bool value) { vars["with_action"] = value; }
-  void             use_cookies(bool value) { vars["with_cookies"] = value; }
   void             use_databases(bool value) { vars["with_databases"] = value; }
 
   std::string_view target() const { return (options.count("target") ? options["target"] : options["name"]).as<std::string>(); }

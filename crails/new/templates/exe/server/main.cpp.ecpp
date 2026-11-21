@@ -1,5 +1,4 @@
 bool @with_action = true;
-bool @with_cookies = false;
 bool @with_databases = false;
 // END LINKING
 #include <crails/logger.hpp>
@@ -12,10 +11,6 @@ bool @with_databases = false;
 
 #include "config/router.hpp"
 <% end -%>
-<% if (with_cookies) do %>
-
-#include <crails/cipher.hpp>
-<% end %>
 
 using namespace std;
 using namespace Crails;
@@ -33,9 +28,6 @@ static int application_main(int argc, const char **argv)
 
 <% end %>
   // Initializers
-<% if (with_cookies) do -%>
-  Cipher::initialize();
-<% end -%>
 
   // Application loop
   try
